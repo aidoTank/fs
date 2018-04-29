@@ -1,0 +1,49 @@
+ManifestFileVersion: 0
+CRC: 2977090393
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 517fe992fea4a3d0e07112456a3c77e3
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: bee7b9914309cd76f3a5e9fc6362fa30
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: -2095666955, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: -900027084, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: -98529514, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: -146154839, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: 1367256648, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resource/ui/prefab/panel_bag.prefab
+Dependencies:
+- D:/Unity5/NEW_CLIENT/MyNew/Assets/StreamingAssets/pc/scene/1/tx/bg_map_zhucun
+- D:/Unity5/NEW_CLIENT/MyNew/Assets/StreamingAssets/pc/ui/static/atlas/common/atlas_1
+- D:/Unity5/NEW_CLIENT/MyNew/Assets/StreamingAssets/pc/shader/ui/ui_photo

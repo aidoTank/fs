@@ -1,0 +1,25 @@
+ManifestFileVersion: 0
+CRC: 1857720463
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a3a2f4c2c2f9d1ab24a60436a3f94d28
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 3b408876498c5d6d6021effd5bf76c84
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resource/effect/fx_1/fx_1.prefab
+Dependencies:
+- D:/Unity5/NEW_CLIENT/MyNew/Assets/StreamingAssets/pc/effect/fx_1/yl/1111

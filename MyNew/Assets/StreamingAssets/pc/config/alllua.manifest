@@ -1,0 +1,38 @@
+ManifestFileVersion: 0
+CRC: 2615209382
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 235bdf9d27b33fc954e36d2aec852ed5
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 1033bf7ddfd4c6d43e7a6382c0a0a61a
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/Script/Client/Lua/LuaScript/Logic/Common/Widget.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Net/Common/NetMessage.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Logic/Login/DialogModule.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Panel/Login/DialogPanel.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Logic/Login/LoginModule.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Net/Common/NetManager.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Common/Tools.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Csv/Common/CsvManager.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Net/Login/MsgLogin.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Logic/Login/CreateRoleModule.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Common/protobuf.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Net/pbc/Roma.pb.bytes
+- Assets/Script/Client/Lua/LuaScript/Logic/Common/GUIManager.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Panel/Login/CreateRolePanel.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Common/Main.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Common/CSharpCallLua.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Panel/Login/LoginPanel.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Csv/PetCsv.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Csv/ItemCsv.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Logic/Login/BagModule.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Net/Login/MsgCreateRole.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Panel/Common/UIBase.lua.txt
+- Assets/Script/Client/Lua/LuaScript/Panel/Login/BagPanel.lua.txt
+Dependencies: []

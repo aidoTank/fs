@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 3707164206
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 26ee435e160ce2e0361731f84988383c
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: eb2757eac30f0cc0abd90c4f09c2db98
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resource/shader/ui/ui_photo.shader
+- Assets/Resource/shader/ui/ui_photo.mat
+Dependencies: []

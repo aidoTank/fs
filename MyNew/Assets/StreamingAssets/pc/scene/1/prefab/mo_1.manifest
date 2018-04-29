@@ -1,0 +1,32 @@
+ManifestFileVersion: 0
+CRC: 1794573110
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0e84b73a95f3672a4b2df2c4d87b37db
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 3f943213e10bdcbdf9b67e7eea3b4a36
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resource/scene/1/prefab/mo_1.prefab
+Dependencies:
+- D:/Unity5/NEW_CLIENT/MyNew/Assets/StreamingAssets/pc/scene/1/tx/mat_1
+- D:/Unity5/NEW_CLIENT/MyNew/Assets/StreamingAssets/pc/scene/1/tx/new material

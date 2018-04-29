@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 20418383
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 008f93d1eadbb8d2fa85e8e4e5975a32
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 6759894fca659e2049f05064db45ce61
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resource/effect/fx_1/yl/2222.png
+Dependencies: []

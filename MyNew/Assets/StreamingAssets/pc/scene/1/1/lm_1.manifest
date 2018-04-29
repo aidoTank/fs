@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 2004225824
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: c18615d460fd155254b9b49007c8aca1
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 6759894fca659e2049f05064db45ce61
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resource/scene/1/1/Lightmap-0_comp_light.exr
+Dependencies: []

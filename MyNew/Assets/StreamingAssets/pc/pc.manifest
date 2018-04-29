@@ -1,0 +1,98 @@
+ManifestFileVersion: 0
+CRC: 4262859114
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: config/allcsvinfo
+      Dependencies: {}
+    Info_1:
+      Name: config/allresinfo
+      Dependencies: {}
+    Info_2:
+      Name: effect/fx_1/fx_1
+      Dependencies:
+        Dependency_0: effect/fx_1/yl/1111
+    Info_3:
+      Name: effect/fx_1/yl/1111
+      Dependencies:
+        Dependency_0: effect/fx_1/yl/2222
+    Info_4:
+      Name: effect/fx_1/yl/2222
+      Dependencies: {}
+    Info_5:
+      Name: effect/fx_2/fx_2
+      Dependencies:
+        Dependency_0: effect/fx_1/yl/1111
+    Info_6:
+      Name: scene/1/cfg_1
+      Dependencies: {}
+    Info_7:
+      Name: scene/1/prefab/mo_1
+      Dependencies:
+        Dependency_0: scene/1/tx/mat_1
+        Dependency_1: scene/1/tx/new material
+    Info_8:
+      Name: scene/1/tx/bg_map_zhucun
+      Dependencies: {}
+    Info_9:
+      Name: scene/1/tx/mat_1
+      Dependencies:
+        Dependency_0: "scene/1/tx/tx_\u8349\u57301"
+    Info_10:
+      Name: shader/scene/mobile-diffuse
+      Dependencies: {}
+    Info_11:
+      Name: "scene/1/tx/tx_\u8349\u57301"
+      Dependencies: {}
+    Info_12:
+      Name: scene/1/tx/new material
+      Dependencies:
+        Dependency_0: scene/1/tx/bg_map_zhucun
+        Dependency_1: shader/scene/mobile-diffuse
+    Info_13:
+      Name: scene/1/prefab/mo_2
+      Dependencies:
+        Dependency_0: scene/1/tx/mat_1
+        Dependency_1: scene/1/tx/new material
+    Info_14:
+      Name: ui/dynamic/icon/item/icon_item_1
+      Dependencies: {}
+    Info_15:
+      Name: ui/dynamic/icon/item/icon_item_2
+      Dependencies: {}
+    Info_16:
+      Name: ui/dynamic/icon/item/icon_item_3
+      Dependencies: {}
+    Info_17:
+      Name: ui/dynamic/icon/item/icon_item_4
+      Dependencies: {}
+    Info_18:
+      Name: ui/prefab/panel_login
+      Dependencies:
+        Dependency_0: ui/static/atlas/common/atlas_1
+    Info_19:
+      Name: ui/static/atlas/common/atlas_1
+      Dependencies: {}
+    Info_20:
+      Name: scene/1/1/lm_1
+      Dependencies: {}
+    Info_21:
+      Name: config/alllua
+      Dependencies: {}
+    Info_22:
+      Name: ui/prefab/panel_dialog
+      Dependencies:
+        Dependency_0: ui/static/atlas/common/atlas_1
+    Info_23:
+      Name: shader/ui/ui_photo
+      Dependencies: {}
+    Info_24:
+      Name: ui/prefab/panel_bag
+      Dependencies:
+        Dependency_0: scene/1/tx/bg_map_zhucun
+        Dependency_1: ui/static/atlas/common/atlas_1
+        Dependency_2: shader/ui/ui_photo
+    Info_25:
+      Name: ui/prefab/panel_create_role
+      Dependencies:
+        Dependency_0: ui/static/atlas/common/atlas_1
