@@ -1,0 +1,27 @@
+
+require("ItemCsv")
+require("PetCsv")
+
+CsvManager = {
+	allCsv={}
+}
+
+CsvManager.Inst = nil
+
+function CsvManager:new ()
+	local obj = {}
+    setmetatable(obj, self)
+	self.__index = self
+    return obj
+end
+
+function CsvManager:Init()
+    self.allCsv["ItemCsv"] = ItemCsv:new(108)
+    self.allCsv["PetCsv"] = PetCsv:new(109)
+
+
+
+    for k,v in pairs(self.allCsv) do
+		v:Init()
+	end
+end

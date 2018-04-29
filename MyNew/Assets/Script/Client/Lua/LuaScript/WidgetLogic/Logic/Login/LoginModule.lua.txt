@@ -1,0 +1,110 @@
+﻿require("NetManager")
+
+local Roma = CS.Roma
+local UIEventListener = Roma.UIEventListener
+local NetRunTime = Roma.NetRunTime
+local Unity = CS.UnityEngine
+
+local this
+LoginModule = {
+    m_bStartCon = false,
+    m_connCurTime = 0,
+    m_connMaxTime = 3,
+}
+
+
+setmetatable (LoginModule, Widget)
+function LoginModule:new(UIClass)
+	local obj = Widget:new(UIClass)
+	setmetatable(obj, self)
+    self.__index = self
+    return obj
+end
+
+function LoginModule:Init ()
+    this = self
+    UIEventListener.Get (self.m_ui.m_btnOk).onClick = self.OnClickBtn
+end
+
+
+function LoginModule:InitData()
+    --ItemName =  CsvManager.Inst.allCsv["ItemCsv"]:GetItem(2)
+    --PetName =  CsvManager.Inst.allCsv["PetCsv"]:GetItem(1).name
+
+end
+
+-- 非匿名回调方法，只能table.xx方法，并且this要单独传入
+LoginModule.OnClickBtn = function(go)
+    if go == this.m_ui.m_btnOk then
+
+        if this.m_ui.m_userName.text == '' or this.m_ui.m_passWord.text == '' then
+            dialog = GUIManager.Inst.allWidget["panel_dialog"]
+            dialog.m_openEnd = function()
+                dialog:Open("content can not be empty", "ok", "", nil)
+            end
+            dialog:SetVisible (true)
+            return
+        end
+        Roma.EGame.m_openid = this.m_ui.m_userName.text
+        Roma.EGame.m_strPassword = this.m_ui.m_passWord.text
+
+        this:OnStartLogin()
+    end
+end
+
+function LoginModule:OnStartLogin()
+    if NetRunTime.Inst:GetNetState() == NetRunTime.NetState.Disconnected then
+
+        NetRunTime.Inst:ConServer(function()
+            --连接成功，发送登录
+            local msgLogin = NetManager.Inst.allMsg[eNetMessageID.Login]
+            msgLogin.loginData.userName = Roma.EGame.m_openid
+            msgLogin.loginData.passWord = Roma.EGame.m_strPassword
+            NetManager.Inst:SendMessage(msgLogin)
+            print("send login")
+        end)
+
+        self.m_bStartCon = true
+        self.m_connCurTime = 0
+    end
+end
+
+function LoginModule:Update(fTime, fDTime)
+	if self.m_bStartCon == false then
+        return
+    end
+    --连接中，如果超时
+    if NetRunTime.Inst:GetNetState() == NetRunTime.NetState.Connecting then 
+
+        self.m_connCurTime = self.m_connCurTime + fDTime
+        if self.m_connCurTime > self.m_connMaxTime then
+
+            self:CloseConn()
+            dialog = GUIManager.Inst.allWidget["panel_dialog"]
+            dialog.m_openEnd = function()
+                dialog:Open("timeout!哈哈哈ffff", "retry", "exit", function(ok)
+                    if ok then
+                        --self:OnStartLogin()
+                        --CS.Roma.GameInit.LoadRestTest()
+                        Roma.LogicSystem.Inst:LoadMap(2,nil)
+                    else
+                        --Unity.Application.Quit()
+                        --CS.Roma.GameInit.UnRestTest()
+                        --CS.Roma.LogicSystem.Inst:UnInitModule()
+                               bag = GUIManager.Inst.allWidget["panel_bag"]
+                               bag:SetVisible(true)
+                         Roma.LogicSystem.Inst:LoadMap(1,nil)
+                        
+                    end
+                end)
+            end
+            dialog:SetVisible (true)
+
+        end
+    end
+end
+
+function LoginModule:CloseConn()
+    NetRunTime.Inst:Stop()
+    self.m_bStartCon = false
+end

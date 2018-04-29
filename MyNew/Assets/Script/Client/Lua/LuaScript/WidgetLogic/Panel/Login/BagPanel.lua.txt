@@ -1,0 +1,23 @@
+﻿require("UIBase")
+
+local Roma = CS.Roma
+
+BagPanel = {
+    m_listBag,
+}
+
+setmetatable (BagPanel, UIBase)
+function BagPanel:new()
+	local obj = UIBase:new()
+	setmetatable(obj, self)
+	self.__index = self
+	return obj
+end
+
+function BagPanel:Init()
+	print ("BagPanel....Init......")
+	local r = self.m_root;
+    self.m_listBag = self.m_root:FindChild ("panel/right/list").gameObject:AddComponent(typeof(Roma.UISuperList))
+    self.m_listBag:Init(91, 91, 5, 5);
+
+end

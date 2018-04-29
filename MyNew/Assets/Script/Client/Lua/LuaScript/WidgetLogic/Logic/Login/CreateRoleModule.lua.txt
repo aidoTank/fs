@@ -1,0 +1,52 @@
+﻿require("Widget")
+
+local Roma = CS.Roma
+local UIEventListener = Roma.UIEventListener
+local UIButton = Roma.UIButton
+local UIItem = Roma.UIItem
+
+local this
+CreateRoleModule = {
+ 
+}
+
+setmetatable (CreateRoleModule, Widget)
+function CreateRoleModule:new(UIClass)
+	local obj = Widget:new(UIClass)
+	setmetatable(obj, self)
+    self.__index = self
+    return obj
+end
+
+function CreateRoleModule:Init ()
+    this = self
+    UIEventListener.Get (self.m_ui.m_btnOk).onClick = self.OnClickBtn
+end
+
+function CreateRoleModule:InitData()
+
+end
+
+CreateRoleModule.OnClickBtn = function (go)
+
+    if go == this.m_ui.m_btnOk then
+
+       if this.m_ui.m_name.text == '' then
+            dialog = GUIManager.Inst.allWidget["panel_dialog"]
+            dialog.m_openEnd = function()
+                dialog:Open("name can not be empty", "ok", "", nil)
+            end
+            dialog:SetVisible (true)
+            return
+        end
+
+        -- 发送创建名称
+        local createRole = NetManager.Inst.allMsg[eNetMessageID.CreateRole]
+        createRole.createData.userName = Roma.EGame.m_openid
+        createRole.createData.name = this.m_ui.m_name.text
+        createRole.createData.occ = 1
+        NetManager.Inst:SendMessage(createRole)
+    end
+
+end
+

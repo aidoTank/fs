@@ -1,0 +1,36 @@
+﻿require("NetMessage")
+
+MsgLogin = {
+    loginData = {},
+}
+
+setmetatable (MsgLogin, NetMessage)
+function MsgLogin:new(id)
+	local obj = NetMessage:new(id)
+	setmetatable(obj, self)
+	self.__index = self
+	return obj
+end
+
+function MsgLogin:ToByte(lusuoStream)
+    self:SetByte("CG_Login", self.loginData, lusuoStream)
+end
+
+
+function MsgLogin:OnRecvLogic()
+
+	print("self.eno=" ,self.eno)
+
+	if self.eno == 0 then  --无角色，跳转登录界面
+	    createRole = GUIManager.Inst.allWidget["panel_create_role"]
+		createRole:SetVisible(true)
+	elseif self.eno == 1 then --有角色，直接进入游戏
+		data = self:GetData("GC_PlayerPublicData", self.structBytes)
+		print("data.userName=", data.userName)
+		print("data.name=", data.name)
+		print("data.occ=", data.occ)
+		print("data.mapId=", data.mapId)
+		print("data.dir=", data.dir)
+	end
+  
+end

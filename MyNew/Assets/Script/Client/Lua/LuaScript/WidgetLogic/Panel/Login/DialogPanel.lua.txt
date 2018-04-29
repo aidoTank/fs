@@ -1,0 +1,23 @@
+﻿require("UIBase")
+
+
+DialogPanel = {
+	m_txt,
+	m_btnOk,
+    m_btnCancel,
+}
+
+setmetatable (DialogPanel, UIBase)
+function DialogPanel:new()
+	local obj = UIBase:new()
+	setmetatable(obj, self)
+	self.__index = self
+	return obj
+end
+
+function DialogPanel:Init()
+	print ("DialogPanel....Init......")
+	self.m_txt = self.m_root:FindChild ("panel/txt"):GetComponent("Text")
+    self.m_btnOk = self.m_root:FindChild ("panel/btn/btn_ok").gameObject
+	self.m_btnCancel = self.m_root:FindChild ("panel/btn/btn_cancel").gameObject
+end

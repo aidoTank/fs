@@ -1,0 +1,53 @@
+﻿require("Widget")
+
+local Roma = CS.Roma
+local UIEventListener = Roma.UIEventListener
+local UIButton = Roma.UIButton
+local UIItem = Roma.UIItem
+
+local this
+DialogModule = {
+    m_clickEvent,
+}
+
+setmetatable (DialogModule, Widget)
+function DialogModule:new(UIClass)
+	local obj = Widget:new(UIClass)
+	setmetatable(obj, self)
+    self.__index = self
+    return obj
+end
+
+function DialogModule:Init ()
+    this = self
+    UIEventListener.Get (self.m_ui.m_btnOk).onClick = self.OnClickBtn
+    UIEventListener.Get (self.m_ui.m_btnCancel).onClick = self.OnClickBtn
+end
+
+function DialogModule:InitData()
+
+end
+
+DialogModule.OnClickBtn = function (go)
+    if this.m_clickEvent ~= nil then
+        if go == this.m_ui.m_btnOk then
+            this.m_clickEvent(true)
+        elseif go == this.m_ui.m_btnCancel then
+            this.m_clickEvent(false)
+        end
+    end
+    this:SetVisible(false)
+end
+
+function DialogModule:Open(conetent, okTxt, cancelTxt, clickEvent)
+    self.m_ui.m_txt.text = conetent
+
+    UIItem.SetText(self.m_ui.m_btnOk, "Text", okTxt)
+    if cancelTxt =='' then
+        self.m_ui.m_btnCancel:SetActive(false)
+    else
+        self.m_ui.m_btnCancel:SetActive(true)
+        UIItem.SetText(self.m_ui.m_btnCancel, "Text", cancelTxt)
+    end
+    self.m_clickEvent = clickEvent
+end

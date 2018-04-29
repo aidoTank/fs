@@ -1,0 +1,15 @@
+// 将设置放入此文件中以覆盖默认设置
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/*.meta":true
+    },
+    "files.autoGuessEncoding": true,
+    "files.associations": {
+        "*.txt": "lua"
+    }
+}

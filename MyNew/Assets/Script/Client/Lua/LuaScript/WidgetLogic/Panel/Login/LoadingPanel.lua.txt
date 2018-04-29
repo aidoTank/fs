@@ -1,0 +1,37 @@
+﻿require("UIBase")
+
+
+
+LoadingPanel = {
+    m_textInfo,
+    m_textPct,
+    m_slider,
+}
+--告诉编译器，如果子类中查找不到方法，就去父类查找，子类优先级高 
+setmetatable(LoadingPanel, UIBase)
+function LoadingPanel:new()
+	local obj = UIBase:new()
+	--设置这个表的元表为ChildClass本身  
+    --并且定义过了__index属性，给这个表就提供了查找新key（方法）的机会  
+	setmetatable(obj, self)
+	self.__index = self
+	return obj
+end
+
+function LoadingPanel:Init()
+    self.m_textInfo = self.m_root:FindChild ("panel/text_info"):GetComponent("Text")
+    self.m_textPct = self.m_root:FindChild ("panel/bottom/text_pct"):GetComponent("Text")
+    self.m_slider = self.m_root:FindChild ("panel/bottom/slider"):GetComponent("Slider")
+end
+
+
+function LoadingPanel:SetInfo(val)
+    self.m_textInfo.text = val
+end
+
+
+function LoadingPanel:SetPct(text, progress)
+    self.m_textPct.text = text
+    self.m_slider.value = progress
+end
+

@@ -1,0 +1,26 @@
+﻿require("UIBase")
+
+
+
+LoginPanel = {
+    m_btnClose,
+    m_userName,
+    m_passWord,
+    m_btnOk,
+}
+--告诉编译器，如果子类中查找不到方法，就去父类查找，子类优先级高 
+setmetatable(LoginPanel, UIBase)
+function LoginPanel:new()
+	local obj = UIBase:new()
+	--设置这个表的元表为ChildClass本身  
+    --并且定义过了__index属性，给这个表就提供了查找新key（方法）的机会  
+	setmetatable(obj, self)
+	self.__index = self
+	return obj
+end
+
+function LoginPanel:Init()
+    self.m_userName = self.m_root:FindChild ("panel/user_name"):GetComponent("InputField")
+    self.m_passWord = self.m_root:FindChild ("panel/pass_word"):GetComponent("InputField")
+    self.m_btnOk = self.m_root:FindChild ("panel/btn_ok").gameObject
+end

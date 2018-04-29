@@ -1,0 +1,78 @@
+﻿local Roma = CS.Roma
+local NetRunTime = Roma.NetRunTime
+local LusuoStream = Roma.LusuoStream
+
+require("Tools")
+require("MsgLogin")
+require("MsgCreateRole")
+
+--消息枚举
+eNetMessageID = { 
+    "Login",
+	"CreateRole"
+}
+eNetMessageID = CreateEnumTable(eNetMessageID, 1000)
+
+NetManager = {
+	allMsg={}
+}
+NetManager.Inst = nil
+function NetManager:new ()
+	local obj = {}
+    setmetatable (obj, self)
+	self.__index = self
+    return obj
+end
+
+--初始化，注册逻辑消息
+function NetManager:Init()
+	print("NetManager:Init")
+
+	self:InitPb()
+	self.allMsg[eNetMessageID.Login] = MsgLogin:new(eNetMessageID.Login)
+	self.allMsg[eNetMessageID.CreateRole] = MsgCreateRole:new(eNetMessageID.CreateRole)
+end
+
+--注册pbc协议
+function NetManager:InitPb()
+	local protobuf = require "protobuf"
+	system = Roma.LogicSystem.Inst
+	for i = 0, system:GetLuaPbCount() - 1 do
+		bytes = system:GetLuaPb(i)
+		protobuf.register(bytes)
+	end
+end
+
+function NetManager:Update(fTime, fDTime)
+	--print("NetManager:Update")
+end
+
+function NetManager:LateUpdate(fTime, fDTime)
+	--print("NetManager:Update")
+end
+
+
+local stream = LusuoStream(1024)
+
+function NetManager:SendMessage(msg)
+
+	if msg == nil then
+		print("消息为空", msg)
+		return
+	end
+	stream:Reset()
+	msg:ToByte(stream)
+	-- 设置消息的最大长度,用于给C#发送时设置长度
+	stream.m_byteLen = msg.msgMaxLen
+	NetRunTime.Inst:SendMessage(stream)
+end
+
+function NetManager:OnRecv(id, contentLen, lusuoStream)
+	print("lua OnRecv id:", id)
+	msg = self.allMsg[id]
+	if msg == nil then
+		print("not register:", id)
+	end
+	msg:OnRecv(contentLen, lusuoStream)
+	msg:OnRecvLogic()
+end

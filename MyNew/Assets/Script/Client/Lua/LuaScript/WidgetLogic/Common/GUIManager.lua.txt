@@ -1,0 +1,66 @@
+﻿require("Widget")
+require("LoginModule")
+require("DialogModule")
+require("CreateRoleModule")
+require("LoadingModule")
+require("BagModule")
+
+
+require("LoginPanel")
+require("DialogPanel")
+require("CreateRolePanel")
+require("LoadingPanel")
+require("BagPanel")
+
+local Unity = CS.UnityEngine
+local UI = CS.UnityEngine.UI
+local GameObject = CS.UnityEngine.GameObject
+local Roma = CS.Roma
+
+GUIManager = {
+    panelRoot,
+	allWidget={},
+	test = 1  --开始修改find ui_main
+}
+
+GUIManager.Inst = nil
+
+function GUIManager:new ()
+	local obj = {}
+    setmetatable(obj, self)
+	self.__index = self
+    return obj
+end
+
+
+
+function GUIManager:Init()
+    -- 全局通用
+    self.panelRoot =  GameObject.Find("panel_root")
+
+	self.allWidget["panel_login"] = LoginModule:new(LoginPanel:new())
+    self.allWidget["panel_dialog"] = DialogModule:new(DialogPanel:new())
+    self.allWidget["panel_bag"] = BagModule:new(BagPanel:new())
+    self.allWidget["panel_create_role"] = CreateRoleModule:new(CreateRolePanel:new())
+    self.allWidget["panel_loading"] = LoadingModule:new(LoadingPanel:new())
+
+
+    for k,v in pairs(self.allWidget) do
+		v:SetRootName(k)
+    end
+	print("GUIManager:init...............................................")
+    self.allWidget["panel_login"]:SetVisible(true)
+	
+end
+
+function GUIManager:Update(fTime, fDTime)
+    for k,v in pairs(self.allWidget) do
+		v:Update(fTime, fDTime)
+    end
+end
+
+function GUIManager:LateUpdate(fTime, fDTime)
+	--print("GUIManager:Update")
+end
+
+--return GUIManager

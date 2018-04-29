@@ -1,0 +1,21 @@
+﻿require("UIBase")
+
+
+
+CreateRolePanel = {
+    m_name,
+    m_btnOk,
+}
+
+setmetatable(CreateRolePanel, UIBase)
+function CreateRolePanel:new()
+	local obj = UIBase:new()
+	setmetatable(obj, self)
+	self.__index = self
+	return obj
+end
+
+function CreateRolePanel:Init()
+    self.m_name = self.m_root:FindChild ("panel/name"):GetComponent("InputField")
+    self.m_btnOk = self.m_root:FindChild ("panel/btn_ok").gameObject
+end

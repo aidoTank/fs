@@ -1,0 +1,46 @@
+﻿local Unity = CS.UnityEngine
+local UI = CS.UnityEngine.UI
+local GameObject = CS.UnityEngine.GameObject
+local Roma = CS.Roma
+
+require("CSharpCallLua")
+require("GUIManager")
+require("CsvManager")
+require("NetManager")
+
+mgrList = {}
+function Init()
+	print("Lua..Init")
+	
+	GUIManager.Inst = GUIManager:new()
+	CsvManager.Inst = CsvManager:new()
+	NetManager.Inst = NetManager:new()
+
+	table.insert(mgrList,GUIManager.Inst)
+	table.insert(mgrList,CsvManager.Inst)
+	table.insert(mgrList,NetManager.Inst)
+
+	for k,v in ipairs(mgrList) do
+		v:Init()
+	end
+end
+
+function Update(fTime, fDTime)
+	for k, v in ipairs(mgrList) do
+		if v.Update ~= nil then   	-- 防止当前类型无心跳方法
+			v:Update(fTime, fDTime)
+		end
+	end
+end
+
+function LateUpdate(fTime, fDTime)
+	for k, v in ipairs(mgrList) do
+		if v.LateUpdate ~= nil then   	-- 防止当前类型无心跳方法
+			v:LateUpdate(fTime, fDTime)
+		end
+	end
+end
+
+function Destroy()
+	--print("Lua..Destroy")
+end

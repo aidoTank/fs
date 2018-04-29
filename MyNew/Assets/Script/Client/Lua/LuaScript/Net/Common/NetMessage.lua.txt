@@ -1,0 +1,51 @@
+﻿
+local protobuf = require "protobuf"
+
+local Roma = CS.Roma
+local StringHelper = Roma.StringHelper
+
+NetMessage = {
+    id,
+    eno = 0,
+
+    msgMaxLen = 0,
+
+    structBytes,
+}
+
+function NetMessage:new (id)
+	local obj = {} 
+	setmetatable(obj, self) 
+    self.__index = self
+    obj.id = id
+    return obj              
+end
+
+--将结构体转成二进制
+function NetMessage:SetByte(pbName, pbData, lusuoStream)
+    lusuoStream:WriteInt(0)           --预留总字节数
+    lusuoStream:WriteUShort(self.id)  
+    lusuoStream:WriteInt(self.eno)
+    --通过pb将table转成二进制
+    local bytes = protobuf.encode(pbName, pbData)
+    lusuoStream:Write(bytes)         --写具体结构
+    lusuoStream:Seek(0)
+    local contentLen = StringHelper.s_ShortSize + StringHelper.s_IntSize + #bytes
+    lusuoStream:WriteInt(contentLen)
+    self.msgMaxLen = StringHelper.s_IntSize + contentLen -- 长度字节数 + 内容字节数
+end
+
+--接受
+function NetMessage:OnRecv(contentLen, lusuoStream)
+    self.eno = lusuoStream:ReadInt()
+    -- 创建bytes，从流中读取bytes
+    dataLen = contentLen - StringHelper.s_ShortSize - StringHelper.s_IntSize  -- -id -eno
+    self.structBytes = Roma.LusuoStream.NewByte(dataLen)
+    -- 当lua调用C#的方法中含有ref时，作为第二个参数返回即可获取值
+    pos, self.structBytes = lusuoStream:Read(self.structBytes)
+end
+
+--将二进制转成结构体
+function NetMessage:GetData(pbName, bytes)
+    return protobuf.decode(pbName, bytes)
+end

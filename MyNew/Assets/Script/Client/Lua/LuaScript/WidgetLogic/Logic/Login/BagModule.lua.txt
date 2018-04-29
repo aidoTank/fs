@@ -1,0 +1,65 @@
+﻿require("Widget")
+
+local Roma = CS.Roma
+local UIEventListener = Roma.UIEventListener
+
+local this
+BagModule = {}
+setmetatable (BagModule, Widget)
+function BagModule:new(UIClass)
+	local obj = Widget:new(UIClass)
+	setmetatable(obj, self)
+    self.__index = self
+    return obj
+end
+
+function BagModule:Init ()
+    this = self
+    print ("BagModule....Init......")
+
+    
+    local lis = UIEventListener.Get (self.m_ui.m_btnClose)
+    lis.onClick = self.OnClickBtn
+end
+
+function BagModule:InitData()
+    print ("BagModule.  InitData..............")
+    self:UpdateBag()
+end
+
+BagModule.OnClickBtn = function(go)
+    if go == this.m_ui.m_btnClose then
+		this:SetVisible(false)
+    end
+end
+
+local listBag = {
+11001,
+11002,
+11003,
+11004,
+11001,
+11002,
+11003,
+11004,
+11001,
+11002,
+
+}
+
+function BagModule:UpdateBag()
+    self.m_ui.m_listBag:Init(#listBag, function(item, index)
+        local img = item:FindChild("icon"):GetComponent("RawImage")
+        local icon = listBag[index + 1]
+        SetIcon(icon, img)
+    end);  
+end
+
+function SetIcon(resId, image)
+	Roma.ResourceFactory.Inst:LoadResource(resId, function(res)
+        image.texture = res:GetTexture()
+    end)
+end
+
+
+

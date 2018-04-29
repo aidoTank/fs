@@ -1,0 +1,102 @@
+﻿local Unity = CS.UnityEngine
+local UI = CS.UnityEngine.UI
+local Vector3 = CS.UnityEngine.Vector3
+local Vector2 = CS.UnityEngine.Vector2
+local GameObject = CS.UnityEngine.GameObject
+local Roma = CS.Roma
+local Canvas = CS.UnityEngine.Canvas
+local GraphicRaycaster = CS.UnityEngine.UI.GraphicRaycaster
+
+
+--t = {}
+--function t:func(x, y)
+--    self.x = x
+--    self.y = y
+--end
+--t:func(1, 1)
+--print("====================",t.x) -- 1
+
+UIBase = {
+	m_root, 			 --UI对象
+	m_panel,
+	
+	m_canvas,
+	m_gr,
+	m_rect,
+
+	m_btnClose,
+}
+
+function UIBase:new ()
+	local obj = {}          --构造时对象时，可以把属性存子表obj上
+	setmetatable(obj, self) --设置这个类本身作为子表的元表
+    self.__index = self     --定义_index参数后，可以动态增加类的参数，方法等
+    return obj              --返回子表obj，就new了一个新的table
+end
+
+function UIBase:BaseInit(rootObj)
+	self.m_root = rootObj.transform
+	self.m_panel = self.m_root:FindChild("panel").gameObject
+	self.m_panel:SetActive(true)
+
+	self.m_canvas = self.m_panel:AddComponent(typeof(Canvas))
+	self.m_gr = self.m_panel:AddComponent(typeof(GraphicRaycaster))
+	self.m_rect = self.m_panel:GetComponent("RectTransform")
+
+	local btnCloseTrans = self.m_root:FindChild("panel/btn_close");
+	if btnCloseTrans ~= nil then
+		self.m_btnClose = btnCloseTrans.gameObject
+	end
+
+	self:SetOrder(100)
+end
+
+function UIBase:OpenPanel(open)
+
+	if self.m_panel == nil then
+		return
+	end
+
+	if open then
+		self:SetActive(true)
+	else
+		self:SetActive(false)
+	end
+
+end
+
+
+function UIBase:SetActive(open)
+	if self.m_canvas.enabled and open then
+		return
+	end
+	if not self.m_canvas.enabled and not open then
+		return
+	end
+	
+	self.m_canvas.enabled = open
+	self.m_gr.enabled = open
+	
+	if open then
+		self.m_rect.anchoredPosition3D = Vector3.zero
+		self.m_rect.sizeDelta = Vector2.zero
+	else 
+		self.m_rect.anchoredPosition3D = Vector3.up * 1000
+		self.m_rect.sizeDelta = Vector2.zero
+	end
+end
+
+function UIBase:IsShow()
+	if self.m_panel == nil then
+		return false
+	end
+	return self.m_canvas.enabled
+end
+
+function UIBase:SetOrder(order)
+	if self.m_canvas.overrideSorting == false then
+		self.m_canvas.overrideSorting = true;
+	end
+	self.m_canvas.sortingOrder = order;
+end
+

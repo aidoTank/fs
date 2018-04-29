@@ -1,0 +1,39 @@
+﻿require("Widget")
+
+local Roma = CS.Roma
+local UIEventListener = Roma.UIEventListener
+local UIButton = Roma.UIButton
+local UIItem = Roma.UIItem
+local LogicSystem = Roma.LogicSystem
+
+local this
+LoadingModule = {
+
+}
+
+setmetatable (LoadingModule, Widget)
+function LoadingModule:new(UIClass)
+	local obj = Widget:new(UIClass)
+	setmetatable(obj, self)
+    self.__index = self
+    return obj
+end
+
+function LoadingModule:Init ()
+    this = self
+end
+
+function LoadingModule:InitData()
+
+end
+
+function LoadingModule:Update(fTime, fDTime)
+    if self:IsShow() then
+        --print("========================",fTime)
+        mapProcess = LogicSystem.Inst:GetMapLoadProcess()
+        pctInfo = mapProcess.strCurInfo ,":", (mapProcess.fPercent * 100) , "%"
+
+        self.m_ui:SetPct(pctInfo, mapProcess.fPercent)
+    end
+end
+

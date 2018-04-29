@@ -1,0 +1,34 @@
+﻿require("NetMessage")
+
+MsgCreateRole = {
+    createData = {}
+}
+
+setmetatable (MsgCreateRole, NetMessage)
+function MsgLogin:new(id)
+	local obj = NetMessage:new(id)
+	setmetatable(obj, self)
+	self.__index = self
+	return obj
+end
+
+function MsgCreateRole:ToByte(lusuoStream)
+    self:SetByte("CG_CreateRole", self.createData, lusuoStream)
+    return lusuoStream
+end
+
+
+function MsgCreateRole:OnRecvLogic()
+
+	if self.eno == 0 then  --创建成功
+		print("create succ")
+		data = self:GetData("GC_PlayerPublicData", self.structBytes)
+		print("data.userName=", data.userName)
+		print("data.name=", data.name)
+		print("data.occ=", data.occ)
+		print("data.mapId=", data.mapId)
+		print("data.dir=", data.dir)
+	elseif self.eno == -1 then --失败
+
+	end
+end

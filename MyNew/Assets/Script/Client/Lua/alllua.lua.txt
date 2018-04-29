@@ -1,0 +1,77 @@
+﻿xlua.private_accessible(CS.Roma.LoginModule)
+xlua.private_accessible(CS.Roma.MainComModule)
+
+-- 1.test logic class by LoginModule
+xlua.hotfix(CS.Roma.LoginModule,{
+		
+		['.ctor'] = function(csobj)
+            print('............................................', csobj)
+            return {}
+		end;
+		
+	--	ReadTempInfo = function(self)
+	--		self.m_connMaxTime = 22222222222222222222
+	--		print('2222222222222222ReadTempInfo:', self.m_connMaxTime)
+	--	end
+})
+
+local U = CS.UnityEngine;
+local R = CS.Roma;
+local N = CS.star_def;
+
+xlua.hotfix(CS.Roma.MainComModule,{
+		['.ctor'] = function(csobj)
+            print('............................................', csobj)
+            return {}
+		end;
+
+		OnClickBtn = function(self, go)
+		
+			local comDialog = R.LayoutMgr.Inst:GetLogicModule(R.LayoutName.S_ComDialog)
+			comDialog.OpenEnd = function()
+				comDialog:Open(false, '111', '22222', '33333333333?', OnAndroidBack, null)
+			end
+			comDialog:SetVisible(true)
+
+		end
+})
+
+
+local U = CS.UnityEngine;
+local R = CS.Roma;
+local N = CS.star_def;
+
+-- 2.test static class by ckeymgr
+xlua.hotfix(CS.Roma.CKeyMgr,{
+    Update = function(fTime, fdTime)
+	
+		if U.Input.GetKeyDown(U.KeyCode.Return) then
+			local comDialog = R.LayoutMgr.Inst:GetLogicModule(R.LayoutName.S_ComDialog)
+			comDialog.OpenEnd = function()
+				comDialog:Open(false, '111', '22222', '33333333333?', OnAndroidBack, null)
+			end
+			comDialog:SetVisible(true)
+		end
+		
+		if U.Input.GetKeyDown(U.KeyCode.Return) then
+			local master = R.CPlayerMgr:GetMaster()
+			local startPos = master:GetPos()
+			local backDir = U.Quaternion.Euler(master:GetDirection()) * U.Vector3.forward
+			local endPos = startPos + backDir.normalized * 8
+			endPos = U.Vector3(endPos.x, R.SceneManager.Inst:GetTerrainHeight(endPos.x, endPos.z), endPos.z)
+           
+			master.m_jumpStateParam.m_jumpEndPos = endPos
+			master.m_jumpStateParam.m_jumpSpeed = 40;
+			master.m_jumpStateParam.m_jumpEnd = function(cc)
+				master:PushCommand(R.StateID.IdleState)
+				print("end")
+			end
+			master:PushCommand(R.StateID.BtJumpState)
+            
+			-- new class
+			local msg = N.CSMsgC()
+			msg.dwTime = 11111;
+			print("msg.time=",msg.dwTime)
+		end
+	end;
+})

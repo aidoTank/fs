@@ -1,0 +1,117 @@
+﻿require("UIBase")
+
+local Unity = CS.UnityEngine
+local UI = CS.UnityEngine.UI
+local Vector3 = CS.UnityEngine.Vector3
+local Vector2 = CS.UnityEngine.Vector2
+local GameObject = CS.UnityEngine.GameObject
+local Roma = CS.Roma
+
+Widget = {
+	m_strRootName = "",  	--UI节点名
+	m_rootObj, 				--UI对象
+	m_bLoaded = false,  	--是否加载完成，防止重复加载
+	m_bLoading = false, 	--是否在加载中
+	m_ui,
+	
+	m_openEnd,
+}
+
+function Widget:new (UIClass)
+	local obj = {}
+	setmetatable(obj, self)
+	self.__index = self
+
+	obj.m_ui = UIClass
+	return obj
+end
+
+--等于Widget.SetRootName = function(self, rootName)
+function Widget:SetRootName(rootName)
+	self.m_strRootName = rootName
+
+
+end
+
+function Widget:SetVisible(bShow)
+	if bShow then
+		if not self.m_bLoading then
+			self.m_bLoading = true
+			self:OnLoadPrefab()
+			return
+		end
+		if not self.m_bLoaded then  -- 防止重复下载
+			return
+		end
+	end
+
+	if self.m_ui == nil then
+		return
+	end
+
+	self.m_ui:OpenPanel(bShow)
+	if bShow then
+		self:BaseInitData()
+		self:InitData()
+	else
+		self:UnInitData()
+	end
+end
+
+function Widget:BaseInitData()
+	if self.m_openEnd ~= nil then
+		self.m_openEnd()
+	end
+end
+
+function Widget:InitData()
+end
+
+function Widget:UnInitData()
+end
+
+function Widget:IsShow()
+	if self.m_ui ~= nil then
+		return self.m_ui:IsShow()
+	end
+	return false
+end
+
+function Widget:OnLoadPrefab()
+	local tempObj = GameObject.Find(self.m_strRootName)
+	if tempObj == nil then
+		Roma.ResourceFactory.Inst:LoadResource(self.m_strRootName, function(res)
+			self.m_rootObj = res:InstantiateGameObject()
+			self.m_rootObj.name = self.m_strRootName
+			--print("................"..type(Roma.LusuoLayer.eEL_Water))
+			--self.m_rootObj.layer = 0
+			local rect = self.m_rootObj:GetComponent("RectTransform")
+			rect:SetParent(GUIManager.Inst.panelRoot.transform)
+			rect.anchorMin = Vector2.zero
+			rect.anchorMax = Vector2.one
+			rect.pivot = Vector2.zero
+			rect.anchoredPosition = Vector2.zero
+			rect.sizeDelta = Vector2.zero
+			rect.localScale = Vector3.one
+			
+			self.m_bLoaded = true
+			--print("prefab................",self.m_rootObj)
+
+			--初始化基类界面组件
+			self.m_ui:BaseInit(self.m_rootObj)
+			--初始化界面组件，查找各自组件等
+			self.m_ui:Init()
+
+			--初始化逻辑模块,注册各自事件等
+			self:Init()
+			--加打开界面
+			self:SetVisible(true)
+			
+		end)
+	end
+end
+
+-- 如果子类有心跳，会执行子类的
+function Widget:Update(fTime, fDTime)
+	--print("GUIManager:Update")
+end

@@ -1,0 +1,31 @@
+local Roma = CS.Roma
+
+ItemCsv = {
+    id,
+    m_dicItemData = {}
+}
+
+function ItemCsv:new (id)
+	local obj = {}         
+	setmetatable(obj, self) 
+    self.__index = self  
+
+    obj.id = id
+    return obj              
+end
+
+
+function ItemCsv:Init()
+	local csvData = Roma.CsvManager.Inst:GetOrCreateGetCsv(self.id).m_csv
+    for i = 0, csvData:GetRows() - 1 do
+        data = {}
+        data.id = csvData:GetIntData(i, 0)
+        data.name = csvData:GetData(i, 1)
+        data.icon = csvData:GetIntData(i, 2)
+        self.m_dicItemData[data.id] = data
+    end
+end
+
+function ItemCsv:GetItem(id)
+    return self.m_dicItemData[id]
+end

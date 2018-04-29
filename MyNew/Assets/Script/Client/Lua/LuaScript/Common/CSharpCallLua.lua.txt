@@ -1,0 +1,11 @@
+﻿-- 统一管理C#调用lua的接口
+
+function NetManager_OnRecv(id, contentLen, lusuoStream)
+	NetManager.Inst:OnRecv(id, contentLen, lusuoStream)
+end
+
+function OpenLoading(bShow)
+	loading = GUIManager.Inst.allWidget["panel_loading"]
+	loading:SetVisible (bShow)
+end
+
