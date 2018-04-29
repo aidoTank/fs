@@ -111,5 +111,5 @@ public class CsvManager : Singleton
     private Dictionary<int, string> m_mapCSVType2String = new Dictionary<int, string>();
     private Dictionary<string, int> m_mapCSVString2Type = new Dictionary<string, int>();
     public delegate CsvExWrapper CreateCSV();
-    public new static CsvManager Inst = null;
+    public static CsvManager Inst = null;
 }
