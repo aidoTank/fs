@@ -1,0 +1,5 @@
+id,名字,图标,模型资源id
+Id,Name,icon,ModelResId
+int,string,int,int
+1,名字1,2222,30001
+2,名字2,444444,30001
