@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: ad39e11cf7a1401468e51179074d9795
+timeCreated: 1460459000
+licenseType: Pro
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: shader/role/illumin-diffuse_shadow_role
+  assetBundleVariant: 

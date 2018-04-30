@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: a3640fa59c0f347438ebb57b315f7b91
+timeCreated: 1508902689
+licenseType: Pro
+ShaderImporter:
+  defaultTextures:
+  - _MainTex: {fileID: 2800000, guid: 5889da698b338a34f86dc3cfe23108b3, type: 3}
+  - _node_363: {fileID: 2800000, guid: 9b9a29ca746411146b01d3ed47c19128, type: 3}
+  userData: 
+  assetBundleName: shader/ms/fs_js_lg
+  assetBundleVariant: 
