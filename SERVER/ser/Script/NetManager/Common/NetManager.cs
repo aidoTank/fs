@@ -11,7 +11,6 @@ public enum eNetMessageID
     MsgMapLoad = 3,
     MsgMapCreatureEnter = 4,
     MsgMapCreatureLeave = 5,
-    MsgMapCreatureMove = 6,
 
     MsgUseSkill = 10,
 }
@@ -30,7 +29,6 @@ public class NetManager  : Singleton
 
         RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);
         RegNetMessage(eNetMessageID.MsgMapCreatureLeave, MsgMapCreatureLeave.CreateMessage);
-        RegNetMessage(eNetMessageID.MsgMapCreatureMove, MsgMapCreatureMove.CreateMessage);
 
         RegNetMessage(eNetMessageID.MsgUseSkill, MsgUseSkill.CreateMessage);
     }

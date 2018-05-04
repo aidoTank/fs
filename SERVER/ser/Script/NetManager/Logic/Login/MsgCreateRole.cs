@@ -37,7 +37,7 @@ public class MsgCreateRole : NetMessage
             playerData = MsgLogin.CreatePlayer(ref conn, createRole.userName, ref playerTable);
             Console.WriteLine("创建角色成功，返回角色信息");
             // 进入默认场景
-            Map map = MapManager.Inst.GetMap(playerData.mapId);
+            Lobby map = LobbyManager.Inst.GetMap(playerData.mapId);
             map.AddPlayer(conn.player);
         }
         else

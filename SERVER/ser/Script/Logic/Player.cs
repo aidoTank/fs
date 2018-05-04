@@ -62,9 +62,9 @@ public class Player
     {
         //事件处理，稍后实现
         //ServNet.instance.handlePlayerEvent.OnLogout(this);
-        Map map = MapManager.Inst.GetMap(publicData.mapId);
+        Lobby map = LobbyManager.Inst.GetMap(publicData.mapId);
         if(map != null)
-            map.RemovePlayer(id);
+            map.RemovePlayer(this);
         Console.WriteLine("有玩家下线："+ id);
         if (!DBPlayer.Inst.SavePlayer(this))
             return false;

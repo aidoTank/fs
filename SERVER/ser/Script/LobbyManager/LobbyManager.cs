@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class Map
+public class Lobby
 {
     public int id;
     private MapData mapData;
     private Dictionary<long, Player> dicPlayer = new Dictionary<long, Player>();
 
 
-    public Map(int id, MapData data)
+    public Lobby(int id, MapData data)
     {
         this.id = id;
         mapData = data;
@@ -71,9 +71,9 @@ public class Map
 
 }
 
-public class MapManager : Singleton
+public class LobbyManager : Singleton
 {
-    public MapManager() 
+    public LobbyManager() 
         : base(true)
     {
     }
@@ -83,18 +83,16 @@ public class MapManager : Singleton
         MapCsv mapCsv = CsvManager.Inst.GetCsv<MapCsv>(eCSV.eMap);
         //MapData data = mapCsv.m_mapDataDic[3];
 
-        foreach(KeyValuePair<int, MapData> item in mapCsv.m_mapDataDic)
-        {
-            Map map = new Map(item.Value.id, item.Value);
-            dicMap[item.Value.id] = map;
-        }
-        Console.WriteLine("地图初始化完毕，数量："+ mapCsv.m_mapDataDic.Count);
+        Lobby map = new Lobby(3, null);
+        dicLobby[1] = map;
+
+        Console.WriteLine("大厅初始化完毕");
     }
 
-    public Map GetMap(int id)
+    public Lobby GetMap(int id)
     {
-        Map map = null;
-        if (dicMap.TryGetValue(id, out map))
+        Lobby map = null;
+        if (dicLobby.TryGetValue(id, out map))
         {
             return map;
         }
@@ -103,7 +101,7 @@ public class MapManager : Singleton
 
     public override void Update(long time)
     {
-        foreach (KeyValuePair<int, Map> item in dicMap)
+        foreach (KeyValuePair<int, Lobby> item in dicLobby)
         {
             item.Value.Update(time, 0);
         }
@@ -114,7 +112,7 @@ public class MapManager : Singleton
        
     }
 
-    public static MapManager Inst;
-    private Dictionary<int, Map> dicMap = new Dictionary<int, Map>();
+    public static LobbyManager Inst;
+    private Dictionary<int, Lobby> dicLobby = new Dictionary<int, Lobby>();
 }
 

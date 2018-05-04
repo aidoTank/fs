@@ -27,7 +27,7 @@ using UnityEngine;
             if (eno == 0)
             {
                 CG_UseSkill userSkill = GetData<CG_UseSkill>(structBytes);
-                Map map = MapManager.Inst.GetMap(conn.player.publicData.mapId);
+                Lobby map = LobbyManager.Inst.GetMap(conn.player.publicData.mapId);
 
                 this.useSkill.attackUid = userSkill.attackUid;
                 this.useSkill.skillId = userSkill.skillId;

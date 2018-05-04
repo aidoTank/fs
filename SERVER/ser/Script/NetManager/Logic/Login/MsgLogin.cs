@@ -54,7 +54,7 @@ public class MsgLogin : NetMessage
             playerData = CreatePlayer(ref conn, userName, ref player);
             conn.Send(this);
 
-            Map map = MapManager.Inst.GetMap(player.MapId);
+            Lobby map = LobbyManager.Inst.GetMap(player.MapId);
             map.AddPlayer(conn.player);
         }
     }

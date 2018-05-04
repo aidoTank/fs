@@ -37,3 +37,8 @@ D:\Unity5\fsp\SERVER\ser\bin\Debug\UnityEngine.xml
 D:\Unity5\fsp\SERVER\ser\obj\Debug\ser.csprojResolveAssemblyReference.cache
 D:\Unity5\fsp\SERVER\ser\obj\Debug\ser.exe
 D:\Unity5\fsp\SERVER\ser\obj\Debug\ser.pdb
+D:\Unity5\fs\trunk\SERVER\ser\obj\Debug\ser.exe
+D:\Unity5\fs\trunk\SERVER\ser\obj\Debug\ser.pdb
+D:\Unity5\fs\trunk\SERVER\ser\bin\Debug\ser.exe.config
+D:\Unity5\fs\trunk\SERVER\ser\bin\Debug\ser.exe
+D:\Unity5\fs\trunk\SERVER\ser\bin\Debug\ser.pdb
