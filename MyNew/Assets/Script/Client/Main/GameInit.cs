@@ -19,8 +19,8 @@ namespace Roma
             LogicSystem.Inst = new LogicSystem();
             LogicSystem.Inst.InitModule();
 
-            //InitBaseConfig();
-            OnCheckFirst();
+            InitBaseConfig();
+            //OnCheckFirst();
         }
 
         public void InitBaseConfig()
