@@ -8,75 +8,34 @@ public class Map
     private Dictionary<long, Player> dicPlayer = new Dictionary<long, Player>();
 
 
-    private AOIScene aoiScene;
     public Map(int id, MapData data)
     {
         this.id = id;
         mapData = data;
-
-        aoiScene = new AOIScene();
     }
 
     public void AddPlayer(Player player)
     {
         if (dicPlayer.ContainsKey(player.id))
             return;
-        // 先将其他玩家同步给这个人
-        //foreach (KeyValuePair<long, Player> item in dicPlayer)
-        //{
-        //    //Console.WriteLine("map:发送原有场景人物，地图：" + id + " 玩家：" + item.Value.publicData.name);
-        //    MsgMapCreatureEnter otherEnter = (MsgMapCreatureEnter)NetManager.Inst.GetMessage(eNetMessageID.MsgMapCreatureEnter);
-        //    otherEnter.playerData = item.Value.publicData;
-        //    player.conn.Send(otherEnter);
-        //}
         dicPlayer[player.id] = player;
-        aoiScene.Add(player.aoiNode, player.publicData.x, player.publicData.y);
 
-        // 新增这个玩家，同步给其他人
-        //MsgMapCreatureEnter enter = (MsgMapCreatureEnter)NetManager.Inst.GetMessage(eNetMessageID.MsgMapCreatureEnter);
-        //enter.playerData = player.publicData;
-        //BroadcastByPlayer(player.id, enter);
+        Console.WriteLine(player.publicData.name + " 加入" + " 当前房间人数" + dicPlayer.Count);
     }
 
-    public void RemovePlayer(long playerUid)
+    public void RemovePlayer(Player player)
     {
-        if (!dicPlayer.ContainsKey(playerUid))
+        if (!dicPlayer.ContainsKey(player.id))
             return;
+        dicPlayer.Remove(player.id);
 
-        Player player = dicPlayer[playerUid];
-
-        aoiScene.Leave(player.aoiNode);
-
-        dicPlayer.Remove(playerUid);
-
-        // 通知其他人这个玩家下线
-        //MsgMapCreatureLeave enter = (MsgMapCreatureLeave)NetManager.Inst.GetMessage(eNetMessageID.MsgMapCreatureLeave);
-        //enter.uid = playerUid;
-        //Broadcast(enter);
+        Console.WriteLine(player.publicData.name + " 离开" + " 当前房间人数" + dicPlayer.Count);
     }
 
     public void UpdateMove(long uid, GC_MapCreatureMove moveInfo)
     {
-        Player player;
-        if (dicPlayer.TryGetValue(uid,out player))
-        {
-            player.publicData.x = moveInfo.x;
-            player.publicData.y = moveInfo.y;
-            player.publicData.dir = moveInfo.dir;
-        }
 
-        // 同步给其他人
-        //MsgMapCreatureMove enter = (MsgMapCreatureMove)NetManager.Inst.GetMessage(eNetMessageID.MsgMapCreatureMove);
-        //enter.moveInfo = moveInfo;
-        //BroadcastByPlayer(uid, enter);
-        aoiScene.Move(player.aoiNode, moveInfo.x, moveInfo.y);
     }
-
-
-    //public void UpdateState(long uid, )
-    //{
-
-    //}
 
 
     public void Update(float time, float fTime)
@@ -96,13 +55,7 @@ public class Map
 
         Player player = dicPlayer[uid];
         player.Send(msg);
-        List<AOINode> list = aoiScene.GetList(player.aoiNode);
-        foreach (AOINode item in list)
-        {
-            Player p = item.obj as Player;
-            if(p != null)
-                p.Send(msg);
-        }
+
     }
 
     /// <summary>

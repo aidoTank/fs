@@ -9,9 +9,8 @@ public class Player
 {
     public long id;
     public Conn conn;
-    public AOINode aoiNode;
-    public Roma.GC_PlayerPublicData publicData;
-    public TablePlayer data;
+    public Roma.GC_PlayerPublicData publicData;   // 玩家公共数据，消息结构体
+    public TablePlayer data;                      // 玩家数据库数据
     public PlayerTempData tempData;
 
     //构造函数，给id和conn赋值
@@ -20,7 +19,6 @@ public class Player
         this.id = id;
         this.conn = conn;
         tempData = new PlayerTempData();
-        aoiNode = new AOINode(this);
     }
 
     /// <summary>

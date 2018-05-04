@@ -22,8 +22,9 @@ public class GameMain
         DBManager.Inst = new DBManager();
         SingletonManager.Inst.AddSingleton(SingleName.m_dbMgr, DBManager.Inst);
 
-        MapManager.Inst = new MapManager();
-        SingletonManager.Inst.AddSingleton(SingleName.m_mapMgr, MapManager.Inst);
+        // 帧同步，地图管理器变成大厅管理器
+        //MapManager.Inst = new MapManager();
+        //SingletonManager.Inst.AddSingleton(SingleName.m_mapMgr, MapManager.Inst);
     }
 
     public void Init()
@@ -56,7 +57,7 @@ public class GameMain
         SingletonManager.Inst.RemoveSingleton(SingleName.m_dbMgr);
         DBManager.Inst = null;
 
-        SingletonManager.Inst.RemoveSingleton(SingleName.m_mapMgr);
-        MapManager.Inst = null;
+        //SingletonManager.Inst.RemoveSingleton(SingleName.m_mapMgr);
+        //MapManager.Inst = null;
     }
 }

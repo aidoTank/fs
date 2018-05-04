@@ -21,9 +21,16 @@ public class CsvManager : Singleton
         {
             CsvExWrapper csv = GetOrCreateGetCsv(item.Key);
             string name = GetName(item.Key);
-            csv.Load("D:/Server/C#_Server/sev_c#/CLIENT_DEV/Assets/Config/"+ name, Encoding.Default);
+            bool bSucc = csv.Load("D:/Server/C#_Server/sev_c#/CLIENT_DEV/Assets/Config/"+ name, Encoding.Default);
+            if(!bSucc)
+            {
+                Console.WriteLine("CSV初始化失败");
+            }
+            else
+            {
+                Console.WriteLine("CSV初始化成功");
+            }
         }
-        Console.WriteLine("CSV初始化成功");
     }
 
 

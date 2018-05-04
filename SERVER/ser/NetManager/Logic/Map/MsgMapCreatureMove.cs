@@ -26,9 +26,9 @@ public class MsgMapCreatureMove : NetMessage
     {
         if (eno == 0)
         {
-            GC_MapCreatureMove moveInfo = GetData<GC_MapCreatureMove>(structBytes);
-            Map map = MapManager.Inst.GetMap(conn.player.publicData.mapId);
-            map.UpdateMove(conn.player.id, moveInfo);
+            //GC_MapCreatureMove moveInfo = GetData<GC_MapCreatureMove>(structBytes);
+            //Map map = MapManager.Inst.GetMap(conn.player.publicData.mapId);
+            //map.UpdateMove(conn.player.id, moveInfo);
         }
     }
 
