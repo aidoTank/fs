@@ -81,12 +81,12 @@ public class NetRunTime : Singleton
             if (conn == null) continue;
             if (!conn.isUse) continue;
 
-            if (conn.lastTickTime < timeNow - heartBeatTime)
-            {
-                Console.WriteLine("[心跳引起断开连接]" + conn.GetAdress());
-                lock (conn)
-                    conn.Close();
-            }
+            //if (conn.lastTickTime < timeNow - heartBeatTime)
+            //{
+            //    Console.WriteLine("[心跳引起断开连接]" + conn.GetAdress());
+            //    lock (conn)
+            //        conn.Close();
+            //}
         }
     }
 

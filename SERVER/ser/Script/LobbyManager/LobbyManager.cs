@@ -20,7 +20,7 @@ public class Lobby
             return;
         dicPlayer[player.id] = player;
 
-        Console.WriteLine(player.publicData.name + " 加入" + " 当前房间人数" + dicPlayer.Count);
+        Console.WriteLine(player.publicData.name + " 加入" + " 当前大厅人数" + dicPlayer.Count);
     }
 
     public void RemovePlayer(Player player)
@@ -29,7 +29,7 @@ public class Lobby
             return;
         dicPlayer.Remove(player.id);
 
-        Console.WriteLine(player.publicData.name + " 离开" + " 当前房间人数" + dicPlayer.Count);
+        Console.WriteLine(player.publicData.name + " 离开" + " 当前大厅人数" + dicPlayer.Count);
     }
 
     public void UpdateMove(long uid, GC_MapCreatureMove moveInfo)
@@ -84,7 +84,7 @@ public class LobbyManager : Singleton
         //MapData data = mapCsv.m_mapDataDic[3];
 
         Lobby map = new Lobby(3, null);
-        dicLobby[1] = map;
+        dicLobby[3] = map;
 
         Console.WriteLine("大厅初始化完毕");
     }

@@ -57,6 +57,7 @@
     <Compile Include="Script\NetManager\Logic\Login\MsgHeartBeat.cs" />
     <Compile Include="Script\NetManager\Logic\Lobby\MsgMapCreatureEnter.cs" />
     <Compile Include="Script\NetManager\Logic\Lobby\MsgMapCreatureLeave.cs" />
+    <Compile Include="Script\NetManager\Logic\Login\MsgExit.cs" />
     <Compile Include="Script\NetManager\Logic\Skill\MsgUseSkill.cs" />
     <Compile Include="Script\NetManager\Struct\MsgStructMap.cs" />
     <Compile Include="Script\NetManager\Struct\MsgStructCreateRole.cs" />

@@ -140,6 +140,7 @@ class DBPlayer
     {
         try
         {
+            player.data.MapId = player.publicData.mapId;
             player.data.X = player.publicData.x;
             player.data.Y = player.publicData.y;
             player.data.Dir = player.publicData.dir;

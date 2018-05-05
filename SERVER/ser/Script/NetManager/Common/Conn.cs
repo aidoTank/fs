@@ -64,6 +64,7 @@ public class Conn
         Console.WriteLine("【断开连接】"+GetAdress());
         socket.Shutdown(SocketShutdown.Both);
         socket.Close();
+        socket = null;
         isUse = false;
     }
 

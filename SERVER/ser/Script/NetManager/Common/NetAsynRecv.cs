@@ -96,6 +96,8 @@ public class NetAsynRecv
                 // 处理数据
                 ProcessData(conn);
                 // 继续接受，起点是缓冲区的当前位置，大小是缓冲区的剩余位置，用于分包时的接受
+                if (conn.socket == null)   // 该conn客户端断开连接时，不在继续接受
+                    return;
                 conn.socket.BeginReceive(conn.readBuff,
                     conn.buffCount, conn.BuffRemain(),
                     SocketFlags.None, ReceiveCb, conn);
@@ -145,7 +147,10 @@ public class NetAsynRecv
         int contentLen = stream.ReadInt();
         ushort msgId = stream.ReadUShort();
         NetMessage msg = NetManager.Inst.GetMessage(msgId);
-        Console.WriteLine("接受消息：" + (eNetMessageID)msgId);
+        if(msgId != (int)eNetMessageID.MsgHeartBeat)
+        {
+            Console.WriteLine("接受消息：" + (eNetMessageID)msgId);
+        }
         msg.OnRecv(ref conn, contentLen, ref stream);
         msg.OnRecv(ref conn);
 

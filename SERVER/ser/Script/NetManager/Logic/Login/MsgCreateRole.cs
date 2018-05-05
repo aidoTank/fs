@@ -24,8 +24,9 @@ public class MsgCreateRole : NetMessage
     public override void OnRecv(ref Conn conn)
     {
         CG_CreateRole createRole = GetData<CG_CreateRole>(structBytes);
-        Console.WriteLine("接受创建userName:" + createRole.userName);
+        Console.WriteLine("userName:" + createRole.userName);
         Console.WriteLine("接受创建name:" + createRole.name);
+        Console.WriteLine("接受创建occ:" + createRole.occ);
 
         TablePlayer playerTable = DBPlayer.Inst.CreatePlayer(createRole.userName, createRole.name, createRole.occ);
         playerTable.MapId = 3;
