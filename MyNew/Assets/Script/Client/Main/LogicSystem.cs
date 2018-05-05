@@ -130,7 +130,8 @@ namespace Roma
 
         private void QuitGame()
         {
-
+            MsgExit msg = (MsgExit)NetManager.Inst.GetMessage(eNetMessageID.MsgExit);
+            NetRunTime.Inst.SendMessage(msg);
         }
 
         public void UnInitModule()

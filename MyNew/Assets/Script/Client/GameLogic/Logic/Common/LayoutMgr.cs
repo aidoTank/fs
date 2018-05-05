@@ -10,9 +10,10 @@ namespace Roma
         eLM_None = 0,
 
         eLM_PanelLogin = 1,   // 登录
-        eLM_PanelLoading = 2,      // 加载
-        eLM_PanelCreate = 3,  //创建角色   之后选新手有个引导场景
-        eLM_PanelMain = 4, //主界面
+        eLM_PanelCreate = 2,  //创建角色   之后选新手有个引导场景
+        eLM_PanelMain = 3, //主界面
+
+        eLM_PanelLoading = 4,      // 加载
     }
 
     public class LayoutMgr : Singleton
@@ -25,7 +26,8 @@ namespace Roma
         private Dictionary<int, OnCreateMoudleDelegate> m_dicGameCreateMoudle = new Dictionary<int, OnCreateMoudleDelegate>()
         {
             {(int)LogicModuleIndex.eLM_PanelLogin, LoginModule.CreateLogicModule},
-            //{(int)LogicModuleIndex.eLM_PanelCreate, SelectModule.CreateLogicModule},
+            {(int)LogicModuleIndex.eLM_PanelCreate, CreateRoleModule.CreateLogicModule},
+            {(int)LogicModuleIndex.eLM_PanelMain, MainModule.CreateLogicModule},
         };
 
 

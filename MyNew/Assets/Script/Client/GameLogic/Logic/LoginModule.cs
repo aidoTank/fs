@@ -50,7 +50,8 @@ namespace Roma
         private void OnSendLoginMsg()
         {
             MsgLogin msgLogin = (MsgLogin)NetManager.Inst.GetMessage(eNetMessageID.MsgLogin);
-            msgLogin.login.name = GetUserName();
+            EGame.m_openid = GetUserName();
+            msgLogin.login.name = EGame.m_openid;
             msgLogin.login.passWord = GetPassWord();
             NetRunTime.Inst.SendMessage(msgLogin);
             Debug.Log("发送登陆");

@@ -26,9 +26,10 @@ namespace Roma
         {
             if (eno == 0)
             {
-                //CreateRoleModule cRole = LayoutMgr.Inst.GetLogicModule<CreateRoleModule>(LayoutName.S_CreateRole);
-                //cRole.SetVisible(false);
-                Debug.Log("创建角色成功，直接进入游戏");
+                CreateRoleModule cRole = (CreateRoleModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelCreate);
+                cRole.SetVisible(false);
+
+                Debug.Log("创建角色成功，直接进入大厅");
                 GC_PlayerPublicData data = GetData<GC_PlayerPublicData>(structBytes);
                 Debug.Log(data.name);
                 Debug.Log(data.occ);
@@ -36,7 +37,9 @@ namespace Roma
                 Debug.Log(data.y);
                 Debug.Log(data.dir);
 
-                MsgLogin.InitMaster(data);
+       
+
+                MsgLogin.EnterMainUI(data);
             }
             else if (eno == -1)
             {

@@ -28,13 +28,13 @@ namespace Roma
                 Debug.Log("无角色，跳转创建界面");
                 LoginModule login = (LoginModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelLogin);
                 login.SetVisible(false);
-                //CreateRoleModule cRole = LayoutMgr.Inst.GetLogicModule<CreateRoleModule>(LayoutName.S_CreateRole);
-                //cRole.SetVisible(true);
+                CreateRoleModule cRole = (CreateRoleModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelCreate);
+                cRole.SetVisible(true);
             }
             else if (eno == 1)
             {
-                //LoginModule login = LayoutMgr.Inst.GetLogicModule<LoginModule>(LayoutName.S_LoginUI);
-                //login.SetVisible(false);
+                LoginModule login = (LoginModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelLogin);
+                login.SetVisible(false);
                 Debug.Log("有角色，直接进入大厅");
                 GC_PlayerPublicData data = GetData<GC_PlayerPublicData>(structBytes);
                 Debug.Log(data.name);
@@ -43,7 +43,7 @@ namespace Roma
                 Debug.Log(data.y);
                 Debug.Log(data.dir);
 
-                InitMaster(data);
+                EnterMainUI(data);
             }
             else if(eno == -1)
             {
@@ -51,9 +51,11 @@ namespace Roma
             }
         }
 
-        public static void InitMaster(GC_PlayerPublicData data)
+        public static void EnterMainUI(GC_PlayerPublicData data)
         {
-            Debug.Log("创建角色id:"+ data.userName);
+            Debug.Log("进入主界面，附带玩家信息 :"+ data.userName);
+            MainModule main = (MainModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelMain);
+            main.SetVisible(true);
         }
 
         public CG_Login login;

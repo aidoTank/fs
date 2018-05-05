@@ -134,7 +134,7 @@ namespace Roma
                 if (Time.time - lastTickTime > heartBeatTime)
                 {
                     MsgHeartBeat hb = (MsgHeartBeat)NetManager.Inst.GetMessage(eNetMessageID.MsgHeartBeat);
-                    SendMessage(hb);
+                    //SendMessage(hb);
                     lastTickTime = Time.time;
                 }
             }

@@ -7,6 +7,7 @@ public enum eNetMessageID
     MsgHeartBeat = 0,
     MsgLogin = 1,
     MsgCreateRole = 2,
+    MsgExit = 3,
 
     MsgMapLoad = 3,
     MsgMapCreatureEnter = 4,
@@ -27,6 +28,8 @@ public class NetManager : Singleton
         RegNetMessage(eNetMessageID.MsgHeartBeat, MsgHeartBeat.CreateMessage);
         RegNetMessage(eNetMessageID.MsgLogin, MsgLogin.CreateMessage);
         RegNetMessage(eNetMessageID.MsgCreateRole, MsgCreateRole.CreateMessage);
+        RegNetMessage(eNetMessageID.MsgExit, MsgExit.CreateMessage);
+
 
         RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);
         RegNetMessage(eNetMessageID.MsgMapCreatureLeave, MsgMapCreatureLeave.CreateMessage);

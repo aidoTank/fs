@@ -85,19 +85,19 @@ namespace Roma
             // 通过消息头，获取消息体
             NetMessage msg = NetManager.Inst.GetMessage((eNetMessageID)msgId);
             msg.OnRecv(msgLen, ref stream);
-            msg.OnRecv();
-            //m_msgList.Add(msg);
+            //msg.OnRecv();
+            m_msgList.Add(msg);
 
 
             // 如果id段大于1000，那么就是lua协议
-            if (msgId > s_luaStartId)
-            {
-                LuaMsgStruct data;
-                data.id = msgId;
-                data.msgLen = msgLen;
-                data.stream = stream;
-                m_luaMsgList.Add(data);
-            }
+            //if (msgId > s_luaStartId)
+            //{
+            //    LuaMsgStruct data;
+            //    data.id = msgId;
+            //    data.msgLen = msgLen;
+            //    data.stream = stream;
+            //    m_luaMsgList.Add(data);
+            //}
         }
 
         private const int s_luaStartId = 1000;
