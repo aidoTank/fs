@@ -5,7 +5,7 @@ using System;
 public enum eNetMessageID
 {
     MsgHeartBeat = 0,
-    MsgLogin = 1001,
+    MsgLogin = 1,
     MsgCreateRole= 2,
 
     MsgMapLoad = 3,

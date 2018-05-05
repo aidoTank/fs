@@ -33,7 +33,11 @@ public class MsgLogin : NetMessage
             bool bSucc = DBPlayer.Inst.Register(userName, pw);
             if (!bSucc)   // 注册不成功，账号重复等
             {
-                eno = -1;
+                //eno = -1;
+                //conn.Send(this);
+
+                eno = 0;
+                Console.WriteLine("返回创建角色:" + eno + " uid:" + userName);
                 conn.Send(this);
                 return;
             }
