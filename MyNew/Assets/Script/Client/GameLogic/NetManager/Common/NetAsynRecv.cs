@@ -83,14 +83,14 @@ namespace Roma
             Debug.Log("接受消息长度：" + msgLen);
             Debug.Log("接受消息ID：" + msgId);
             // 通过消息头，获取消息体
-            //NetMessage msg = NetManager.Inst.GetMessage((eNetMessageID)msgId);
-            //msg.OnRecv(msgLen, ref stream);
-            ////msg.OnRecv();
+            NetMessage msg = NetManager.Inst.GetMessage((eNetMessageID)msgId);
+            msg.OnRecv(msgLen, ref stream);
+            msg.OnRecv();
             //m_msgList.Add(msg);
 
 
             // 如果id段大于1000，那么就是lua协议
-            if(msgId > s_luaStartId)
+            if (msgId > s_luaStartId)
             {
                 LuaMsgStruct data;
                 data.id = msgId;

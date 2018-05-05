@@ -49,13 +49,11 @@ namespace Roma
 
         private void OnSendLoginMsg()
         {
-
-            byte[] nameBytes = StringHelper.GetBytesByStr(GetUserName());
-    
-
-            byte[] input = StringHelper.GetBytesByStr(GetPassWord());
-      
-            //NetRunTime.Inst.SendMessage(msg);
+            MsgLogin msgLogin = (MsgLogin)NetManager.Inst.GetMessage(eNetMessageID.MsgLogin);
+            msgLogin.login.name = GetUserName();
+            msgLogin.login.passWord = GetPassWord();
+            NetRunTime.Inst.SendMessage(msgLogin);
+            Debug.Log("发送登陆");
         }
 
         public override void UpdateUI(float fTime, float fDTime)
