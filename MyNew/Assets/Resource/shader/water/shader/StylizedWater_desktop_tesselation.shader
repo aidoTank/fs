@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
 // Shader created with Shader Forge v1.30 
 // Shader Forge (c) Neat Corporation / Joachim Holmer - http://www.acegikmo.com/shaderforge/
 // Note: Manually altering this data may prevent you from opening it in Shader Forge
@@ -114,9 +116,9 @@ Shader "StylizedWater/Desktop (DX11 Tessellation)" {
                 VertexOutput o = (VertexOutput)0;
                 o.uv0 = v.texcoord0;
                 o.normalDir = UnityObjectToWorldNormal(v.normal);
-                o.tangentDir = normalize( mul( _Object2World, float4( v.tangent.xyz, 0.0 ) ).xyz );
+                o.tangentDir = normalize( mul( unity_ObjectToWorld, float4( v.tangent.xyz, 0.0 ) ).xyz );
                 o.bitangentDir = normalize(cross(o.normalDir, o.tangentDir) * v.tangent.w);
-                o.posWorld = mul(_Object2World, v.vertex);
+                o.posWorld = mul(unity_ObjectToWorld, v.vertex);
                 float3 lightColor = _LightColor0.rgb;
                 o.pos = mul(UNITY_MATRIX_MVP, v.vertex );
                 UNITY_TRANSFER_FOG(o,o.pos);
@@ -152,7 +154,7 @@ Shader "StylizedWater/Desktop (DX11 Tessellation)" {
                 void displacement (inout VertexInput v){
                     float4 Time = _Time + _TimeEditor;
                     float WaveSpeed = (Time.g*(_Wavesspeed*0.1));
-                    fixed2 Tiling = (lerp( ((-20.0)*v.texcoord0), mul(_Object2World, v.vertex).rgb.rb, _Worldspacetiling )*(1.0 - _Tiling));
+                    fixed2 Tiling = (lerp( ((-20.0)*v.texcoord0), mul(unity_ObjectToWorld, v.vertex).rgb.rb, _Worldspacetiling )*(1.0 - _Tiling));
                     float2 node_5626 = ((Tiling*0.1)+(WaveSpeed*0.5)*float2(1,1));
                     float4 HeightmapTex = tex2Dlod(_Shadermap,float4(node_5626,0.0,0));
                     float DisplacementDirection = (HeightmapTex.g*_Wavesstrength);
@@ -395,9 +397,9 @@ Shader "StylizedWater/Desktop (DX11 Tessellation)" {
                 VertexOutput o = (VertexOutput)0;
                 o.uv0 = v.texcoord0;
                 o.normalDir = UnityObjectToWorldNormal(v.normal);
-                o.tangentDir = normalize( mul( _Object2World, float4( v.tangent.xyz, 0.0 ) ).xyz );
+                o.tangentDir = normalize( mul( unity_ObjectToWorld, float4( v.tangent.xyz, 0.0 ) ).xyz );
                 o.bitangentDir = normalize(cross(o.normalDir, o.tangentDir) * v.tangent.w);
-                o.posWorld = mul(_Object2World, v.vertex);
+                o.posWorld = mul(unity_ObjectToWorld, v.vertex);
                 float3 lightColor = _LightColor0.rgb;
                 o.pos = mul(UNITY_MATRIX_MVP, v.vertex );
                 UNITY_TRANSFER_FOG(o,o.pos);
@@ -434,7 +436,7 @@ Shader "StylizedWater/Desktop (DX11 Tessellation)" {
                 void displacement (inout VertexInput v){
                     float4 Time = _Time + _TimeEditor;
                     float WaveSpeed = (Time.g*(_Wavesspeed*0.1));
-                    fixed2 Tiling = (lerp( ((-20.0)*v.texcoord0), mul(_Object2World, v.vertex).rgb.rb, _Worldspacetiling )*(1.0 - _Tiling));
+                    fixed2 Tiling = (lerp( ((-20.0)*v.texcoord0), mul(unity_ObjectToWorld, v.vertex).rgb.rb, _Worldspacetiling )*(1.0 - _Tiling));
                     float2 node_5626 = ((Tiling*0.1)+(WaveSpeed*0.5)*float2(1,1));
                     float4 HeightmapTex = tex2Dlod(_Shadermap,float4(node_5626,0.0,0));
                     float DisplacementDirection = (HeightmapTex.g*_Wavesstrength);

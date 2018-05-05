@@ -99,17 +99,17 @@ public class GameInfo : MonoBehaviour
 
             if (fSample > 4.0f)
             {
-                m_usedHeapSize = Profiler.usedHeapSize;
-                m_monoHeapSize = Profiler.GetMonoHeapSize();
+                m_usedHeapSize = UnityEngine.Profiling.Profiler.usedHeapSize;
+                m_monoHeapSize = UnityEngine.Profiling.Profiler.GetMonoHeapSize();
 #if UNITY_EDITOR
-                m_monoUsedSize = Profiler.GetMonoUsedSize();
+                m_monoUsedSize = UnityEngine.Profiling.Profiler.GetMonoUsedSize();
 #else
                 m_monoUsedSize = (uint)System.GC.GetTotalMemory(true);
 #endif
 
-                m_totalReservedMemory = Profiler.GetTotalReservedMemory();
-                m_TotalAllocatedMemory = Profiler.GetTotalAllocatedMemory();
-                m_totalUnusedReservedMenory = Profiler.GetTotalUnusedReservedMemory();
+                m_totalReservedMemory = UnityEngine.Profiling.Profiler.GetTotalReservedMemory();
+                m_TotalAllocatedMemory = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemory();
+                m_totalUnusedReservedMenory = UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemory();
 
                 //m_resNums = Resource.m_curTotalNums;
                 //m_resSize = MathEx.GetSize(Resource.m_curTotalSize);

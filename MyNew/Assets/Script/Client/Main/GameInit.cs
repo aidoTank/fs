@@ -75,7 +75,12 @@ namespace Roma
             ResourceFactory.Inst.UnLoadResource(res, true);
 
             LogicSystem.Inst.InitData();
-            ResourceFactory.Inst.LoadResource(2, OnLuaInfoLoaded);
+            Client.Inst().m_uiResInit.OpenPanel(false);
+            LayoutMgr.Inst.InitLayout();
+            LoginModule login = (LoginModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelLogin);
+            login.SetVisible(true);
+
+            //ResourceFactory.Inst.LoadResource(2, OnLuaInfoLoaded);
         }
 
         static Resource r1;

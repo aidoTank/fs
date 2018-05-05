@@ -233,8 +233,7 @@ namespace Roma
             catch(IOException e)
             {
                 Client.Inst().m_uiResInitDialog.OpenPanel(true);
-                Client.Inst().m_uiResInitDialog.SetText("退出", "", "磁盘空间不足或文件异常，请清理空间后重启游戏。\n" + e.StackTrace);
-                Client.Inst().m_uiResInitDialog.AddEvent((bOk, a, b) =>
+                Client.Inst().m_uiResInitDialog.Open("退出", "", "磁盘空间不足或文件异常，请清理空间后重启游戏。\n" + e.StackTrace,(bOk, a) =>
                 {
                     if (bOk)
                     {

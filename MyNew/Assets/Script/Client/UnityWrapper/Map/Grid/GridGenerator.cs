@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif 
 namespace Roma
 {
 
@@ -469,7 +471,7 @@ namespace Roma
             mat = (Material)AssetDatabase.LoadAssetAtPath("Assets/Resource/shader/scene/grid/grid_vertex.mat", typeof(Material));
 #else
                 mat = (Material)Resources.Load("Materials/MHVertex", typeof(Material));
-#endif        
+#endif
 
 
 

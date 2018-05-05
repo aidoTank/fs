@@ -245,11 +245,11 @@ namespace Roma
             }
             else
             {
-                Profiler.BeginSample("LoadImage");
+                UnityEngine.Profiling.Profiler.BeginSample("LoadImage");
                 UIItem.SetImage(item, UIItemTitle.imgIcon, int.Parse(itemVal.icon));
                 if(!iconObject.activeSelf)
                     iconObject.SetActive(true);
-                Profiler.EndSample();
+                UnityEngine.Profiling.Profiler.EndSample();
                 //UIButton.Get(iconObject);
             }
             // 强化等级

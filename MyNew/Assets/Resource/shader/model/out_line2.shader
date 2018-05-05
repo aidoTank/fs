@@ -1,4 +1,6 @@
-﻿Shader "Roma/Model/OutLine2" {  
+﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
+Shader "Roma/Model/OutLine2" {  
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_Shininess ("Shininess", Range (0.01, 1)) = 0.3
@@ -47,7 +49,7 @@
 			//o.viewDir = WorldSpaceViewDir(v.vertex);
 			//o.normal = normalize(UnityObjectToWorldNormal(v.normal));
 
-			o.lightDir = mul(_World2Object, _WorldSpaceLightPos0).xyz;
+			o.lightDir = mul(unity_WorldToObject, _WorldSpaceLightPos0).xyz;
 			o.viewDir = ObjSpaceViewDir(v.vertex);
 			o.normal = normalize(v.normal);
 			return o;

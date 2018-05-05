@@ -31,6 +31,11 @@ namespace Roma
             SingletonManager.Inst.AddSingleton(SingleName.m_ResDpMgr, DPResourceManager.Inst);
 
 
+            GUIManager.Inst = new GUIManager();
+            SingletonManager.Inst.AddSingleton("gui", GUIManager.Inst);
+            LayoutMgr.Inst = new LayoutMgr();
+            SingletonManager.Inst.AddSingleton("layout", LayoutMgr.Inst);
+
             SceneManager.Inst = new SceneManager();
             SingletonManager.Inst.AddSingleton(SingleName.m_Scene, SceneManager.Inst);
             EntityManager.Inst = new EntityManager();

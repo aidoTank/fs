@@ -129,7 +129,7 @@ namespace Roma
         public void _HeartBeat()
         {
             //心跳
-            if (GetNetState() == NetState.Connected)
+            if (GetState() == NetState.Connected)
             {
                 if (Time.time - lastTickTime > heartBeatTime)
                 {
@@ -141,7 +141,7 @@ namespace Roma
         }
 
 
-        public NetState GetNetState()
+        public NetState GetState()
         {
             return m_netState;
         }

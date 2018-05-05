@@ -281,8 +281,8 @@ namespace Roma
                     //Debug.Log("当前光照贴图个数：" + i);
                     lightMap[index] = new LightmapData();
 
-                    lightMap[index].lightmapFar = tex2D[i + 1];
-                    lightMap[index].lightmapNear = tex2D[i];
+                    lightMap[index].lightmapLight = tex2D[i + 1];
+                    lightMap[index].lightmapDir = tex2D[i];
                 }
                 LightmapSettings.lightmaps = lightMap;
             }
@@ -294,7 +294,7 @@ namespace Roma
                 {
                     //Debug.Log("光照贴图个数：" + i);
                     lightMap[i] = new LightmapData();
-                    lightMap[i].lightmapFar = tex2D[i];
+                    lightMap[i].lightmapLight = tex2D[i];
                 }
                 LightmapSettings.lightmaps = lightMap;
             }

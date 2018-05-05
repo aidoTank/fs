@@ -5,20 +5,19 @@ using UnityEngine.UI;
 
 namespace Roma
 {
-    public delegate void DialogClickEvent(bool isOk, System.Object lstParam, bool isTips);
-    public class UIPanelResInitDialog : UI
+    public class UIPanelResInitDialog : UIBase
     {
         public Text m_txtInfo;
         public GameObject m_btnOk;
         public GameObject m_btnExit;
-        public DialogClickEvent m_event;
+        private System.Action<bool, object> m_event;
 
         public override void Init()
         {
             base.Init();
-            m_txtInfo = m_root.FindChild("panel/txt_info").GetComponent<Text>();
-            m_btnOk = m_root.FindChild("panel/btn/btn_ok").gameObject;
-            m_btnExit = m_root.FindChild("panel/btn/btn_cancel").gameObject;
+            m_txtInfo = m_root.FindChild("panel/dynamic/txt_info").GetComponent<Text>();
+            m_btnOk = m_root.FindChild("panel/dynamic/btn/btn_ok").gameObject;
+            m_btnExit = m_root.FindChild("panel/dynamic/btn/btn_cancel").gameObject;
 
             SetOrder(1001);
             UIEventListener.Get(m_btnOk).onClick = OnClickBtn;
@@ -31,33 +30,18 @@ namespace Roma
             {
                 if (go == m_btnOk)
                 {
-                    m_event(true, null, false);
+                    m_event(true, null);
                 }
                 else
                 {
-                    m_event(false, null, false);
-                }
-            }
-            else
-            {
-                if (go == m_btnOk)    // 没有回调，默认是重连和退出
-                {
-                    //Client.Inst().m_gameInit.ResetInit();
-                }
-                else
-                {
-                    Application.Quit();
+                    m_event(false, null);
                 }
             }
             OpenPanel(false);
         }
 
-        public void AddEvent(DialogClickEvent clickEvent)
-        {
-            m_event = clickEvent;
-        }
 
-        public void SetText(string okTxt, string cancelTxt, string text)
+        public void Open(string okTxt, string cancelTxt, string text, System.Action<bool, object> clickEvent)
         {
             UIItem.SetText(m_btnOk, "txt", okTxt);
             if (!string.IsNullOrEmpty(cancelTxt))
@@ -74,6 +58,28 @@ namespace Roma
             {
                 m_txtInfo.text = text;
             }
+            m_event = clickEvent;
+        }
+
+
+        /// <summary>
+        /// 资源无网络连接
+        /// </summary>
+        public static void OpenNoConnNet()
+        {
+            Client.Inst().m_uiResInitDialog.OpenPanel(true);
+            Client.Inst().m_uiResInitDialog.Open("重连", "退出", "连接资源服务器失败，请联系客服。", (bOk, a) =>
+            {
+                if (bOk)
+                {
+                    Debug.Log("重连资源服");
+                    //Client.Inst().m_gameinit.InitAndCheckUpdate();
+                }
+                else
+                {
+                    Application.Quit();
+                }
+            });
         }
     }
 }

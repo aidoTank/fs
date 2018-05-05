@@ -13,7 +13,7 @@ uint,string,string,string
 106,mo_1_2,scene/1/prefab/mo_1_2,模型
 107,mo_1_3,scene/1/prefab/mo_1_3,模型
 201,cfg_2,scene/2/cfg_2,地图配置
-202,lm_2,scene/2/2/lm_2,光照图
+202,lm_2,,
 10000,面板段10000-11000,,
 10001,panel_login,ui/prefab/panel_login,面板
 10002,panel_dialog,ui/prefab/panel_dialog,面板

@@ -194,8 +194,7 @@ namespace Roma
                     m_bStart = false;
                     m_res = null;
                     Client.Inst().m_uiResInitDialog.OpenPanel(true);
-                    Client.Inst().m_uiResInitDialog.SetText("重连", "退出", "连接资源服务器失败，请联系客服。");
-                    Client.Inst().m_uiResInitDialog.AddEvent((bOk, a, b) =>
+                    Client.Inst().m_uiResInitDialog.Open("重连", "退出", "连接资源服务器失败，请联系客服。",(bOk, a) =>
                     {
                         if (bOk)
                         {
@@ -213,8 +212,7 @@ namespace Roma
                     m_bStart = false;
                     m_res = null;
                     Client.Inst().m_uiResInitDialog.OpenPanel(true);
-                    Client.Inst().m_uiResInitDialog.SetText("退出", "", "获取资源错误：" + m_res.m_fullUrl);
-                    Client.Inst().m_uiResInitDialog.AddEvent((bOk, a, b) =>
+                    Client.Inst().m_uiResInitDialog.Open("退出", "", "获取资源错误：" + m_res.m_fullUrl,(bOk, a) =>
                     {
                         if (bOk)
                         {

@@ -144,8 +144,7 @@ namespace Roma
             }
 
             Client.Inst().m_uiResInitDialog.OpenPanel(true);
-            Client.Inst().m_uiResInitDialog.SetText("继续", "退出", "需要更新文件大小："+ MathEx.GetSize(totalSize));
-            Client.Inst().m_uiResInitDialog.AddEvent((bOk, a, b) =>
+            Client.Inst().m_uiResInitDialog.Open("继续", "退出", "需要更新文件大小："+ MathEx.GetSize(totalSize),(bOk, a) =>
             {
                 if (bOk)
                 {
