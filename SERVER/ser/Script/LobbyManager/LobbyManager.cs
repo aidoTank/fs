@@ -6,7 +6,7 @@ public class Lobby
     public int id;
     private MapData mapData;
     private Dictionary<long, Player> dicPlayer = new Dictionary<long, Player>();
-
+    //private List<>
 
     public Lobby(int id, MapData data)
     {
@@ -32,12 +32,6 @@ public class Lobby
         Console.WriteLine(player.publicData.name + " 离开" + " 当前大厅人数" + dicPlayer.Count);
     }
 
-    public void UpdateMove(long uid, GC_MapCreatureMove moveInfo)
-    {
-
-    }
-
-
     public void Update(float time, float fTime)
     {
 
@@ -55,7 +49,6 @@ public class Lobby
 
         Player player = dicPlayer[uid];
         player.Send(msg);
-
     }
 
     /// <summary>
@@ -68,7 +61,6 @@ public class Lobby
             item.Value.Send(msg);
         }
     }
-
 }
 
 public class LobbyManager : Singleton

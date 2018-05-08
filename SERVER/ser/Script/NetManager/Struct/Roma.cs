@@ -133,4 +133,42 @@ namespace Roma
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"GC_MatchResult")]
+  public partial class GC_MatchResult : global::ProtoBuf.IExtensible
+  {
+    public GC_MatchResult() {}
+    
+    private int _matchType;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"matchType", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int matchType
+    {
+      get { return _matchType; }
+      set { _matchType = value; }
+    }
+    private string _serverIp;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"serverIp", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string serverIp
+    {
+      get { return _serverIp; }
+      set { _serverIp = value; }
+    }
+    private int _serverPort;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"serverPort", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int serverPort
+    {
+      get { return _serverPort; }
+      set { _serverPort = value; }
+    }
+    private int _roomId;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"roomId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int roomId
+    {
+      get { return _roomId; }
+      set { _roomId = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
 }

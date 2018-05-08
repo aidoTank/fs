@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 
 public enum eNetMessageID
@@ -9,9 +8,13 @@ public enum eNetMessageID
     MsgCreateRole= 2,
     MsgExit = 3,
 
-    MsgMapLoad = 3,
-    MsgMapCreatureEnter = 4,
-    MsgMapCreatureLeave = 5,
+    MsgStartMatch = 4,  // 接收匹配消息，服务器开始匹配，发送匹配结果
+
+
+
+    MsgMapLoad = 30,
+    MsgMapCreatureEnter,
+    MsgMapCreatureLeave,
 
     MsgUseSkill = 10,
 }
@@ -30,10 +33,10 @@ public class NetManager  : Singleton
         RegNetMessage(eNetMessageID.MsgExit, MsgExit.CreateMessage);
 
 
-        RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);
-        RegNetMessage(eNetMessageID.MsgMapCreatureLeave, MsgMapCreatureLeave.CreateMessage);
+        //RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);
+        //RegNetMessage(eNetMessageID.MsgMapCreatureLeave, MsgMapCreatureLeave.CreateMessage);
 
-        RegNetMessage(eNetMessageID.MsgUseSkill, MsgUseSkill.CreateMessage);
+        //RegNetMessage(eNetMessageID.MsgUseSkill, MsgUseSkill.CreateMessage);
     }
 
     public bool RegNetMessage(eNetMessageID id, CreateMessageEvent msg)

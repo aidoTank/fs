@@ -1,7 +1,7 @@
 ﻿using System;
 using ProtoBuf;
 
-
+using Roma;
 
 public class MsgCreateRole : NetMessage
 {
@@ -23,6 +23,7 @@ public class MsgCreateRole : NetMessage
     
     public override void OnRecv(ref Conn conn)
     {
+       
         CG_CreateRole createRole = GetData<CG_CreateRole>(structBytes);
         Console.WriteLine("userName:" + createRole.userName);
         Console.WriteLine("接受创建name:" + createRole.name);

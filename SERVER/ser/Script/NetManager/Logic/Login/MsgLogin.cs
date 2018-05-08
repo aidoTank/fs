@@ -1,7 +1,7 @@
 ﻿using System;
 using ProtoBuf;
 
-
+using Roma;
 
 public class MsgLogin : NetMessage
 {
@@ -17,13 +17,13 @@ public class MsgLogin : NetMessage
 
     public override void ToByte(ref LusuoStream ls)
     {
-        SetByte<Roma.GC_PlayerPublicData>(playerData, ref ls);
+        SetByte<GC_PlayerPublicData>(playerData, ref ls);
     }
     
     public override void OnRecv(ref Conn conn)
     {
         CG_Login login = GetData<CG_Login>(structBytes);
-        string userName = login.name;
+        string userName = login.userName;
         string pw = login.passWord;
 
         // 检测账号密码是否正确
@@ -66,9 +66,9 @@ public class MsgLogin : NetMessage
     /// <summary>
     /// 将表数据组装为逻辑数据
     /// </summary>
-    public static Roma.GC_PlayerPublicData CreatePlayer(ref Conn conn, string userName, ref TablePlayer player)
+    public static GC_PlayerPublicData CreatePlayer(ref Conn conn, string userName, ref TablePlayer player)
     {
-        Roma.GC_PlayerPublicData playerData = new Roma.GC_PlayerPublicData();
+        GC_PlayerPublicData playerData = new GC_PlayerPublicData();
         if (player == null)
             return playerData;
         long uid = 0;
@@ -90,6 +90,6 @@ public class MsgLogin : NetMessage
         return playerData;
     }
 
-    private Roma.GC_PlayerPublicData playerData = new Roma.GC_PlayerPublicData();
+    private GC_PlayerPublicData playerData = new GC_PlayerPublicData();
 }
 
