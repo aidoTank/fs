@@ -10,7 +10,7 @@ public enum eNetMessageID
 
     MsgStartMatch = 4,  // 接收匹配消息，服务器开始匹配，发送匹配结果
 
-
+    
 
     MsgMapLoad = 30,
     MsgMapCreatureEnter,
@@ -32,6 +32,7 @@ public class NetManager  : Singleton
         RegNetMessage(eNetMessageID.MsgCreateRole, MsgCreateRole.CreateMessage);
         RegNetMessage(eNetMessageID.MsgExit, MsgExit.CreateMessage);
 
+        RegNetMessage(eNetMessageID.MsgStartMatch, MsgStartMatch.CreateMessage);
 
         //RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);
         //RegNetMessage(eNetMessageID.MsgMapCreatureLeave, MsgMapCreatureLeave.CreateMessage);

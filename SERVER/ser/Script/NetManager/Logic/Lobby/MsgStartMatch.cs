@@ -27,6 +27,7 @@ public class MsgStartMatch : NetMessage
         if (eno == 0)
         {
             int type = GetData<int>(structBytes);
+            Console.WriteLine("收到匹配信息：" + conn.player.publicData.userName + " type:" + type);
             if (type == 1)  // 1V1匹配
             {
                 // 开始匹配
@@ -35,6 +36,7 @@ public class MsgStartMatch : NetMessage
                 m_matchResult.matchType = 1;
                 m_matchResult.serverIp = "127.0.0.1";
                 m_matchResult.serverPort = 6001;
+                conn.Send(this);
             }
         }
     }
