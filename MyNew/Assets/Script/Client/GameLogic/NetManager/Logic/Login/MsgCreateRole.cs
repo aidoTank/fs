@@ -48,7 +48,7 @@ namespace Roma
             }
         }
 
-        public CG_CreateRole createRole;
+        public CG_CreateRole createRole = new CG_CreateRole();
     }
 
     /// <summary>
@@ -57,33 +57,5 @@ namespace Roma
     /// 2.支持客户端单独更新属性值时，单独调用显示前端显示
     /// 3.支持其他模块通过key的方法获取属性值
     /// </summary>
-    [ProtoContract]
-    public struct GC_PlayerPublicData
-    {
-        [ProtoMember(1)]
-        public long userName;
-        [ProtoMember(2)]
-        public string name;
-        [ProtoMember(3)]
-        public int occ;
-        [ProtoMember(4)]
-        public int resId;
-        [ProtoMember(5)]
-        public int mapId;
-        [ProtoMember(6)]
-        public int x;
-        [ProtoMember(7)]
-        public int y;
-        [ProtoMember(8)]
-        public int dir;
-    }
-
-    [ProtoContract]
-    public struct CG_Login
-    {
-        [ProtoMember(1)]
-        public string name;
-        [ProtoMember(2)]
-        public string passWord;
-    }
+   
 }

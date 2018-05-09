@@ -9,12 +9,14 @@ public enum eNetMessageID
     MsgCreateRole = 2,
     MsgExit = 3,
 
-    MsgMapLoad = 3,
-    MsgMapCreatureEnter = 4,
-    MsgMapCreatureLeave = 5,
-    MsgMapCreatureMove = 6,
+    MsgStartMatch = 4,  // 接收匹配消息，服务器开始匹配，发送匹配结果
 
-    MsgUseSkill = 10,
+    MsgMapLoad = 300,
+    MsgMapCreatureEnter,
+    MsgMapCreatureLeave,
+    MsgMapCreatureMove,
+
+    MsgUseSkill,
 }
 
 public delegate NetMessage CreateMessageEvent();
@@ -30,12 +32,14 @@ public class NetManager : Singleton
         RegNetMessage(eNetMessageID.MsgCreateRole, MsgCreateRole.CreateMessage);
         RegNetMessage(eNetMessageID.MsgExit, MsgExit.CreateMessage);
 
+        RegNetMessage(eNetMessageID.MsgStartMatch, MsgStartMatch.CreateMessage);
 
-        RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);
-        RegNetMessage(eNetMessageID.MsgMapCreatureLeave, MsgMapCreatureLeave.CreateMessage);
-        RegNetMessage(eNetMessageID.MsgMapCreatureMove, MsgMapCreatureMove.CreateMessage);
 
-        RegNetMessage(eNetMessageID.MsgUseSkill, MsgUseSkill.CreateMessage);
+        //RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);
+        //RegNetMessage(eNetMessageID.MsgMapCreatureLeave, MsgMapCreatureLeave.CreateMessage);
+        //RegNetMessage(eNetMessageID.MsgMapCreatureMove, MsgMapCreatureMove.CreateMessage);
+
+        //RegNetMessage(eNetMessageID.MsgUseSkill, MsgUseSkill.CreateMessage);
     }
 
     public bool RegNetMessage(eNetMessageID id, CreateMessageEvent msg)

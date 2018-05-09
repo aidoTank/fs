@@ -20,7 +20,7 @@ namespace Roma
         public override void ToByte(ref LusuoStream ls)
         {
             eno = 0;
-            SetByte<CG_UseSkill>(useSkill, ref ls);
+            //SetByte<CG_UseSkill>(useSkill, ref ls);
         }
 
         // 接受客户端移动消息
@@ -28,7 +28,7 @@ namespace Roma
         {
             if (eno == 0)
             {
-                GC_UseSkill userSkill = GetData<GC_UseSkill>(structBytes);
+                //GC_UseSkill userSkill = GetData<GC_UseSkill>(structBytes);
                 //CPlayer player = CPlayerMgr.Get(userSkill.attackUid);
                 //if (player == null)
                 //{
@@ -50,6 +50,6 @@ namespace Roma
             //NetRunTime.Inst.SendMessge(msg);
         }
 
-        public CG_UseSkill useSkill;
+        //public CG_UseSkill useSkill;
     }
 }

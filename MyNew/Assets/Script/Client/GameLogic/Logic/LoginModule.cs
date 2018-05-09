@@ -51,7 +51,7 @@ namespace Roma
         {
             MsgLogin msgLogin = (MsgLogin)NetManager.Inst.GetMessage(eNetMessageID.MsgLogin);
             EGame.m_openid = GetUserName();
-            msgLogin.login.name = EGame.m_openid;
+            msgLogin.login.userName = EGame.m_openid;
             msgLogin.login.passWord = GetPassWord();
             NetRunTime.Inst.SendMessage(msgLogin);
             Debug.Log("发送登陆");

@@ -20,7 +20,7 @@ namespace Roma
         public override void ToByte(ref LusuoStream ls)
         {
             eno = 0;
-            SetByte<GC_MapCreatureMove>(moveInfo, ref ls);
+            //SetByte<GC_MapCreatureMove>(moveInfo, ref ls);
         }
 
         // 接受客户端移动消息
@@ -28,7 +28,7 @@ namespace Roma
         {
             if (eno == 0)
             {
-                GC_MapCreatureMove moveInfo = GetData<GC_MapCreatureMove>(structBytes);
+               // GC_MapCreatureMove moveInfo = GetData<GC_MapCreatureMove>(structBytes);
                 //CPlayer player = CPlayerMgr.Get(moveInfo.uid);
                 //if(player == null)
                 //{
@@ -49,6 +49,6 @@ namespace Roma
             //NetRunTime.Inst.SendMessge(move);
         }
 
-        public GC_MapCreatureMove moveInfo;
+        //public GC_MapCreatureMove moveInfo;
     }
 }

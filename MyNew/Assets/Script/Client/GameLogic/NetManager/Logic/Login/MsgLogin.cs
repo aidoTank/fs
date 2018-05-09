@@ -58,7 +58,7 @@ namespace Roma
             main.SetVisible(true);
         }
 
-        public CG_Login login;
+        public CG_Login login = new CG_Login();
     }
 
 

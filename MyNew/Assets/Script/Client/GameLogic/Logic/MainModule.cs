@@ -29,7 +29,9 @@ namespace Roma
             }
             else if(go == m_ui.m_btnJoinRoom)
             {
-                Debug.Log("加入房间");
+                MsgStartMatch msg = (MsgStartMatch)NetManager.Inst.GetMessage(eNetMessageID.MsgStartMatch);
+                msg.m_sendMatchType = 1;
+                NetRunTime.Inst.SendMessage(msg);
             }
         }
 
