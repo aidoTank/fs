@@ -31,12 +31,7 @@ public class MsgStartMatch : NetMessage
             if (type == 1)  // 1V1匹配
             {
                 // 开始匹配
-
-
-                m_matchResult.matchType = 1;
-                m_matchResult.serverIp = "127.0.0.1";
-                m_matchResult.serverPort = 6001;
-                conn.Send(this);
+                LobbyManager.Inst.GetLobby(3).OnJoinMatch(conn.player);
             }
         }
     }

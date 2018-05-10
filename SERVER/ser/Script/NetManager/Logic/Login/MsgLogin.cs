@@ -58,7 +58,9 @@ public class MsgLogin : NetMessage
             playerData = CreatePlayer(ref conn, userName, ref player);
             conn.Send(this);
 
-            Lobby map = LobbyManager.Inst.GetMap(player.MapId);
+            Lobby map = LobbyManager.Inst.GetLobby(player.MapId);
+            if (map == null)
+                Console.WriteLine("大厅为空：" + player.MapId);
             map.AddPlayer(conn.player);
         }
     }
