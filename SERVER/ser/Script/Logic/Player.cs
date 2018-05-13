@@ -16,7 +16,7 @@ namespace Roma
         public int m_teamId;
         public Conn conn;
         public GC_PlayerPublicData publicData;   // 玩家公共数据，消息结构体
-        public TablePlayer data;                      // 玩家数据库数据
+        public TablePlayer data;    // 逻辑不用的，在创建玩家时，先从数据中取tabData给到PublicData，保存时PublicData转tabData
         public PlayerTempData tempData;
 
         //构造函数，给id和conn赋值
@@ -79,6 +79,32 @@ namespace Roma
             conn.Close();
             return true;
         }
+
+        #region 帧同步的玩家接口
+        private Queue<FspFrame> m_frameList = new Queue<FspFrame>();
+        public void Send(FspFrame frame)
+        {
+            if (frame == null)
+                return;
+
+            if(!m_frameList.Contains(frame))
+            {
+                m_frameList.Enqueue(frame);
+            }
+
+            while(m_frameList.Count > 0)
+            {
+                FspFrame fsp = m_frameList.Peek();
+
+                FspMsgFrame msg = (FspMsgFrame)NetManager.Inst.GetMessage(eNetMessageID.FspMsgFrame);
+                msg.frameMsg = fsp;
+                FspNetRunTime.Inst.Send(conn, msg);
+
+                m_frameList.Dequeue();
+            }
+        }
+
+        #endregion
     }
 }
 

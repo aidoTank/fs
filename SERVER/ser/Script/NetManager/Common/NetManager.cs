@@ -12,12 +12,9 @@ namespace Roma
         MsgStartMatch = 4,  // 接收匹配消息，服务器开始匹配，发送匹配结果
 
 
-
-        MsgMapLoad = 30,
-        MsgMapCreatureEnter,
-        MsgMapCreatureLeave,
-
-        MsgUseSkill = 10,
+        
+        FspMsgJoinRoom = 100,
+        FspMsgFrame = 101,
     }
 
     public delegate NetMessage CreateMessageEvent();
@@ -32,8 +29,10 @@ namespace Roma
             RegNetMessage(eNetMessageID.MsgLogin, MsgLogin.CreateMessage);
             RegNetMessage(eNetMessageID.MsgCreateRole, MsgCreateRole.CreateMessage);
             RegNetMessage(eNetMessageID.MsgExit, MsgExit.CreateMessage);
-
             RegNetMessage(eNetMessageID.MsgStartMatch, MsgStartMatch.CreateMessage);
+
+            RegNetMessage(eNetMessageID.FspMsgJoinRoom, FspMsgJoinRoom.CreateMessage);
+            RegNetMessage(eNetMessageID.FspMsgFrame, FspMsgFrame.CreateMessage);
 
             //RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);
             //RegNetMessage(eNetMessageID.MsgMapCreatureLeave, MsgMapCreatureLeave.CreateMessage);

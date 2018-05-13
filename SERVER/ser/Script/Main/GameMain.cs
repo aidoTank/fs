@@ -26,6 +26,13 @@ namespace Roma
             // 帧同步，地图管理器变成大厅管理器
             LobbyManager.Inst = new LobbyManager();
             SingletonManager.Inst.AddSingleton(SingleName.m_mapMgr, LobbyManager.Inst);
+
+            // 帧服务器
+            // 客户端在连接帧服务器时，就附带了房间号
+            FspNetRunTime.Inst = new FspNetRunTime();
+            SingletonManager.Inst.AddSingleton("fspnetrun", FspNetRunTime.Inst);
+            FspServerManager.Inst = new FspServerManager();
+            SingletonManager.Inst.AddSingleton("FspServerManager", FspServerManager.Inst);
         }
 
         public void Init()

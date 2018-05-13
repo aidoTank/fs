@@ -30,22 +30,22 @@ namespace Roma
 
         public void Send(Conn conn, NetMessage msg)
         {
-            //MessageCache cache;
-            //cache.conn = conn;
-            //cache.msg = msg;
-            //msgList.Add(cache);
+            MessageCache cache;
+            cache.conn = conn;
+            cache.msg = msg;
+            msgList.Add(cache);
 
-            m_stream.Reset();
-            msg.ToByte(ref m_stream);
-            try
-            {
-                Console.WriteLine("发送消息:" + (eNetMessageID)msg.msgID);
-                conn.socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, null, null);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("[错误]发送消息异常,id:" + (eNetMessageID)msg.msgID + " " + conn.GetAdress() + " : " + e.Message);
-            }
+            //m_stream.Reset();
+            //msg.ToByte(ref m_stream);
+            //try
+            //{
+            //    Console.WriteLine("发送消息:" + (eNetMessageID)msg.msgID);
+            //    conn.socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, null, null);
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("[错误]发送消息异常,id:" + (eNetMessageID)msg.msgID + " " + conn.GetAdress() + " : " + e.Message);
+            //}
         }
 
         public void Update()
