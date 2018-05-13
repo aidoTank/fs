@@ -16,6 +16,12 @@ namespace Roma
         public int eno;
         public byte[] structBytes;
 
+        public bool bFspMsg;
+        public bool GetFspMsg()
+        {
+            return bFspMsg;
+        }
+
         public NetMessage(ushort uID)
         {
             msgID = uID;

@@ -28,8 +28,17 @@ public class MsgStartMatch : NetMessage
         if (eno == 0)
         {
             GC_MatchResult data = GetData<GC_MatchResult>(structBytes);
-            Debug.Log("data ip:" + data.serverIp);
+
             //GC_MatchResult m_matchResult = new GC_MatchResult();
+
+            Debug.Log("连接帧服务器:" + data.serverPort);
+            FspNetRunTime.Inst = new FspNetRunTime();
+            FspNetRunTime.Inst.Init();
+            FspNetRunTime.Inst.ConServer(() => {
+                FspMsgJoinRoom joinRoom = (FspMsgJoinRoom)NetManager.Inst.GetMessage(eNetMessageID.FspMsgJoinRoom);
+                joinRoom.m_curPlayerUid = int.Parse(EGame.m_openid);
+                FspNetRunTime.Inst.SendMessage(joinRoom);
+            });
         }
     }
 
