@@ -60,19 +60,13 @@ namespace Roma
         /// <summary>
         /// 添加玩家
         /// </summary>
-        public void AddPlayer(ref Conn conn, GC_PlayerPublicData data)
+        public void AddPlayer(Player player)
         {
             // 如果包含了
-            Player player = null;
-            for(int i = 0; i < m_listPlayer.Count; i ++)
+            if(m_listPlayer.Contains(player))
             {
-                player = m_listPlayer[i];
-                if(player.id == data.userName)
-                {
-                    Console.WriteLine("AddPlayer重复的玩家，新的替换旧的");
-                    m_listPlayer.RemoveAt(i);
-                    player = null;
-                }
+                Console.WriteLine("AddPlayer重复的玩家，新的替换旧的");
+                m_listPlayer.Remove(player);
             }
 
             if(m_listPlayer.Count >= 2)
@@ -80,13 +74,20 @@ namespace Roma
                 Console.WriteLine("AddPlayer达到上限了");
             }
 
-            Player fspData = new Player(data.userName, conn);
-            fspData.publicData = data;
-            fspData.tempData.bReady = false;
-            fspData.tempData.bLoaded = false;
-            m_listPlayer.Add(fspData);
-            Console.WriteLine("加入房间：" + data.userName);
+            player.tempData.bReady = false;
+            player.tempData.bLoaded = false;
+            m_listPlayer.Add(player);
+            Console.WriteLine("加入房间：" + player.id);
             // 通知当前所在玩家。更新房间的UI显示
+        }
+
+        public void RemovePlayer(Player player)
+        {
+            if (m_listPlayer.Contains(player))
+            {
+                Console.WriteLine("RemovePlayer:" + player.id);
+                m_listPlayer.Remove(player);
+            }
         }
         
         /// <summary>
@@ -160,7 +161,7 @@ namespace Roma
                     break;
                 case FspGameState.Create:
                     // 如果都加入了，就设置下一个状态
-                    if(m_dicPlayer.Count != 2)
+                    if(m_listPlayer.Count != 2)
                     {
                         return;
                         // 并通知客户端可以选人了
@@ -169,10 +170,9 @@ namespace Roma
                     break;
                 case FspGameState.SelectRole:
                     // 时间到，或者都准备了，开始下一个状态
-                    foreach (KeyValuePair<long, Player> item in m_dicPlayer)
+                    foreach (Player item in m_listPlayer)
                     {
-                        Player p = item.Value;
-                        if (!p.tempData.bReady)
+                        if (!item.tempData.bReady)
                             return;
                     }
                     m_state = FspGameState.StartLoad;
@@ -180,10 +180,9 @@ namespace Roma
                     break;
                 case FspGameState.StartLoad:
                     // 都加载完成，开始下一个状态
-                    foreach (KeyValuePair<long, Player> item in m_dicPlayer)
+                    foreach (Player item in m_listPlayer)
                     {
-                        Player p = item.Value;
-                        if (!p.tempData.bLoaded)
+                        if (!item.tempData.bLoaded)
                             return;
                     }
                     m_state = FspGameState.StartControl;

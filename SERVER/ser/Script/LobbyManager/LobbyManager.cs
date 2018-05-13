@@ -46,16 +46,21 @@ namespace Roma
             // 如果玩家在匹配中，就移除
         }
 
+        public Player GetPlayer(int uid)
+        {
+            return m_dicPlayer[uid];
+        }
+
         public void Update(float time, float fTime)
         {
             bool isOk = false;
-            foreach(KeyValuePair<long, Player> itemA in m_dicMatch)
+            foreach (KeyValuePair<long, Player> itemA in m_dicMatch)
             {
                 foreach (KeyValuePair<long, Player> itemB in m_dicMatch)
                 {
                     Player playerA = itemA.Value;
                     Player playerB = itemB.Value;
-                    if (playerA.id != playerB.id &&
+                    if (playerA.id == playerB.id &&
                         playerA.tempData.m_matchType == playerB.tempData.m_matchType)
                     {
                         MatchInfo info = new MatchInfo();
@@ -70,7 +75,8 @@ namespace Roma
                 if (isOk)
                     break;
             }
-            for(int i = 0; i < m_listMatch.Count; i ++)
+
+            for (int i = 0; i < m_listMatch.Count; i ++)
             {
                 MatchInfo item = m_listMatch[i];
                 Console.WriteLine("匹配成功 a:" + item.playerA.publicData.userName

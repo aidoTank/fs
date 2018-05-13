@@ -153,29 +153,37 @@ namespace Roma
                 Console.WriteLine("接受消息：" + (eNetMessageID)msgId);
             }
             msg.OnRecv(ref conn, contentLen, ref stream);
-            msg.OnRecv(ref conn);
+            //msg.OnRecv(ref conn);
 
-            //MessageCache cache;
-            //cache.conn = conn;
-            //cache.msg = msg;
-            //// 每次接受存起来，然后一阵一个
-            //msgList.AddLast(cache);
+            MessageCache cache;
+            cache.conn = conn;
+            cache.msg = msg;
+            // 每次接受存起来，然后一阵一个
+            msgList.Add(cache);
         }
 
-        //private void _HandleMsg()
-        //{
-        //    LinkedListNode<MessageCache> cache = msgList.First;
-        //    if (cache == null)
-        //        return;
-        //    Conn conn = cache.Value.conn;
-        //    cache.Value.msg.OnRecv(ref conn);
-        //    if(msgList.First != null)
-        //        msgList.RemoveFirst();
-        //}
+        private void _HandleMsg()
+        {
+            for (int i = 0; i < msgList.Count; i++)
+            {
+                //Console.WriteLine("处理消息：" + msgList[i].msg + " num:" + msgList.Count);
+                MessageCache msg = msgList[i];
+                msgList.RemoveAt(i);
+                msg.msg.OnRecv(ref msg.conn);
+            }
+
+            //LinkedListNode<MessageCache> cache = msgList.First;
+            //if (cache == null)
+            //    return;
+            //Conn conn = cache.Value.conn;
+            //cache.Value.msg.OnRecv(ref conn);
+            //if (msgList.First != null)
+            //    msgList.RemoveFirst();
+        }
 
         public void Update()
         {
-            //_HandleMsg();
+            _HandleMsg();
         }
 
         public void Close()
@@ -193,7 +201,7 @@ namespace Roma
         }
 
 
-        private LinkedList<MessageCache> msgList = new LinkedList<MessageCache>();
+        private List<MessageCache> msgList = new List<MessageCache>();
         // 接受的消息队列，不能再异步回调的线程中操作模型
         // private Dictionary<Conn, NetMessage> m_msgList = new Dictionary<Conn, NetMessage>();
 

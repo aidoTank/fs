@@ -87,7 +87,7 @@ namespace Roma
 
         public void EnterFram()
         {
-            Console.WriteLine("帧心跳");
+            //Console.WriteLine("帧心跳");
             // 网络的心跳在这里
             FspNetRunTime.Inst.EnterFrame();
             m_room.EnterFrame();

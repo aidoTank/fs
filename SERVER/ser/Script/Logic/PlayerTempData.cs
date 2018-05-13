@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 public class PlayerTempData
 {
+    public int m_roomId;
     // 当前队伍信息
     public int m_team;
     // 当前匹配类型

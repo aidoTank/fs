@@ -12,7 +12,7 @@ public class FspMsgJoinRoom : NetMessage
 
     public static NetMessage CreateMessage()
     {
-        return new MsgStartMatch();
+        return new FspMsgJoinRoom();
     }
 
     public override void ToByte(ref LusuoStream ls)
@@ -26,11 +26,12 @@ public class FspMsgJoinRoom : NetMessage
         // 接受玩家的加入房间信息，
         if (eno == 0)
         {
-            GC_PlayerPublicData playerData = GetData<GC_PlayerPublicData>(structBytes);
-            Console.WriteLine("接受玩家信息：" + conn.player.publicData.userName);
+            int uid = GetData<int>(structBytes);
+            Console.WriteLine("接受玩家信息：" + uid);
 
             // 把当前玩家加到指定房间
-            FspServerManager.Inst.GetRoom(1).AddPlayer(ref conn, playerData);
+            Player player = LobbyManager.Inst.GetLobby(3).GetPlayer(uid);
+            FspServerManager.Inst.GetRoom(1).AddPlayer(player);
         }
     }
 

@@ -46,7 +46,7 @@ namespace Roma
             recv.Init();
             send = new NetAsynSend();
             send.Init();
-            Console.WriteLine("网络初始化完毕");
+            Console.WriteLine("帧服务器网络初始化完毕");
         }
 
         public void Close()
@@ -67,8 +67,8 @@ namespace Roma
         {
             //处理心跳
             //_HeartBeat();
-            recv.Update();
-            send.Update();
+            //recv.Update();
+            //send.Update();
         }
 
         public void EnterFrame()
