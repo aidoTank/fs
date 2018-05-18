@@ -24,20 +24,21 @@ namespace Roma
 
         public void SendMessage(NetMessage msg)
         {
-            //m_listMsg.Add(msg);
+            m_listMsg.Add(msg);
             Debug.Log("发送消息：" + (eNetMessageID)msg.msgID);
-            m_stream.Reset();
-            msg.ToByte(ref m_stream);
-            m_socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, null, null);
+            //m_stream.Reset();
+            //msg.ToByte(ref m_stream);
+            //m_socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, null, null);
         }
 
-        public void SendMessage(LusuoStream stream)
-        {
-            m_socket.BeginSend(stream.GetBuffer(), 0, stream.m_byteLen, SocketFlags.None, null, null);
-        }
+        //public void SendMessage(LusuoStream stream)
+        //{
+        //    m_socket.BeginSend(stream.GetBuffer(), 0, stream.m_byteLen, SocketFlags.None, null, null);
+        //}
 
 
         // 发送消息要单独在心跳中发送
+        // 帧同步时，可能需在一帧发送很多消息，待处理
         public override void Update()
         {
             SendMessage();

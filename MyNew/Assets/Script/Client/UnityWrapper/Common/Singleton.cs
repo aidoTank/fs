@@ -7,7 +7,7 @@ using System.Collections;
 /// </summary>
 public class Singleton
 {
-	public static Singleton Inst = null;
+	//public static Singleton Inst = null;
 
 	public bool m_isAutoUpdate = false;
 	

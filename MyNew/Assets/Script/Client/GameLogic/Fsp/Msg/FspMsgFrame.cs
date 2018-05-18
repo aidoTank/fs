@@ -1,6 +1,7 @@
 ﻿using System;
 using ProtoBuf;
 using Roma;
+using System.Collections.Generic;
 
 public class FspMsgFrame : NetMessage
 {
@@ -30,6 +31,6 @@ public class FspMsgFrame : NetMessage
         }
     }
 
-    public FspFrame frameMsg = new FspFrame();
+    public List<FspFrame> frameMsg = new List<FspFrame>();
 }
 
