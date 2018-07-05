@@ -15,8 +15,6 @@ namespace Roma
         public FspServerManager():base(true)
         { }
 
-        private FspRoom m_room;
-
         //线程模块
         private Thread m_loopThread;
         public bool m_bRuning = true;
@@ -33,7 +31,7 @@ namespace Roma
         /// </summary>
         public override void Init()
         {
-            m_room = new FspRoom(1);
+
             Console.WriteLine("帧服务器启动成功");
 
             m_logicLastTicks = DateTime.Now.Ticks;
@@ -45,14 +43,11 @@ namespace Roma
             m_loopThread.Start();
         }
 
-        public FspRoom GetRoom(int id)
-        {
-            return m_room;
-        }
+
 
         public void Close()
         {
-            m_room.Close();
+          
         }
 
 
@@ -90,7 +85,31 @@ namespace Roma
             //Console.WriteLine("帧心跳");
             // 网络的心跳在这里
             FspNetRunTime.Inst.EnterFrame();
-            m_room.EnterFrame();
+
+            // 后续会拆分为房间管理器
+            _UpdateRoom();
+        }
+
+
+        private Dictionary<int, FspRoom> m_listRoom = new Dictionary<int, FspRoom>();
+
+        public void CreateRoom(int id)
+        {
+            FspRoom room = new FspRoom(id);
+            m_listRoom[id] = room;
+        }
+
+        public void _UpdateRoom()
+        {
+            foreach(KeyValuePair<int, FspRoom> item in m_listRoom)
+            {
+                item.Value.EnterFrame();
+            }
+        }
+
+        public FspRoom GetRoom(int id)
+        {
+            return m_listRoom[id];
         }
 
     }

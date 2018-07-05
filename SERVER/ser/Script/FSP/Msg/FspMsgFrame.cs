@@ -26,7 +26,7 @@ public class FspMsgFrame : NetMessage
         if (eno == 0)
         {
             FspFrame frameMsg = GetData<FspFrame>(structBytes);
-            FspServerManager.Inst.GetRoom(3).OnRecvClient(ref conn, frameMsg);
+            FspServerManager.Inst.GetRoom(conn.player.tempData.m_roomId).OnRecvClient(ref conn, frameMsg);
         }
     }
 

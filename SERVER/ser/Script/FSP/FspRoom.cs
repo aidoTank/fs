@@ -38,7 +38,7 @@ namespace Roma
 
     /// <summary>
     /// 一个房间就是一个战场
-    /// 房间分为选人阶段 游戏开始阶段,都在房间类处理
+    /// 房间分为选人阶段 游戏开始阶段,都在房间内处理
     /// </summary>
     public class FspRoom
     {
@@ -73,12 +73,15 @@ namespace Roma
             {
                 Console.WriteLine("AddPlayer达到上限了");
             }
-
+            player.tempData.m_roomId = m_id;
             player.tempData.bReady = false;
             player.tempData.bLoaded = false;
             m_listPlayer.Add(player);
             Console.WriteLine("加入房间：" + player.id);
             // 通知当前所在玩家。更新房间的UI显示
+            FspMsgJoinRoom msg = (FspMsgJoinRoom)NetManager.Inst.GetMessage(eNetMessageID.FspMsgJoinRoom);
+            msg.m_roomId = m_id;
+            FspNetRunTime.Inst.Send(player.conn, msg);
         }
 
         public void RemovePlayer(Player player)
@@ -119,7 +122,7 @@ namespace Roma
                 case FspVKeyType.LOAD_PROGRESS: // 加载进度
                     player.tempData.m_loadPct = cmd.args[0];
                     break;
-                case FspVKeyType.LOAD_END:
+                case FspVKeyType.LOAD_END:     // 加载完成
                     player.tempData.bLoaded = true;
                     break;
                 case FspVKeyType.CONTROL_START:  // 玩家的操作战斗指令
@@ -143,7 +146,7 @@ namespace Roma
                 }
             }
 
-            // 游戏控制时，帧号才会增加
+            // 游戏控制时，帧号才会增加，其实进入房间就算开始了
             if(m_state == FspGameState.StartControl)
             {
                 m_curFrameId++;
@@ -161,15 +164,13 @@ namespace Roma
                     break;
                 case FspGameState.Create:
                     // 如果都加入了，就设置下一个状态
-                    if(m_listPlayer.Count != 2)
-                    {
-                        return;
-                        // 并通知客户端可以选人了
-                    }
+
                     m_state = FspGameState.SelectRole;
                     break;
                 case FspGameState.SelectRole:
                     // 时间到，或者都准备了，开始下一个状态
+                    if (m_listPlayer.Count == 0)
+                        return;
                     foreach (Player item in m_listPlayer)
                     {
                         if (!item.tempData.bReady)
@@ -177,15 +178,22 @@ namespace Roma
                     }
                     m_state = FspGameState.StartLoad;
                     // 通知客户端加载战斗场景
+                    FspVKey fspKey = new FspVKey();
+                    fspKey.vkey = FspVKeyType.LOAD_START;
+                    m_lockedFrame.frameId = 1;
+                    m_lockedFrame.vkeys.Add(fspKey);
+
                     break;
                 case FspGameState.StartLoad:
                     // 都加载完成，开始下一个状态
+                    if (m_listPlayer.Count == 0)
+                        return;
                     foreach (Player item in m_listPlayer)
                     {
                         if (!item.tempData.bLoaded)
                             return;
                     }
-                    m_state = FspGameState.StartControl;
+                    //m_state = FspGameState.StartControl;
                     // 通知客户端关闭load界面，开始操作
                     break;
                 case FspGameState.StartControl:

@@ -53,7 +53,7 @@ namespace Roma
 
         public void Update(float time, float fTime)
         {
-            bool isOk = false;
+            bool isOk = true;
             foreach (KeyValuePair<long, Player> itemA in m_dicMatch)
             {
                 foreach (KeyValuePair<long, Player> itemB in m_dicMatch)
@@ -84,7 +84,7 @@ namespace Roma
 
                 MsgStartMatch msg = (MsgStartMatch)NetManager.Inst.GetMessage(eNetMessageID.MsgStartMatch);
                 msg.m_matchResult.roomId = 1;
-                msg.m_matchResult.matchType = 1;
+                //msg.m_matchResult.matchType = 1;
                 msg.m_matchResult.serverIp = "127.0.0.1";
                 msg.m_matchResult.serverPort = 6001;
                 item.playerA.Send(msg);

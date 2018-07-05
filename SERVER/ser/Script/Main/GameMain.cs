@@ -66,6 +66,9 @@ namespace Roma
             SingletonManager.Inst.RemoveSingleton(SingleName.m_dbMgr);
             DBManager.Inst = null;
 
+            SingletonManager.Inst.RemoveSingleton("fspnetrun");
+            FspNetRunTime.Inst = null;
+
             SingletonManager.Inst.RemoveSingleton(SingleName.m_mapMgr);
             LobbyManager.Inst = null;
         }

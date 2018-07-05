@@ -18,7 +18,7 @@ public class FspMsgJoinRoom : NetMessage
     public override void ToByte(ref LusuoStream ls)
     {
         eno = 0;
-        //SetByte<GC_MatchResult>(m_matchResult, ref ls);
+        SetByte<int>(m_roomId, ref ls);
     }
     
     public override void OnRecv(ref Conn conn)
@@ -26,15 +26,16 @@ public class FspMsgJoinRoom : NetMessage
         // 接受玩家的加入房间信息，
         if (eno == 0)
         {
-            int uid = GetData<int>(structBytes);
-            Console.WriteLine("接受玩家信息：" + uid);
+            CG_CreateRoom room = GetData<CG_CreateRoom>(structBytes);
+            Console.WriteLine("接受玩家信息：" + room.roomId);
 
-            // 把当前玩家加到指定房间
-            Player player = LobbyManager.Inst.GetLobby(3).GetPlayer(uid);
-            FspServerManager.Inst.GetRoom(1).AddPlayer(player);
+            // 从大厅获取玩家信息，加入到帧服务器房间,此时暂时给conn赋值玩家信息，没有分服
+            Player player = LobbyManager.Inst.GetLobby(3).GetPlayer(room.userName);
+            FspServerManager.Inst.GetRoom(room.roomId).AddPlayer(player);
+            conn.player = player;
         }
     }
 
-    //public GC_PlayerPublicData m_player = new GC_PlayerPublicData();
+    public int m_roomId;
 }
 
