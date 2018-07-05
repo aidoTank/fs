@@ -101,16 +101,7 @@ namespace Roma
             m_send.SendMessage(msg);
         }
 
-        public void SendMessage(LusuoStream stream)
-        {
-            // 如果没连接不处理
-            if (m_netState != NetState.Connected)
-            {
-                Debug.Log("网络没连接，发送失败:" + stream);
-                return;
-            }
-            m_send.SendMessage(stream);
-        }
+
 
         public override void Update(float fTime, float fDTime)
         {

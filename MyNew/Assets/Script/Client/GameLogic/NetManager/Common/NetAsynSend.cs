@@ -25,7 +25,7 @@ namespace Roma
         public void SendMessage(NetMessage msg)
         {
             m_listMsg.Add(msg);
-            Debug.Log("发送消息：" + (eNetMessageID)msg.msgID);
+     
             //m_stream.Reset();
             //msg.ToByte(ref m_stream);
             //m_socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, null, null);
@@ -54,11 +54,12 @@ namespace Roma
                 return;
             if(m_listMsg.Count > 0)
             {
+                m_bSending = true;
                 NetMessage msg = m_listMsg[0];
                 msg.ToByte(ref m_stream);
                 m_socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, SendedEnd, null);
                 m_listMsg.RemoveAt(0);
-                m_bSending = true;
+                Debug.Log("最后发送消息：" + (eNetMessageID)msg.msgID);
             }
         }
 
@@ -68,7 +69,7 @@ namespace Roma
             m_bSending = false;
             m_stream.Reset();
             ar = null;
-            //Debug.Log("发送成功！");
+            Debug.Log("发送成功！");
         }
 
         public override void Stop()

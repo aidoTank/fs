@@ -4,6 +4,7 @@ uint,string,string,string
 0,allresinfo,config/allresinfo,resinfo
 1,allcsvinfo,config/allcsvinfo,csv
 2,alllua,config/alllua,lua
+3,panel_joy_stick,ui/prefab/panel_joy_stick,面板
 100,场景段100-1000,,
 101,cfg_1,scene/1/cfg_1,地图配置
 102,lm_1,scene/1/1/lm_1,光照图
@@ -18,9 +19,10 @@ uint,string,string,string
 10001,panel_login,ui/prefab/panel_login,面板
 10002,panel_create_role,ui/prefab/panel_create_role,面板
 10003,panel_main,ui/prefab/panel_main,面板
-10004,panel_bag,ui/prefab/panel_bag,面板
-10005,panel_dialog,ui/prefab/panel_dialog,面板
-10006,panel_loading,ui/prefab/panel_loading,面板
+10004,panel_select_hero,ui/prefab/panel_select_hero,面板
+10005,panel_bag,ui/prefab/panel_bag,面板
+10006,panel_dialog,ui/prefab/panel_dialog,面板
+10007,panel_loading,ui/prefab/panel_loading,面板
 11000,图标段11000+,,
 11001,icon_item_1,ui/dynamic/icon/item/icon_item_1,图标
 11002,icon_item_2,ui/dynamic/icon/item/icon_item_2,图标

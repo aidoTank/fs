@@ -11,8 +11,9 @@ public enum eNetMessageID
 
     MsgStartMatch = 4,  // 接收匹配消息，服务器开始匹配，发送匹配结果
 
-    FspMsgJoinRoom = 100,
-    FspMsgFrame = 101,
+    FspMsgCreateRoom = 100,
+    FspMsgJoinRoom = 101,
+    FspMsgFrame = 200,
 
     //MsgMapLoad = 300,
     //MsgMapCreatureEnter,
@@ -37,6 +38,7 @@ public class NetManager : Singleton
         RegNetMessage(eNetMessageID.MsgExit, MsgExit.CreateMessage);
         RegNetMessage(eNetMessageID.MsgStartMatch, MsgStartMatch.CreateMessage);
 
+        RegNetMessage(eNetMessageID.FspMsgCreateRoom, FspMsgCreateRoom.CreateMessage);
         RegNetMessage(eNetMessageID.FspMsgJoinRoom, FspMsgJoinRoom.CreateMessage);
         RegNetMessage(eNetMessageID.FspMsgFrame, FspMsgFrame.CreateMessage);
         //RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);

@@ -1,6 +1,7 @@
 ﻿using System;
 using ProtoBuf;
 using Roma;
+using UnityEngine;
 
 public class FspMsgJoinRoom : NetMessage
 {
@@ -18,18 +19,20 @@ public class FspMsgJoinRoom : NetMessage
     public override void ToByte(ref LusuoStream ls)
     {
         eno = 0;
-        SetByte<int>(m_curPlayerUid, ref ls);
+        SetByte<CG_CreateRoom>(m_joinRoom, ref ls);
     }
 
     public override void OnRecv()
     {
-     
         if (eno == 0)
         {
-        
+            int roomId = GetData<int>(structBytes);
+            Debug.Log("加入房间成功，切换界面选人界面 : room:" + roomId);
+            SelectHeroModule selectHero = (SelectHeroModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelSelectHero);
+            selectHero.SetVisible(true);
         }
     }
 
-    public int m_curPlayerUid = new int();
+    public CG_CreateRoom m_joinRoom = new CG_CreateRoom();
 }
 

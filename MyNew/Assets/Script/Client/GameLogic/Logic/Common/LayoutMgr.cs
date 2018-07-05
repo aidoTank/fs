@@ -12,8 +12,9 @@ namespace Roma
         eLM_PanelLogin = 1,   // 登录
         eLM_PanelCreate = 2,  //创建角色   之后选新手有个引导场景
         eLM_PanelMain = 3, //主界面
+        eLM_PanelSelectHero = 4, 
 
-        eLM_PanelLoading = 4,      // 加载
+        eLM_PanelLoading = 5,      // 加载
     }
 
     public class LayoutMgr : Singleton
@@ -28,6 +29,7 @@ namespace Roma
             {(int)LogicModuleIndex.eLM_PanelLogin, LoginModule.CreateLogicModule},
             {(int)LogicModuleIndex.eLM_PanelCreate, CreateRoleModule.CreateLogicModule},
             {(int)LogicModuleIndex.eLM_PanelMain, MainModule.CreateLogicModule},
+            {(int)LogicModuleIndex.eLM_PanelSelectHero, SelectHeroModule.CreateLogicModule},
         };
 
 

@@ -25,13 +25,29 @@ namespace Roma
         {
             if(go == m_ui.m_btnCreateRoom)
             {
-                Debug.Log("创建房间");
+                int roomId = 0;
+                int.TryParse(m_ui.m_roomId.text, out roomId);
+
+                FspNetRunTime.Inst = new FspNetRunTime();
+                FspNetRunTime.Inst.Init();
+                FspNetRunTime.Inst.ConServer(() =>
+                {
+                    Debug.Log("连接帧服务器成功，发送创建房间");
+                    FspMsgCreateRoom msg = (FspMsgCreateRoom)NetManager.Inst.GetMessage(eNetMessageID.FspMsgCreateRoom);
+                    msg.m_createRoom.roomId = roomId;
+                    msg.m_createRoom.userName = int.Parse(EGame.m_openid);
+                    FspNetRunTime.Inst.SendMessage(msg);
+                });
             }
             else if(go == m_ui.m_btnJoinRoom)
             {
-                MsgStartMatch msg = (MsgStartMatch)NetManager.Inst.GetMessage(eNetMessageID.MsgStartMatch);
-                msg.m_sendMatchType = 1;
-                NetRunTime.Inst.SendMessage(msg);
+                int roomId = 0;
+                int.TryParse(m_ui.m_roomId.text, out roomId);
+
+                FspMsgJoinRoom msg = (FspMsgJoinRoom)NetManager.Inst.GetMessage(eNetMessageID.FspMsgJoinRoom);
+                msg.m_joinRoom.roomId = roomId;
+                msg.m_joinRoom.userName = int.Parse(EGame.m_openid);
+                FspNetRunTime.Inst.SendMessage(msg);
             }
         }
 

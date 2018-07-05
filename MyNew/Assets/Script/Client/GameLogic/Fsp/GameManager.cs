@@ -14,7 +14,8 @@ namespace Roma
 
         public override void Init()
         {
-            FspNetRunTime fspNet = new FspNetRunTime();
+            FspNetRunTime.Inst = new FspNetRunTime();
+            FspNetRunTime.Inst.Init();
         }
 
         /// <summary>

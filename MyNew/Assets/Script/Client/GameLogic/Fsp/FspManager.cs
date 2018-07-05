@@ -55,6 +55,10 @@ namespace Roma
             // 场景帧心跳等
         }
 
+        /// <summary>
+        /// 添加FSP消息，问题：接受FSP消息时，是存储List<FspFrame> ，还是FspFrame
+        /// 应该是List,正常情况一次只有一个帧消息，但是断线重连可以扩充为list
+        /// </summary>
         public void AddServerFrameMsg(NetMessage msg)
         {
             FspMsgFrame frameMsg = msg as FspMsgFrame;

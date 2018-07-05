@@ -28,7 +28,7 @@ namespace Roma
         }
 
         protected Socket m_socket = null;
-        public List<NetMessage> m_listMsg = new List<NetMessage>();
+        protected List<NetMessage> m_listMsg = new List<NetMessage>();
         protected const int m_uBufferSize = 1024;
     }
 }

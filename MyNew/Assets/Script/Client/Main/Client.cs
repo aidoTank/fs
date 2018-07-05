@@ -125,6 +125,10 @@ namespace Roma
             m_gameUpdate = new GameUpdate();
             m_gameQuit = new GameQuit();
             m_gameInit.Init();
+
+            GameManager.Inst = new GameManager();
+            GameManager.Inst.Init();
+            GameManager.Inst.Start();
         }
 
         private void Update()
@@ -153,9 +157,10 @@ namespace Roma
             }
         }
 
+
         private void FixedUpdate()
         {
-            
+            GameManager.Inst.FixedUpdate();
         }
 
         private void OnApplicationQuit()
