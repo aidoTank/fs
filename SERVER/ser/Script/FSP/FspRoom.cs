@@ -80,7 +80,13 @@ namespace Roma
             Console.WriteLine("加入房间：" + player.id);
             // 通知当前所在玩家。更新房间的UI显示
             FspMsgJoinRoom msg = (FspMsgJoinRoom)NetManager.Inst.GetMessage(eNetMessageID.FspMsgJoinRoom);
-            msg.m_roomId = m_id;
+            msg.m_enterInfo[0] = m_id;
+            // 玩家列表
+            for(int i = 0;i < m_listPlayer.Count;  i ++)
+            {
+                msg.m_enterInfo[1 + i] = (int)m_listPlayer[i].id;
+            }
+
             FspNetRunTime.Inst.Send(player.conn, msg);
         }
 
@@ -134,6 +140,9 @@ namespace Roma
 
         public void EnterFrame()
         {
+            if (m_listPlayer.Count == 0)
+                return;
+
             HandleState();
 
             // 每一帧的消息发给各客户端
@@ -157,20 +166,16 @@ namespace Roma
 
         private void HandleState()
         {
-            switch(m_state)
+            switch (m_state)
             {
                 case FspGameState.None:
                     // 清空所有数据
                     break;
                 case FspGameState.Create:
-                    // 如果都加入了，就设置下一个状态
-
                     m_state = FspGameState.SelectRole;
                     break;
                 case FspGameState.SelectRole:
                     // 时间到，或者都准备了，开始下一个状态
-                    if (m_listPlayer.Count == 0)
-                        return;
                     foreach (Player item in m_listPlayer)
                     {
                         if (!item.tempData.bReady)
@@ -182,7 +187,6 @@ namespace Roma
                     fspKey.vkey = FspVKeyType.LOAD_START;
                     m_lockedFrame.frameId = 1;
                     m_lockedFrame.vkeys.Add(fspKey);
-
                     break;
                 case FspGameState.StartLoad:
                     // 都加载完成，开始下一个状态

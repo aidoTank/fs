@@ -18,7 +18,7 @@ public class FspMsgJoinRoom : NetMessage
     public override void ToByte(ref LusuoStream ls)
     {
         eno = 0;
-        SetByte<int>(m_roomId, ref ls);
+        SetByte<int[]>(m_enterInfo, ref ls);
     }
     
     public override void OnRecv(ref Conn conn)
@@ -36,6 +36,6 @@ public class FspMsgJoinRoom : NetMessage
         }
     }
 
-    public int m_roomId;
+    public int[] m_enterInfo = new int[2];
 }
 

@@ -9,6 +9,10 @@ namespace Roma
     public class FspVKeyType
     {
         /// <summary>
+        /// 进入的状态
+        /// </summary>
+        public const int ENTER = 0;
+        /// <summary>
         /// 准备
         /// </summary>
         public const int READY = 1;

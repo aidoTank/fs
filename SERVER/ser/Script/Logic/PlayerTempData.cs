@@ -11,6 +11,7 @@ public class PlayerTempData
     public int m_team;
     // 当前匹配类型
     public int m_matchType;
+
     /// <summary>
     /// 是否点击准备
     /// </summary>
