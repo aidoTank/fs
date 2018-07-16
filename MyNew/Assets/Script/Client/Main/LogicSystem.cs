@@ -79,7 +79,7 @@ namespace Roma
                 // 逻辑相关
                 SceneManager.Inst.LoadMap(mapId, ref m_mapLoadProcess, OnMapLoaded);
                 // 打开进度条
-                CSharpCallLua.OpenLoading(true);
+                //CSharpCallLua.OpenLoading(true);
             }
             else
             {
@@ -90,7 +90,7 @@ namespace Roma
         private void OnMapLoaded()
         {
             // 关闭进度条
-            CSharpCallLua.OpenLoading(false);
+            //CSharpCallLua.OpenLoading(false);
             if (m_mapLoadFinshed != null)
             {
                 m_mapLoadFinshed();

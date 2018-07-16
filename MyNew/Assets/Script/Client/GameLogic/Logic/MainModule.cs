@@ -21,6 +21,18 @@ namespace Roma
             UIEventListener.Get(m_ui.m_btnJoinRoom).onClick = OnClickBtn;
         }
 
+        public override void InitData()
+        {
+            base.InitData();
+
+            FspNetRunTime.Inst = new FspNetRunTime();
+            FspNetRunTime.Inst.Init();
+            FspNetRunTime.Inst.ConServer(() =>
+            {
+                Debug.Log("连接帧服务器成功，发送创建房间");
+            });
+        }
+
         public void OnClickBtn(GameObject go)
         {
             if(go == m_ui.m_btnCreateRoom)
@@ -28,16 +40,12 @@ namespace Roma
                 int roomId = 0;
                 int.TryParse(m_ui.m_roomId.text, out roomId);
 
-                FspNetRunTime.Inst = new FspNetRunTime();
-                FspNetRunTime.Inst.Init();
-                FspNetRunTime.Inst.ConServer(() =>
-                {
-                    Debug.Log("连接帧服务器成功，发送创建房间");
-                    FspMsgCreateRoom msg = (FspMsgCreateRoom)NetManager.Inst.GetMessage(eNetMessageID.FspMsgCreateRoom);
-                    msg.m_createRoom.roomId = roomId;
-                    msg.m_createRoom.userName = int.Parse(EGame.m_openid);
-                    FspNetRunTime.Inst.SendMessage(msg);
-                });
+
+                FspMsgCreateRoom msg = (FspMsgCreateRoom)NetManager.Inst.GetMessage(eNetMessageID.FspMsgCreateRoom);
+                msg.m_createRoom.roomId = roomId;
+                msg.m_createRoom.userName = int.Parse(EGame.m_openid);
+                FspNetRunTime.Inst.SendMessage(msg);
+
             }
             else if(go == m_ui.m_btnJoinRoom)
             {

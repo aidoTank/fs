@@ -34,5 +34,10 @@ namespace Roma
 
             m_fspMgr.FixedUpdate();
         }
+
+        public void AddFrameMsg(NetMessage msg)
+        {
+            m_fspMgr.AddServerFrameMsg(msg);
+        }
     }
 }

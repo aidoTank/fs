@@ -8,7 +8,7 @@ public class FspMsgJoinRoom : NetMessage
     public FspMsgJoinRoom()
         : base(eNetMessageID.FspMsgJoinRoom)
     {
-        bFspMsg = true;
+        //bFspMsg = true;
     }
 
     public static NetMessage CreateMessage()
@@ -26,10 +26,19 @@ public class FspMsgJoinRoom : NetMessage
     {
         if (eno == 0)
         {
-            int roomId = GetData<int>(structBytes);
-            Debug.Log("加入房间成功，切换界面选人界面 : room:" + roomId);
+            int[] joinRoom = GetData<int[]>(structBytes);
+            Debug.Log("加入房间成功，切换界面选人界面 : room:" + joinRoom[0]);
+            Debug.Log("player id" + joinRoom[1]);
             SelectHeroModule selectHero = (SelectHeroModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelSelectHero);
-            selectHero.SetVisible(true);
+            selectHero.OnRecvJoinInfo(joinRoom);
+            if(selectHero.IsShow())
+            {
+                selectHero.UpdateJoinInfo();
+            }
+            else
+            {
+                selectHero.SetVisible(true);
+            }
         }
     }
 
