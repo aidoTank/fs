@@ -13,6 +13,7 @@ namespace Roma
 
         FspMsgCreateRoom = 100,
         FspMsgJoinRoom = 101,
+        FspMsgPlayerData = 102,  // 玩家数据
         FspMsgFrame = 200,
     }
 
