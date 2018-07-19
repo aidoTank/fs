@@ -128,7 +128,6 @@ namespace Roma
 
             GameManager.Inst = new GameManager();
             GameManager.Inst.Init();
-            GameManager.Inst.Start();
         }
 
         private void Update()

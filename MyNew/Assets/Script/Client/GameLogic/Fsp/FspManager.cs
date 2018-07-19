@@ -6,9 +6,11 @@ using UnityEngine;
 
 namespace Roma
 {
+    /// <summary>
+    /// 帧同步管理类，负责游戏开始后，消息缓存，逻辑处理，加速处理等
+    /// </summary>
     public class FspManager
     {
-
         private Dictionary<int, FspFrame> m_dicFrame = new Dictionary<int, FspFrame>();
         private int m_curFrameIndex;
         /// <summary>
@@ -16,7 +18,7 @@ namespace Roma
         /// </summary>
         private int m_clientNewFrameIndex;
 
-        public void Start()
+        public void Init()
         {
             Time.fixedDeltaTime = FSPParam.clientFrameScTime;
         }
@@ -38,7 +40,18 @@ namespace Roma
                     ExecuteFrame(m_curFrameIndex, frameMsg);
                 }
            }
+
+            //HandleLoadingPro();
         }
+
+        //public void HandleLoadingPro()
+        //{
+        //    FspMsgFrame msg = (FspMsgFrame)NetManager.Inst.GetMessage(eNetMessageID.FspMsgFrame);
+        //    FspVKey fsp = new FspVKey();
+        //    fsp.vkey = FspVKeyType.READY;
+        //    msg.m_frameData.vkeys.Add(fsp);
+        //    FspNetRunTime.Inst.SendMessage(msg);
+        //}
 
 
         /// <summary>
@@ -92,24 +105,13 @@ namespace Roma
             switch (cmd.vkey)
             {
                 case FspVKeyType.LOAD_START:
-                    Debug.Log("开始加载场景，开始汇报场景进度");
-                    SelectHeroModule selectHero = (SelectHeroModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelSelectHero);
-                    selectHero.SetVisible(false);
 
-                    MainModule mainModule = (MainModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelMain);
-                    mainModule.SetVisible(false);
-
-                    LogicSystem.Inst.LoadMap(1, () =>
-                    {
-                        CPlayer p = CPlayerMgr.CreateMaster(1);
-                        p.InitConfigure();
-                        p.SetPos(60, 27);
-                    });
                     break;
                 case FspVKeyType.CONTROL_START:
                     Debug.Log("开始控制");
                     break;
             }
         }
+
     }
 }
