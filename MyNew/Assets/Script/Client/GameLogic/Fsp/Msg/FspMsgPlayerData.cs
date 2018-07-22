@@ -8,7 +8,7 @@ public class FspMsgPlayerData : NetMessage
     public FspMsgPlayerData()
         : base(eNetMessageID.FspMsgPlayerData)
     {
-        bFspMsg = true;
+ 
     }
 
     public static NetMessage CreateMessage()
@@ -26,8 +26,9 @@ public class FspMsgPlayerData : NetMessage
     {
         if (eno == 0)
         {
+            int[] info = GetData<int[]>(structBytes);
             Debug.Log("接受玩家信息，开始游戏");
-            GameManager.Inst.Start();
+            GameManager.Inst.Start(info);
         }
     }
 

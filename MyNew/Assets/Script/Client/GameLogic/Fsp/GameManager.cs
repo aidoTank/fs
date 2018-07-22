@@ -41,8 +41,12 @@ namespace Roma
             m_fspMgr = new FspManager();
             m_fspMgr.Init();
 
-
+            for(int i = 0; i < playerData.Length; i ++)
+            {
+                Debug.Log("开始游戏的玩家id:" + playerData[i]);
+            }
             Debug.Log("开始加载场景，开始汇报场景进度");
+
             SelectHeroModule selectHero = (SelectHeroModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelSelectHero);
             selectHero.SetVisible(false);
 
@@ -60,12 +64,14 @@ namespace Roma
         public void FixedUpdate()
         {
             FspNetRunTime.Inst.Update(0,0);
-            m_fspMgr.FixedUpdate();
+            if(m_fspMgr != null)
+                m_fspMgr.FixedUpdate();
         }
 
         public void AddFrameMsg(NetMessage msg)
         {
-            m_fspMgr.AddServerFrameMsg(msg);
+            if (m_fspMgr != null)
+                m_fspMgr.AddServerFrameMsg(msg);
         }
     }
 }

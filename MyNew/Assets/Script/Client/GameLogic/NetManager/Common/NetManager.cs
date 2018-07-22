@@ -13,7 +13,9 @@ public enum eNetMessageID
 
     FspMsgCreateRoom = 100,
     FspMsgJoinRoom = 101,
-    FspMsgPlayerData = 102,  // 玩家数据
+    FspMsgReady = 102,
+    FspMsgPlayerData = 150,  // 玩家数据
+
     FspMsgFrame = 200,
 
     //MsgMapLoad = 300,
@@ -41,6 +43,7 @@ public class NetManager : Singleton
 
         RegNetMessage(eNetMessageID.FspMsgCreateRoom, FspMsgCreateRoom.CreateMessage);
         RegNetMessage(eNetMessageID.FspMsgJoinRoom, FspMsgJoinRoom.CreateMessage);
+        RegNetMessage(eNetMessageID.FspMsgReady, FspMsgReady.CreateMessage);
         RegNetMessage(eNetMessageID.FspMsgPlayerData, FspMsgPlayerData.CreateMessage);
         RegNetMessage(eNetMessageID.FspMsgFrame, FspMsgFrame.CreateMessage);
         //RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);

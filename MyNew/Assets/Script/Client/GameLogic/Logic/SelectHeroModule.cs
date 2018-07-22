@@ -40,10 +40,7 @@ namespace Roma
             }
             else if(go == m_ui.m_btnReady)
             {
-                FspMsgFrame msg = (FspMsgFrame)NetManager.Inst.GetMessage(eNetMessageID.FspMsgFrame);
-                FspVKey fsp = new FspVKey();
-                fsp.vkey = FspVKeyType.READY;
-                msg.m_frameData.vkeys.Add(fsp);
+                FspMsgReady msg = (FspMsgReady)NetManager.Inst.GetMessage(eNetMessageID.FspMsgReady);
                 FspNetRunTime.Inst.SendMessage(msg);
             }
         }

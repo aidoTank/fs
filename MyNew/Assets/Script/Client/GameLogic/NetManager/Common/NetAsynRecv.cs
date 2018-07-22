@@ -85,7 +85,7 @@ namespace Roma
             // 通过消息头，获取消息体
             NetMessage msg = NetManager.Inst.GetMessage((eNetMessageID)msgId);
             msg.OnRecv(msgLen, ref stream);
-            if(msg.GetFspMsg())
+            if(msg is FspMsgFrame)
             {
                 msg.OnRecv();
                 GameManager.Inst.AddFrameMsg(msg);

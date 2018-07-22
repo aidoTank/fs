@@ -9,7 +9,7 @@ public class FspMsgFrame : NetMessage
     public FspMsgFrame()
         : base(eNetMessageID.FspMsgFrame)
     {
-        bFspMsg = true;
+
     }
 
     public static NetMessage CreateMessage()
