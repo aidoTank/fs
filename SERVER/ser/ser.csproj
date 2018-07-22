@@ -57,9 +57,11 @@
     <Compile Include="Script\FSP\FspRoom.cs" />
     <Compile Include="Script\FSP\FspServerManager.cs" />
     <Compile Include="Script\FSP\FspParam.cs" />
+    <Compile Include="Script\FSP\Msg\FspMsgJoinRoom.cs" />
+    <Compile Include="Script\FSP\Msg\FspMsgPlayerData.cs" />
     <Compile Include="Script\FSP\Msg\FspMsgFrame.cs" />
     <Compile Include="Script\NetManager\Common\FspNetRunTime.cs" />
-    <Compile Include="Script\FSP\Msg\FspMsgJoinRoom.cs" />
+    <Compile Include="Script\FSP\Msg\FspMsgReady.cs" />
     <Compile Include="Script\FSP\Msg\FspMsgCreateRoom.cs" />
     <Compile Include="Script\NetManager\Logic\Lobby\MsgStartMatch.cs" />
     <Compile Include="Script\NetManager\Logic\Login\MsgCreateRole.cs" />
