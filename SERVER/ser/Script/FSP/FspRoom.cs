@@ -122,9 +122,6 @@ namespace Roma
         {
             switch(cmd.vkey)
             {
-                case FspVKeyType.READY:  // 准备
-                    player.tempData.bReady = true;
-                    break;
                 case FspVKeyType.LOAD_PROGRESS: // 加载进度
                     player.tempData.m_loadPct = cmd.args[0];
                     break;
@@ -181,12 +178,20 @@ namespace Roma
                         if (!item.tempData.bReady)
                             return;
                     }
+                    // 组合要发送的玩家信息
+                    int[] sendData = new int[m_listPlayer.Count];
+                    for (int i = 0; i < m_listPlayer.Count; i ++)
+                    {
+                        sendData[i] = (int)m_listPlayer[i].id;
+                    }
+                    // 通知客户端开始游戏
+                    foreach (Player item in m_listPlayer)
+                    {
+                        FspMsgPlayerData msg = (FspMsgPlayerData)NetManager.Inst.GetMessage(eNetMessageID.FspMsgPlayerData);
+                        msg.m_sendData = sendData;
+                        FspNetRunTime.Inst.Send(item.conn, msg);
+                    }
                     m_state = FspGameState.StartLoad;
-                    // 通知客户端加载战斗场景
-                    FspVKey fspKey = new FspVKey();
-                    fspKey.vkey = FspVKeyType.LOAD_START;
-                    m_lockedFrame.frameId = 1;
-                    m_lockedFrame.vkeys.Add(fspKey);
                     break;
                 case FspGameState.StartLoad:
                     // 都加载完成，开始下一个状态
