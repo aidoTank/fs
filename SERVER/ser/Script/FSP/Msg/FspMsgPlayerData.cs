@@ -31,6 +31,7 @@ public class FspMsgPlayerData : NetMessage
         }
     }
 
+    /// 临时为玩家id
     public int[] m_sendData;
 }
 

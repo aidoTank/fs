@@ -19,7 +19,7 @@ public class PlayerTempData
     /// <summary>
     /// 加载进度
     /// </summary>
-    public int m_loadPct;
+    public float m_loadProgress;
     /// <summary>
     /// 是否加载完成
     /// </summary>

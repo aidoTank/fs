@@ -15,6 +15,8 @@ namespace Roma
         FspMsgJoinRoom = 101,
         FspMsgReady = 102,
         FspMsgPlayerData = 150,  // 玩家数据
+        FspMsgLoadProgress = 151,
+        FspMsgStartControl = 152,
 
         FspMsgFrame = 200,
     }
@@ -37,6 +39,9 @@ namespace Roma
             RegNetMessage(eNetMessageID.FspMsgJoinRoom, FspMsgJoinRoom.CreateMessage);
             RegNetMessage(eNetMessageID.FspMsgReady, FspMsgReady.CreateMessage);
             RegNetMessage(eNetMessageID.FspMsgPlayerData, FspMsgPlayerData.CreateMessage);
+            RegNetMessage(eNetMessageID.FspMsgLoadProgress, FspMsgLoadProgress.CreateMessage);
+            RegNetMessage(eNetMessageID.FspMsgStartControl, FspMsgStartControl.CreateMessage);
+
             RegNetMessage(eNetMessageID.FspMsgFrame, FspMsgFrame.CreateMessage);
 
             //RegNetMessage(eNetMessageID.MsgMapCreatureEnter, MsgMapCreatureEnter.CreateMessage);

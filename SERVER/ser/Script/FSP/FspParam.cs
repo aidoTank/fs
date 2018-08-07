@@ -8,34 +8,9 @@ namespace Roma
 {
     public class FspVKeyType
     {
-        /// <summary>
-        /// 进入的状态
-        /// </summary>
-        public const int ENTER = 0;
-        /// <summary>
-        /// 准备
-        /// </summary>
-        public const int READY = 1;
-
-        /// <summary>
-        /// 开始加载
-        /// </summary>
-        public const int LOAD_START = 2;
-
-        /// <summary>
-        /// 加载进度
-        /// </summary>
-        public const int LOAD_PROGRESS = 3;
-
-        public const int LOAD_END = 4;
-        /// <summary>
-        /// 开始控制
-        /// </summary>
-        public const int CONTROL_START = 5;
-
-        public const int GAME_END = 6;
+        public const int Move = 1;
+        public const int Stop = 2;
     }
-
 
     /// <summary>
     /// 为了兼容键盘和轮盘操作，将玩家的操作抽象为【虚拟按键+参数】的【命令】形式：VKey+Arg

@@ -122,16 +122,16 @@ namespace Roma
         {
             switch(cmd.vkey)
             {
-                case FspVKeyType.LOAD_PROGRESS: // 加载进度
-                    player.tempData.m_loadPct = cmd.args[0];
-                    break;
-                case FspVKeyType.LOAD_END:     // 加载完成
-                    player.tempData.bLoaded = true;
-                    break;
-                case FspVKeyType.CONTROL_START:  // 玩家的操作战斗指令
-                    cmd.playerId = (uint)player.id;
-                    m_lockedFrame.vkeys.Add(cmd);
-                    break;
+                //case FspVKeyType.LOAD_PROGRESS: // 加载进度
+                //    player.tempData.m_loadProgress = cmd.args[0];
+                //    break;
+                //case FspVKeyType.LOAD_END:     // 加载完成
+                //    player.tempData.bLoaded = true;
+                //    break;
+                //case FspVKeyType.CONTROL_START:  // 玩家的操作战斗指令
+                //    cmd.playerId = (uint)player.id;
+                //    m_lockedFrame.vkeys.Add(cmd);
+                //    break;
             }
         }
 
@@ -184,7 +184,7 @@ namespace Roma
                     {
                         sendData[i] = (int)m_listPlayer[i].id;
                     }
-                    // 通知客户端开始游戏
+                    // 通知客户端开始加载游戏
                     foreach (Player item in m_listPlayer)
                     {
                         FspMsgPlayerData msg = (FspMsgPlayerData)NetManager.Inst.GetMessage(eNetMessageID.FspMsgPlayerData);
@@ -194,16 +194,33 @@ namespace Roma
                     m_state = FspGameState.StartLoad;
                     break;
                 case FspGameState.StartLoad:
-                    // 都加载完成，开始下一个状态
                     if (m_listPlayer.Count == 0)
                         return;
+                    // 临时组合要发送的玩家进度
+                    float[] progress = new float[m_listPlayer.Count];
+                    for (int i = 0; i < m_listPlayer.Count; i++)
+                    {
+                        progress[i] = (int)m_listPlayer[i].tempData.m_loadProgress;
+                    }
+                    foreach (Player item in m_listPlayer)
+                    {
+                        FspMsgLoadProgress msg = (FspMsgLoadProgress)NetManager.Inst.GetMessage(eNetMessageID.FspMsgLoadProgress);
+                        msg.m_sendProgress = progress;
+                        FspNetRunTime.Inst.Send(item.conn, msg);
+                    }
                     foreach (Player item in m_listPlayer)
                     {
                         if (!item.tempData.bLoaded)
                             return;
                     }
-                    //m_state = FspGameState.StartControl;
-                    // 通知客户端关闭load界面，开始操作
+                    Console.WriteLine("接受玩家全部加载完成 发送开始控制");
+                    // 如果都加载完成，就发送开始控制,正式时可附带信息
+                    foreach (Player item in m_listPlayer)
+                    {
+                        FspMsgStartControl msg = (FspMsgStartControl)NetManager.Inst.GetMessage(eNetMessageID.FspMsgStartControl);
+                        FspNetRunTime.Inst.Send(item.conn, msg);
+                    }
+                    m_state = FspGameState.StartControl;
                     break;
                 case FspGameState.StartControl:
 

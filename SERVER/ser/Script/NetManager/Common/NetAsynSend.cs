@@ -79,7 +79,7 @@ namespace Roma
                 }
                 msgList.RemoveAt(0);
                 m_bSending = true;
-            }
+            } 
         }
 
         private void SendedEnd(IAsyncResult ar)
