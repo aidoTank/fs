@@ -1,38 +1,51 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 
 
 namespace Roma
 {
     public class GameObjectHelper : MonoBehaviour
     {
-        void OnWillRenderObject()
+        public void SetCreatrue(CCreature cc)
         {
-            if (m_HelpObject != null)
-            {
-                // 得到最后一次渲染的帧
-                //m_HelpObject.WillDraw();
-            }
+            m_creature = cc;
         }
 
-        public void SetHelpObject(Entity entity)
+        //public void SetMtCreatrue(MtCreature mt)
+        //{
+        //    m_mtCreature = mt;
+        //}
+
+        public void SetResource(Resource res)
         {
-            m_HelpObject = entity;
+            m_resource = res;
         }
 
-        public Entity GetHelpObject()
+        public CCreature GetCreature()
         {
-            return m_HelpObject;
+            return m_creature;
         }
 
-        public void AsyncCall(IEnumerator routine)
+        //public MtCreature GetMTCreature()
+        //{
+        //    return m_mtCreature;
+        //}
+
+        public Resource GetResource()
         {
-            StartCoroutine(routine);
+            return m_resource;
         }
 
-        private Entity m_HelpObject = null;
+        static public GameObjectHelper Get(GameObject go)
+        {
+            GameObjectHelper helper = go.GetComponent<GameObjectHelper>();
+            if (helper == null)
+                helper = go.AddComponent<GameObjectHelper>();
+            return helper;
+        }
 
+        private CCreature m_creature;
+        //private MtCreature m_mtCreature;
+        private Resource m_resource;
     }
 }

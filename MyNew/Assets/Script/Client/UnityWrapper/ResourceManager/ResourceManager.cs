@@ -267,8 +267,8 @@ namespace Roma
                 case ResType.ModelResource:
                     resource = new ModelResource(ref resInfo);
                     break;
-                case ResType.SceneCfgResource:
-                    resource = new SceneCfgResource(ref resInfo);
+                //case ResType.SceneCfgResource:
+                    //resource = new SceneCfgResource(ref resInfo);
                     break;
                 case ResType.LightMapResource:
                     resource = new LightMapResource(ref resInfo);

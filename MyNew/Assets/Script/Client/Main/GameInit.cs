@@ -72,6 +72,7 @@ namespace Roma
 
         private void OnCsvInfoLoaded(Resource res)
         {
+            LogicSystem.Inst.GetMapLoadProcess().fPercent = 1.0f;
             ResourceFactory.Inst.UnLoadResource(res, true);
 
             LogicSystem.Inst.InitData();
@@ -122,13 +123,13 @@ namespace Roma
 
             Client.Inst().m_uiResInit.OpenPanel(false);
 
-            LogicSystem.Inst.LoadMap(1, () =>
-            {
+            //LogicSystem.Inst.LoadMap(1, () =>
+            //{
 
-                CPlayer p = CPlayerMgr.CreateMaster(1);
-                p.InitConfigure();
-                p.SetPos(60, 27);
-            });
+            //    CPlayer p = CPlayerMgr.CreateMaster(1);
+            //    p.InitConfigure();
+            //    p.SetPos(60, 27);
+            //});
         }
 
         private void OnLoadingEnd()

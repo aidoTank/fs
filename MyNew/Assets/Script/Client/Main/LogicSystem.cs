@@ -40,8 +40,8 @@ namespace Roma
             SingletonManager.Inst.AddSingleton(SingleName.m_Scene, SceneManager.Inst);
             EntityManager.Inst = new EntityManager();
             SingletonManager.Inst.AddSingleton(SingleName.m_Entity, EntityManager.Inst);
-            SoundManager.Inst = new SoundManager();
-            SingletonManager.Inst.AddSingleton(SingleName.m_sound, SoundManager.Inst);
+            //SoundManager.Inst = new SoundManager();
+            //SingletonManager.Inst.AddSingleton(SingleName.m_sound, SoundManager.Inst);
         
             SingletonManager.Inst.Init();
 
@@ -51,51 +51,43 @@ namespace Roma
 
         public void InitData()      // 所有配置下载完成时，初始化客户端本地数据
         {
-            InitMapData();
+            //InitMapData();
         }
 
        
-        private void InitMapData()
-        {
-            MapCsv mapCsv = CsvManager.Inst.GetCsv<MapCsv>((int)eAllCSV.eAC_Map);
-            foreach (KeyValuePair<uint, MapData> item in mapCsv.m_mapDataDic)
-            {
-                SceneManager.Inst.SetSceneData(item.Value);
-            }
-        }
 
 
 
-        public int GetMapId()
-        {
-            return (int)SceneManager.Inst.GetMap().GetMapID();
-        }
+        //public int GetMapId()
+        //{
+        //    return (int)SceneManager.Inst.GetMap().GetMapID();
+        //}
 
-        public void LoadMap(uint mapId, SceneLoaded loaded)
-        {
-            if(mapId != SceneManager.Inst.GetMap().GetMapID())
-            {
-                m_mapLoadFinshed = loaded;
-                // 逻辑相关
-                SceneManager.Inst.LoadMap(mapId, ref m_mapLoadProcess, OnMapLoaded);
-                // 打开进度条
-                //CSharpCallLua.OpenLoading(true);
-            }
-            else
-            {
-                Debug.LogWarning("同一场景无需加载" + mapId);
-            }
-        }
+        //public void LoadMap(uint mapId, SceneLoaded loaded)
+        //{
+        //    if(mapId != SceneManager.Inst.GetMap().GetMapID())
+        //    {
+        //        m_mapLoadFinshed = loaded;
+        //        // 逻辑相关
+        //        SceneManager.Inst.LoadMap(mapId, ref m_mapLoadProcess, OnMapLoaded);
+        //        // 打开进度条
+        //        //CSharpCallLua.OpenLoading(true);
+        //    }
+        //    else
+        //    {
+        //        Debug.LogWarning("同一场景无需加载" + mapId);
+        //    }
+        //}
 
-        private void OnMapLoaded()
-        {
-            // 关闭进度条
-            //CSharpCallLua.OpenLoading(false);
-            if (m_mapLoadFinshed != null)
-            {
-                m_mapLoadFinshed();
-            }
-        }
+        //private void OnMapLoaded()
+        //{
+        //    // 关闭进度条
+        //    //CSharpCallLua.OpenLoading(false);
+        //    if (m_mapLoadFinshed != null)
+        //    {
+        //        m_mapLoadFinshed();
+        //    }
+        //}
 
         /// <summary>
         /// 0到3，高到低
@@ -110,12 +102,12 @@ namespace Roma
         {
             Lua_Update(fTime, fDTime);
             SingletonManager.Inst.Update(fTime, fDTime);
-            if (SceneManager.Inst != null && SceneManager.Inst.IsLoaded())
-            {
-                CPointMgr.Update(fTime, fDTime);
-                CPlayerMgr.Update(fTime, fDTime);
-                CCameraMgr.Update();
-            }
+            //if (SceneManager.Inst != null && SceneManager.Inst.IsLoaded())
+            //{
+            //    CPointMgr.Update(fTime, fDTime);
+            //    CPlayerMgr.Update(fTime, fDTime);
+            //    CCameraMgr.Update();
+            //}
         }
 
         public void LateUpdateModule(float fTime, float fDTime)
@@ -154,7 +146,7 @@ namespace Roma
             EntityManager.Inst = null;
 
             SingletonManager.Inst.RemoveSingleton(SingleName.m_sound);
-            SoundManager.Inst = null;
+            //SoundManager.Inst = null;
 
             SingletonManager.Inst.RemoveSingleton(SingleName.m_ResMgr);
             ResourceManager.Inst = null;
@@ -171,8 +163,8 @@ namespace Roma
         public static LogicSystem Inst = null;
 
         private LoadProcess m_mapLoadProcess = new LoadProcess();
-        public SceneLoaded m_mapLoadFinshed;
-        public SceneLoaded m_mapCreatureLoadFinshed;
+        //public SceneLoaded m_mapLoadFinshed;
+        //public SceneLoaded m_mapCreatureLoadFinshed;
         public bool m_fristLoadScene = true;
         //private QuadTree m_tree;
         private uint m_fightSoundHandle;

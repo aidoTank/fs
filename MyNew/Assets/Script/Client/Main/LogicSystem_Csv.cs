@@ -9,8 +9,8 @@ namespace Roma
     public enum eAllCSV
     {
         eAC_None = 0,
+        eAC_Scene,
         eAC_GameText,
-        eAC_Map,
         eAC_Player,
         eAC_Effect,
     }
@@ -35,7 +35,7 @@ namespace Roma
         public void InitCsv(ref CsvManager csvMgr)
         {
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_GameText, "游戏文本表", new GameTextCsv());
-            csvMgr.AddCSVCreate((int)eAllCSV.eAC_Map, "地图表", new MapCsv());
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_Scene, "地图表", new SceneCsv());
 
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Player, "玩家表", new PlayerCsv());
 

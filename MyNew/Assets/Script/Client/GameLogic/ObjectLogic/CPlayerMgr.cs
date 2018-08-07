@@ -38,9 +38,7 @@ namespace Roma
 
             CPlayer player = new CPlayer(uid);
             Add(uid, player);
-            player.m_createCreatureEnd += (CCreature cc) => {
-                //player.SetShadow(!m_bHideOtherPlayer);
-            };
+
             return player;
         }
 

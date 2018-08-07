@@ -29,9 +29,9 @@ namespace Roma
                 info.m_resID = data.ModelResId;
                 info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
 
-                uint uH = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, this.OnEntityLoaded, info);
-                m_ent = EntityManager.Inst.GetEnity(uH, false) as BoneEntity;
-                m_ent.SetUserString(eUserData.Uid, m_uId);
+                //uint uH = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, this.OnEntityLoaded, info);
+                //m_ent = EntityManager.Inst.GetEnity(uH, false) as BoneEntity;
+                //m_ent.SetUserString(eUserData.Uid, m_uId);
             }
             return true;
         }

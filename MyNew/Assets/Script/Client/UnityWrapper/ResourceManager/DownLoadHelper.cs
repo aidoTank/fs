@@ -117,6 +117,9 @@ namespace Roma
         private Resource m_res;
         private WWW m_www;
 
+        private int m_curResNum;
+        private int m_maxResNum;
+
         public void Clear()
         {
             if (null != m_www)
@@ -144,6 +147,8 @@ namespace Roma
             if (res.GetResInfo().m_bDepend) //先下载依赖资源
             {
                 dependences = ResourceManager.ABManifest.GetAllDependencies(res.GetResInfo().strUrl);
+                m_curResNum = 0;
+                m_maxResNum = dependences.Length + 1;
                 if (dependences != null && dependences.Length > 0)
                 {
                     for (int i = 0; i < dependences.Length; i++)
@@ -154,25 +159,35 @@ namespace Roma
                         if (dpRes != null)
                         {
                             dpRes.AddRef();
+                            m_curResNum++;
                             continue;
                         }
 
-                        string dpURL = GlobleConfig.GetPersistentPath() + name;
-                        if (!File.Exists(dpURL))
+                        string dpURL;
+                        if (GlobleConfig.m_downLoadType == eDownLoadType.WWW)  // 编辑器服务器
                         {
-                            dpURL = GlobleConfig.GetStreamingPath() + name;
+                            dpURL = GlobleConfig.GetFileServerPath() + name;
+                        }
+                        else
+                        {
+                            dpURL = GlobleConfig.GetPersistentPath() + name;
+                            if (!File.Exists(dpURL))
+                            {
+                                dpURL = GlobleConfig.GetStreamingPath() + name;
+                            }
                         }
 
-                        WWW dwww = new WWW(dpURL);
-                        yield return dwww;
-                        if (dwww.error != null)
+                        m_www = new WWW(dpURL);
+                        yield return m_www;
+                        if (m_www.error != null)
                         {
                             m_bStart = false;
                             Debug.Log("依赖资源加载出错：" + name + "  " + dpURL);
                         }
                         else
                         {
-                            DPResourceManager.Inst.Add(name, dwww.assetBundle);
+                            m_curResNum++;
+                            DPResourceManager.Inst.Add(name, m_www.assetBundle);
                         }
                     }
                 }
@@ -223,6 +238,7 @@ namespace Roma
             }
             else
             {
+                m_curResNum++;
                 res.SetDPResource(dependences);
                 res.SetResource(ref m_www);
                 res.SetState(eResourceState.eRS_Loaded);  // 这里只是表示资源加载完成，并没有执行资源内部的下载后的逻辑
@@ -243,7 +259,9 @@ namespace Roma
             }
             if(m_res != null && m_www != null && !m_www.isDone)
             {
-                m_res.SetDownLoadProcess(m_www.progress);
+                float cur = m_curResNum + m_www.progress / (float)m_maxResNum;
+                float pro = cur / (float)m_maxResNum;
+                m_res.SetDownLoadProcess(pro);
             }
         }
     }

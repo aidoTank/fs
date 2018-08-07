@@ -51,6 +51,9 @@ namespace Roma
 
         public static Client Inst()
         {
+
+            //Debug.Log(Mathf.Cos(30 * Mathf.Deg2Rad));
+
             if (m_client == null)
             {
                 Caching.CleanCache();

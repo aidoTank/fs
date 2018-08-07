@@ -104,12 +104,7 @@ namespace Roma
         {
             switch (cmd.vkey)
             {
-                case FspVKeyType.LOAD_START:
-
-                    break;
-                case FspVKeyType.CONTROL_START:
-                    Debug.Log("开始控制");
-                    break;
+    
             }
         }
 

@@ -44,21 +44,6 @@ namespace Roma
 
         public BoneEntity m_ent = null;        // 角色本身
 
-        public OnCreatureCreateEnd m_createCreatureEnd;
-        public OnCreatureDestoryEnd m_destoryCreatureEnd;
-        public CCreature m_targetCreature = null;
-
-        private uint m_moveClickEffectHandldId = 0;
-
-        public FSMMgr m_fsmMgr;
-        public MoveStateParam m_moveStateParam = new MoveStateParam();
-        public AttackStateParam m_skillCastInfo = new AttackStateParam();
-        public StunStateParam m_stunStateParam = new StunStateParam();
-        public NearStateParam m_nearStateParem = new NearStateParam();
-        public StrikeStateParam m_strikeStateParam = new StrikeStateParam();
-        public HitFlyStateParam m_hitFlyStateParam = new HitFlyStateParam();
-        public JumpStateParam m_jumpStateParam = new JumpStateParam();
-
 
         public CCreature(long id)
             : base(id)
@@ -67,7 +52,7 @@ namespace Roma
 
         public virtual bool InitConfigure()
         {
-            m_fsmMgr = new FSMMgr(this);
+  
             return false;
         }
 
@@ -78,65 +63,13 @@ namespace Roma
 
         public virtual void PushCommand(StateID stateId)
         {
-            if (m_fsmMgr == null)
-                return;
-            if (stateId == StateID.MoveState || stateId == StateID.AttackState)
-            {
-                if (m_fsmMgr.GetCurState() == StateID.AttackState || m_fsmMgr.GetCurState() == StateID.StunState)
-                {
-                    return;
-                }
-            }
-
-            //Debug.Log(this.m_name +  "=========================================切换：" + stateId);
-            // 切换状态
-            if (m_fsmMgr != null)
-                m_fsmMgr.ChangeState((int)stateId);
+            
         }
 
 
         public virtual bool GoTo(float x, float z, eControlMode mode, int dir)
         {
-            if (x <= 0 || z <= 0)
-            {
-                return false;
-            }
-
-            //m_moveStateParam.m_moveEnd = null;
-            m_moveStateParam.m_movePath.Clear();
-            Vector2 startPos = new Vector2(GetPos().x, GetPos().z);
-            Vector2 target = new Vector2(x, z);
-            switch (mode)
-            {
-                case eControlMode.eCM_keyboard:
-                    //SceneManager.Inst.GetMap().GetPath(ref startPos, ref target, ref m_moveStateParam.m_movePath);
-                    PushCommand(StateID.MoveState);
-                    break;
-                case eControlMode.eCM_mouse:    // 自己
-                    SceneManager.Inst.GetMap().GetPath(ref startPos, ref target, ref m_moveStateParam.m_movePath);
-                    PushCommand(StateID.MoveState);
-                    // 播放点击地面特效
-                    if (m_moveStateParam.m_movePath.Count >= 1)
-                    {
-                        //Vector2 endPoint = m_moveStateParam.m_movePath[m_moveStateParam.m_movePath.Count - 1];
-                        //CEffectMgr.Destroy(m_moveClickEffectHandldId);
-                        //m_moveClickEffectHandldId = CEffectMgr.Create((uint)eSceneEffect.ePathTargetPoint,
-                        //new Vector3(
-                        //    endPoint.x,
-                        //    SceneManager.Inst.GetTerrainHeight(endPoint.x, endPoint.y),
-                        //    endPoint.y),
-                        //Vector3.zero, null);
-                    }
-                    break;
-                case eControlMode.eCM_auto:
-                    SceneManager.Inst.GetMap().GetPath(ref startPos, ref target, ref m_moveStateParam.m_movePath);
-                    PushCommand(StateID.MoveState);
-                    break;
-                case eControlMode.eCM_noFindPath:
-                    m_moveStateParam.m_movePath.Add(target);
-                    PushCommand(StateID.MoveState);
-                    break;
-            }
+            
             //m_moveStateParam.m_movePath.Clear();
             return true;
         }
@@ -159,12 +92,8 @@ namespace Roma
                 return;
             }
 
-            m_ent.SetActive(bShow);
-            m_ent.SetShadowActive(bShow);
-            if (!IsMaster())
-            {
-                m_ent.SetCollider(bShow);
-            }
+            m_ent.SetShow(bShow);
+     
         }
 
 
@@ -179,7 +108,7 @@ namespace Roma
         {
             if (m_ent != null)
             {
-                m_ent.SetPos(x, y);
+                //m_ent.SetPos(x, y);
             }
         }
 
@@ -187,7 +116,7 @@ namespace Roma
         {
             if (m_ent != null)
             {
-                m_ent.SetPos(pos);
+               // m_ent.SetPos(pos);
             }
         }
 
@@ -234,10 +163,10 @@ namespace Roma
         }
 
        
-        public CCreature GetTarget()
-        {
-            return m_targetCreature;
-        }
+        //public CCreature GetTarget()
+        //{
+        //    return m_targetCreature;
+        //}
 
         public Vector3 GetPos()
         {
@@ -275,14 +204,7 @@ namespace Roma
             return m_ent.GetRotate();
         }
 
-        public StateID GetState()
-        {
-            if (m_fsmMgr == null)
-            {
-                return StateID.DeadState;
-            }
-            return m_fsmMgr.GetCurState();
-        }
+
 
         public virtual void Update(float fTime, float fDTime)
         {
@@ -291,10 +213,7 @@ namespace Roma
                 return;
             }
 
-            if (null != m_fsmMgr)
-            {
-                m_fsmMgr.Update(fTime, fDTime);
-            }
+
         }
     }
 }

@@ -8,28 +8,9 @@ namespace Roma
 {
     public class FspVKeyType
     {
-        /// <summary>
-        /// 准备
-        /// </summary>
-        public const int READY = 1;
+        public const int Move = 1;
+        public const int Stop = 2;
 
-        /// <summary>
-        /// 开始加载
-        /// </summary>
-        public const int LOAD_START = 2;
-
-        /// <summary>
-        /// 加载进度
-        /// </summary>
-        public const int LOAD_PROGRESS = 3;
-
-        public const int LOAD_END = 4;
-        /// <summary>
-        /// 开始控制
-        /// </summary>
-        public const int CONTROL_START = 5;
-
-        public const int GAME_END = 6;
     }
 
 

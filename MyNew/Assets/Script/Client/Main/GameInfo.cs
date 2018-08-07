@@ -118,7 +118,7 @@ public class GameInfo : MonoBehaviour
                 m_curUnLoadRes = ResourceFactory.Inst.GetUnLoadResource();
                 m_dpRes = DPResourceManager.Inst.GetDPResource();
 
-                m_staticEntity = EntityManager.Inst.GetStaticEntityInfo();
+                //m_staticEntity = EntityManager.Inst.GetStaticEntityInfo();
                 m_dynamicEntity = EntityManager.Inst.GetDynamicEntityInfo();
                 m_cacheEntity = EntityManager.Inst.GetCahceEntityInfo();
 

@@ -7,204 +7,81 @@ using UnityEngineInternal;
 
 namespace Roma
 {
-    public delegate void EffectFinishListenerEvent();
-    // 特效对象类，类似于CCreature。
     public class CEffect
     {
-        /// <summary>
-        /// 用于外部设置，识别的唯一标识符，比如场景动画配置需要控制创建和消失
-        /// </summary>
-        public uint m_uid; 
-        public EffectData m_effectData;
-        public DynamicEntity m_ent;
-        public Vector3 m_pos = new Vector3(0f, 0.01f, 0f);
-        public Vector3 m_rota = Vector3.zero;
-        public Vector3 m_scale = Vector3.one;
-        public int m_layer = (int)LusuoLayer.eEL_Dynamic;
-        public int m_order;
-        public Vector3 m_offsetPos = Vector3.zero;
-        public Transform m_parent;
-        public EntityInitNotify m_loaded;
-        public EffectFinishListenerEvent m_finished;     //播放结束
-        public uint m_soundHandleId = 0;
-
-        public float m_curTime = 0.0f;
-        public float m_maxTime = 0.0f;
+        private Entity m_ent;
+        private EffectData m_effectData;   // 如果是场景特效，需要控制声音的销毁，UI特效就不控制
+        public float m_curTime;
+        public float m_maxTime;
         // 默认是自动删除，如果开始时间是0，那么就是需要手动删除
         public bool m_isFinish = false;
         private bool m_bAutoDel = true;
 
-        public CEffect(EffectData data)
+        public BoneEntity m_parentEnt; // 挂载的父对象
+        private Action<CEffect> m_playEnd;
+
+        private Entity m_soundEnt;
+
+        public CEffect(int csvId, Vector3 start, Action<Entity> loaded = null)
         {
-            m_effectData = data;
-            m_maxTime = data.fLiveTime;
+            Create(csvId, start, loaded);
+        }
+
+        public CEffect(int csvId, Action<Entity> loaded = null)
+        {
+            if (csvId == 0)
+                return;
+            Create(csvId, Vector3.zero, loaded);
+        }
+
+        private void Create(int csvId, Vector3 startPos, Action<Entity> loaded = null)
+        {
+            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
+            m_effectData = effectCsv.GetData(csvId);
+            if (m_effectData == null || m_effectData.nResID == 0)
+            {
+                Debug.LogError("找不到特效id:" + csvId);
+                return;
+            }
+            EntityBaseInfo info = new EntityBaseInfo();
+            info.m_vPos = startPos;
+            info.m_resID = m_effectData.nResID;
+            int handldId = EntityManager.Inst.CreateEntity(eEntityType.eEffectEntity, info, loaded);
+            m_ent = EntityManager.Inst.GetEnity(handldId);
+
+            m_maxTime = m_effectData.fLiveTime;
             if (m_maxTime.Equals(0.0f))
             {
                 m_bAutoDel = false;
             }
+
+            //int soundHid = SoundManager.Inst.PlaySound(m_effectData.uSoundID, startPos);
+            //m_soundEnt = EntityManager.Inst.GetEnity(soundHid);
+
         }
 
-        public uint InitConfigure()
+        public void AddPlayEnd(Action<CEffect> end)
         {
-            EntityBaseInfo info = new EntityBaseInfo();
-            info.m_resID = m_effectData.nResID;
-            // 创建一个动态实体
-            // 注：如果这里有相同资源，就直接先执行OnLoaded
-            uint uH = EntityManager.Inst.CreateEntity(eEntityType.eEffectEntity, OnLoaded, info);
-            m_ent = EntityManager.Inst.GetEnity(uH, false) as DynamicEntity;
-            return uH;
-        }
-        private void OnLoaded(Entity entity, object userObject)
-        {
-            // 设置位置等
-            if (null != m_parent)
-            {
-                ((DynamicEntity)entity).Bind(m_parent);   // 将当期特效绑定到这个骨骼上
-                //Debug.Log("这个特效被挂着父类上了:" + m_parent);
-            }
-            m_pos += m_offsetPos;
-
-            entity.SetPos(m_pos);
-            entity.SetDirection(m_rota);
-            entity.SetScale(m_scale);
-            entity.SetLayer(m_layer);
-            entity.SetOrder(m_order);
-
-            if (null != m_loaded)
-            {
-                m_loaded(entity, userObject);
-            }
-
-            // 播放音效
-            //Debug.Log("特效实体:" + entity + "特效音效:" + m_effectData + "音效ID:" + m_effectData.uSoundID);
-            if (m_effectData != null && !string.IsNullOrEmpty(m_effectData.uSoundID))
-            {
-                int sndId = 0;
-                int.TryParse(m_effectData.uSoundID, out sndId);
-                //m_soundHandleId = LogicSystem.Inst.PlaySound(sndId);
-            }
-
-            //Debug.Log("特效挂点这里被调用！" + ((DynamicEntity)entity).m_transform.parent);
-        }
-
-        public bool IsInited()
-        {
-            if(m_ent == null)
-            {
-                return false;
-            }
-            return m_ent.IsInited();
-        }
-
-        public Vector3 GetPos()
-        {
-            return m_pos;
-        }
-
-        public void SetActive(bool bTrue)
-        {
-            if (m_ent != null && m_ent.IsInited())
-            {
-                // 特效使用renderer做显影不好重置进行下次播放
-                m_ent.SetActive(bTrue);
-                //m_ent.GetObject().SetActive(bTrue);
-            }
-        }
-
-        public void SetLayer(int index)
-        {
-            if (index == 0)
-                return;
-            m_layer = index;
-            if (m_ent != null && m_ent.IsInited())
-            {
-                m_ent.SetLayer(index);
-            }
-        }
-
-        public void SetOrder(int order)
-        {
-            m_order = order;
-            if(m_ent != null && m_ent.IsInited())
-            {
-                m_ent.SetOrder(order);
-            }
-        }
-
-        public void SetPos(Vector3 pos)
-        {
-            m_pos = pos;
-            if (m_ent !=null && m_ent.IsInited())
-            {
-                m_ent.SetPos(pos);
-            }
-        }
-
-        public void SetOffset(Vector3 vOffset)
-        {
-            m_offsetPos = vOffset;
-        }
-
-        public Vector3 GetDirection()
-        {
-            if (m_ent != null)
-            {
-                return m_ent.GetRotate();
-            }
-
-            return Vector3.zero;
-        }
-
-        public void SetDirection(Vector3 rota)
-        {
-            m_rota = rota;
-            if (m_ent != null && m_ent.IsInited())
-            {
-                m_ent.SetDirection(rota);
-            }
-        }
-
-        public void SetScale(Vector3 scale)
-        {
-            m_scale = scale;
-        }
-
-        public void SetBind(Transform bone)
-        {
-            m_parent = bone;
-        }
-
-        public void SetLoaded(EntityInitNotify loaded)
-        {
-            m_loaded = loaded;
-        }
-
-        /// <summary>
-        /// 特效播放完成
-        /// </summary>
-        /// <param name="finished"></param>
-        public void SetFinish(EffectFinishListenerEvent finished)
-        {
-            m_finished = finished;
+            m_playEnd = end;
         }
 
         public virtual void Update(float fTime, float fDTime)
         {
-            if (IsInited() && m_bAutoDel && !m_isFinish)
+            if (m_ent.IsInited() && m_bAutoDel && !m_isFinish)
             {
                 m_curTime += fDTime;
                 if (m_curTime >= m_maxTime)
                 {
                     m_isFinish = true;
-                    if (m_finished != null)
-                        m_finished();
+                    if (m_playEnd != null)
+                        m_playEnd(this);
+                }
+                // 声音位置和特效位置一致
+                if (m_soundEnt != null)
+                {
+                    m_soundEnt.SetPos(m_ent.GetPos());
                 }
             }
-        }
-
-        public void SetFinish()
-        {
-            m_isFinish = true;
         }
 
         public bool IsFinish()
@@ -212,180 +89,166 @@ namespace Roma
             return m_isFinish;
         }
 
-        /// <summary>
-        /// 默认加入缓存， 但是武器特效这些就不加入缓存了
-        /// </summary>
-        /// <param name="bCache"></param>
-        public void Destory(bool bCache = true)
+        public Entity GetEntity()
         {
-            // 声音用自己的时间销毁
-            //SoundManager.Inst.Stop(m_soundHandleId);
-            // 后期内存太大，不做缓存了
-            EntityManager.Inst.RemoveEntity(m_ent.m_handleID, false, false);
+            return m_ent;
+        }
+
+        public void Destory()
+        {
+            // if effect have parent then parent object need clear bind objects
+            if (m_parentEnt != null)
+                m_parentEnt.RemoveBindObject(m_ent);
+            //EntityManager.Inst.RemoveEntity(m_ent.m_hid, true);
+            //if (m_soundEnt != null)
+            //{
+            //    SoundManager.Inst.Remove(m_soundEnt.m_hid);
+            //}
+        }
+
+        public void SetBind(int bindHandleId, string bingPoint)
+        {
+            BoneEntity bindEnt = (BoneEntity)EntityManager.Inst.GetEnity(bindHandleId);
+            Transform bindTransform = bindEnt.GetBone(bingPoint);
+            if (bindTransform == null)
+            {
+                m_ent.SetPos(bindEnt.GetPos());
+                //ent.SetParent(bindEnt.GetObject().transform);
+            }
+            else
+            {
+                m_ent.SetParent(bindTransform);
+            }
+        }
+
+        public void SetLayer(LusuoLayer lay)
+        {
+            m_ent.SetLayer(lay);
+        }
+
+        public void SetShow(bool bShow)
+        {
+            m_ent.SetShow(bShow);
         }
     }
-    // 特效作为一个实体对象，可以去控制它在场景中的位置，渲染等等。
+
     public class CEffectMgr
     {
-        /// <summary>
-        /// 创建基于场景位置的特效
-        /// </summary>
-        public static uint Create(uint effectId, Vector3 pos, Vector3 rota, EntityInitNotify initEnd)
+        public static int Create(int effectId, Vector3 pos, Vector3 rota, Action<Entity> loaded = null)
         {
-            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
-            EffectData effectData = effectCsv.GetEffect(effectId);
-            if (null == effectData)
-            {
-                //Debug.LogError("特效不存在：" + effectId);
+            if (effectId == 0)
                 return 0;
-            }
-            CEffect effect = new CEffect(effectData);
-            effect.SetPos(pos);
-            effect.SetDirection(rota);
-            effect.SetLoaded(initEnd);
-            uint uH = effect.InitConfigure();
-            m_mapEffect.Add(uH, effect);
-            return uH;
-        }
-        //大小
-        public static uint Create(uint effectId, Vector3 pos, Vector3 rota, EntityInitNotify initEnd,Vector3 scale)
-        {
-            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
-            EffectData effectData = effectCsv.GetEffect(effectId);
-            if (null == effectData)
-            {
-                //Debug.LogError("特效不存在：" + effectId);
-                return 0;
-            }
-            CEffect effect = new CEffect(effectData);
-            effect.SetPos(pos);
-            effect.SetDirection(rota);
-            effect.SetLoaded(initEnd);
-            effect.SetScale(scale);
-            uint uH = effect.InitConfigure();
-            m_mapEffect.Add(uH, effect);
-            return uH;
+            CEffect effect = new CEffect(effectId, pos, loaded);
+            Entity ent = effect.GetEntity();
+            ent.SetLayer((int)LusuoLayer.eEL_Dynamic);
+            ent.SetPos(pos);
+            ent.SetDirection(rota);
+            m_mapEffect.Add(ent.m_hid, effect);
+            return ent.m_hid;
         }
 
         /// <summary>
-        /// 创建基于玩家身体绑定点的特效,在这里通过外部的技能配置表传入战斗开始，击中等特效的绑定点
-        /// </summary>
-        public static uint Create(uint effectId, CCreature creature, string bindPoint)
+        /// 创建基于绑定实体身上的特效
+        /// </summary>     
+        public static int Create(int effectId, int bindHandleId, string bingPoint, Action<Entity> loaded = null)
         {
-            // 这一层不用再绕到CCreature中处理，直接在这里绑定到角色实体上
-            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
-            EffectData effectData = effectCsv.GetEffect(effectId);
-            if (null == effectData)
+            if (effectId == 0)
+                return 0;
+            CEffect effect = new CEffect(effectId, loaded);
+            Entity ent = effect.GetEntity();
+            if (ent == null)
             {
-                //Debug.LogError("特效不存在：" + effectId);
                 return 0;
             }
-            CEffect effect = new CEffect(effectData);
-            if (creature == null || creature.GetEntity() == null)
-            {
-                //Debug.LogError("特效:" + effectId + "绑点不存在");
-                return 0;
-            }
-            //Transform bind = creature.GetBone(bindPoint);
-            Vector3 offsetEffect= Vector3.zero;
-            //if (bind.Equals("over_head")) offsetEffect = creature.GetEffectOffset();
+            ent.SetLayer((int)LusuoLayer.eEL_Dynamic);
 
-            effect.SetOffset(offsetEffect);
-            //effect.SetBind(bind);
-            uint uH = effect.InitConfigure();
-            m_mapEffect.Add(uH, effect);
-            return uH;
+            BoneEntity bindEnt = (BoneEntity)EntityManager.Inst.GetEnity(bindHandleId);
+            Transform bindTransform = bindEnt.GetBone(bingPoint);
+            if (bindTransform == null)
+            {
+                ent.SetPos(bindEnt.GetPos());
+                //ent.SetParent(bindEnt.GetObject().transform);
+            }
+            else
+            {
+                ent.SetParent(bindTransform);
+                effect.m_parentEnt = bindEnt;
+                bindEnt.AddBindObject(ent);
+            }
+            m_mapEffect.Add(ent.m_hid, effect);
+            return ent.m_hid;
         }
 
         /// <summary>
-        /// 可选是否为战斗监听特效
+        /// 创建基于实体位置跟随的特效
         /// </summary>
-        public static uint Create(uint effectId, CCreature creature, string bindPoint, bool bFightListenerList)
+        public static int CreateByCreaturePos(int effectId, int bindHandleId, Action<Entity> loaded = null)
         {
-            uint id = Create(effectId, creature, bindPoint);
-            return id;
+            if (effectId == 0)
+                return 0;
+            CEffect effect = new CEffect(effectId, loaded);
+            Entity ent = effect.GetEntity();
+            if (ent == null)
+            {
+                return 0;
+            }
+            ent.SetLayer((int)LusuoLayer.eEL_Dynamic);
+
+            BoneEntity bindEnt = (BoneEntity)EntityManager.Inst.GetEnity(bindHandleId);
+            effect.m_parentEnt = bindEnt;
+            bindEnt.AddBindObject(ent);
+
+            m_mapEffect.Add(ent.m_hid, effect);
+
+            m_followPos.Add(effect, bindEnt);
+            return ent.m_hid;
         }
+
 
         /// <summary>
         /// 创建基于UI的特效绑定
         /// </summary>     
-        public static uint CreateUI(uint effectId, Transform uiBindPoint, int order = 0)
+        public static int CreateUI(int effectId, Transform uiBindPoint, int order = 0, Action<CEffect> playend = null)
         {
-            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
-            EffectData effectData = effectCsv.GetEffect(effectId);
-            if (null == effectData)
-            {
-                Debug.Log("特效不存在：" + effectId);
+            if (effectId == 0)
                 return 0;
-            }
-            CEffect effect = new CEffect(effectData);
-            effect.SetLayer((int)LusuoLayer.eEL_UI);
-            effect.SetOrder((int)order);
-            Transform parent = UIItem.GetChild(uiBindPoint, "effect");
-            if (parent == null) 
-                parent = uiBindPoint;
-            effect.SetBind(parent);
-            uint uH = effect.InitConfigure();
-            m_mapEffect.Add(uH, effect);
-            return uH;
+            CEffect effect = new CEffect(effectId, null);
+            Entity ent = effect.GetEntity();
+            ent.SetLayer((int)LusuoLayer.eEL_UI);
+            ent.SetOrder(order);
+            ent.SetParent(uiBindPoint);
+            m_mapEffect.Add(ent.m_hid, effect);
+            effect.AddPlayEnd(playend);
+            return ent.m_hid;
+
         }
 
-        public static uint CreateUI(uint effectId, int order = 0)
+        public static void Destroy(int hid)
         {
-            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
-            EffectData effectData = effectCsv.GetEffect(effectId);
-            if (null == effectData)
+            if (hid == 0)
+                return;
+            CEffect effect;
+            if (m_mapEffect.TryGetValue(hid, out effect))
             {
-                Debug.Log("特效不存在：" + effectId);
-                return 0;
+                effect.Destory();
+                effect = null;
+                m_mapEffect.Remove(hid);
             }
-            CEffect effect = new CEffect(effectData);
-            effect.SetLayer((int)LusuoLayer.eEL_UI);
-            effect.SetOrder((int)order);
-            uint uH = effect.InitConfigure();
-            m_mapEffect.Add(uH, effect);
-            return uH;
         }
 
-        public static uint Create(uint effectId, Transform uiBindPoint, EntityInitNotify initEnd = null, int layer = 0)
+        public static CEffect GetEffect(int handleId)
         {
-            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
-            EffectData effectData = effectCsv.GetEffect(effectId);
-            if (null == effectData)
+            CEffect effect;
+            if (m_mapEffect.TryGetValue(handleId, out effect))
             {
-                //Debug.LogError("特效不存在：" + effectId);
-                return 0;
+                return effect;
             }
-            CEffect effect = new CEffect(effectData);
-            effect.SetBind(uiBindPoint);
-            effect.SetLoaded(initEnd);
-            effect.SetLayer(layer);
-            uint uH = effect.InitConfigure();
-            m_mapEffect.Add(uH, effect);
-            return uH;
-        }
-
-        public static uint Create(uint effectId, Transform uiBindPoint, Vector3 pos , Vector3 scale)
-        {
-            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
-            EffectData effectData = effectCsv.GetEffect(effectId);
-            if (null == effectData)
-            {
-                //Debug.LogError("特效不存在：" + effectId);
-                return 0;
-            }
-            CEffect effect = new CEffect(effectData);
-            effect.SetBind(uiBindPoint);
-            effect.SetPos(pos);
-            effect.SetScale(scale);
-            uint uH = effect.InitConfigure();
-            m_mapEffect.Add(uH, effect);
-            return uH;
+            return null;
         }
 
         public static void Update(float fTime, float fDTime)
         {
-            Dictionary<uint, CEffect>.Enumerator ms = m_mapEffect.GetEnumerator();
+            Dictionary<int, CEffect>.Enumerator ms = m_mapEffect.GetEnumerator();
             while (ms.MoveNext())
             {
                 m_tempListEffect.Add(ms.Current.Value);
@@ -400,135 +263,59 @@ namespace Roma
                 }
                 else
                 {
+                    m_followPos.Remove(ef);
+                    m_mapEffect.Remove(ef.GetEntity().m_hid);
                     ef.Destory();
-                    m_mapEffect.Remove(ef.m_ent.m_handleID);
                 }
             }
             m_tempListEffect.Clear();
-        }
 
-        /// <summary>
-        /// 让外部可以传入handleID
-        /// </summary>
-        /// <param name="uHangID"></param>
-        /// <param name="effect"></param>
-        public static void Add(uint uHangID, CEffect effect)
-        {
-            if(m_mapEffect.ContainsKey(uHangID))
+            foreach (KeyValuePair<CEffect, Entity> item in m_followPos)
             {
-                //Debug.LogError("添加重复的技能特效");
-                return;
-            }
-            m_mapEffect.Add(uHangID, effect);
-        }
-
-        /// <summary>
-        /// 特效默认缓存，但是武器特效不加缓存
-        /// </summary>
-        public static void Destroy(uint handleId, bool bCache = true)
-        {
-            CEffect effect;
-            if (m_mapEffect.TryGetValue(handleId, out effect))
-            {
-                if (effect.m_ent.IsInited())
+                Entity ent = item.Key.GetEntity();
+                if (ent.IsInited())
                 {
-                    effect.Destory(bCache);
-                    effect.m_effectData = null;
-                    m_mapEffect.Remove(handleId);
+                    ent.SetPos(item.Value.GetPos());
                 }
             }
         }
 
-        /// <summary>
-        /// 外部设置UID，并通过UID删除
-        /// </summary>
-        /// <param name="uid"></param>
-        public static void DestroyByUid(uint uid)
-        {
-            foreach (KeyValuePair<uint, CEffect> item in m_mapEffect)
-            {
-                if(uid == item.Value.m_uid)
-                {
-                    Destroy(item.Value.m_ent.m_handleID);
-                    return;
-                }
-            }
-        }
-
-        public static CEffect GetEffect(uint effectHandleId)
-        { 
-            CEffect effect;
-            if (m_mapEffect.TryGetValue(effectHandleId, out effect))
-            {
-                return effect;
-            }
-            return null;
-        }
-
-        public static void Clear()
-        {
-            foreach (KeyValuePair<uint, CEffect> item in m_mapEffect)
-            {
-                item.Value.Destory();
-            }
-            m_mapEffect.Clear();
-        }
-
-        public static void ClearNotUI()
-        {
-            List<CEffect> list = new List<CEffect>(m_mapEffect.Values);
-            for(int i = 0; i < list.Count; i ++)
-            {
-                if (list[i].m_layer != (int)LusuoLayer.eEL_UI)
-                {
-                    m_mapEffect.Remove(list[i].m_ent.m_handleID);
-                    list[i].Destory();
-                }
-            }
-        }
-
-        //public static void OnLoadAllEffect(OnAllShaderLoaded loaded)
-        //{
-        //    m_onAllEffectLoaded = loaded;
-
-        //    LoadingEffectCsv loadingEffectCsv = CsvManager.Inst.GetCsv<LoadingEffectCsv>((int)eAllCSV.eAC_LoadingEffect);
-        //    if(loadingEffectCsv.m_dicData.Count == 0)
-        //    {
-        //        m_onAllEffectLoaded(m_curNum, m_maxNum);
-        //    }
-        //    else
-        //    {
-        //        for (int i = 0; i < loadingEffectCsv.m_dicData.Count; i++)
-        //        {
-        //            uint csvId = loadingEffectCsv.m_dicData[i];
-        //            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
-        //            EffectData effectData = effectCsv.GetEffect(csvId);
-        //            if (effectData != null)
-        //            {
-        //                m_maxNum++;
-        //                ResourceFactory.Inst.LoadResource(effectData.nResID, OnEffectLoaded, null);
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private static void OnEffectLoaded(Resource res)
-        //{
-        //    m_curNum++;
-        //    m_onAllEffectLoaded(m_curNum, m_maxNum);
-        //}
-
-        private static Dictionary<uint, CEffect> m_mapEffect = new Dictionary<uint, CEffect>();
+        private static Dictionary<int, CEffect> m_mapEffect = new Dictionary<int, CEffect>();
         // 临时销毁列表
         private static List<CEffect> m_tempListEffect = new List<CEffect>();
 
-        private static EffectFinishListenerEvent m_fightListenerEvent;
-        private static Dictionary<uint, CEffect> m_mapFightListener = new Dictionary<uint, CEffect>();
-        //private static bool m_bHandleFLEvent = false;
+        /// <summary>
+        /// 跟随角色位置的特效
+        /// </summary>
+        private static Dictionary<CEffect, Entity> m_followPos = new Dictionary<CEffect, Entity>();
 
-        // 第一次loading需要加载的
-        //private static OnAllShaderLoaded m_onAllEffectLoaded;
-        private static int m_curNum;
-        private static int m_maxNum;
+
+
+        public static string GetEffectInfo()
+        {
+            string info = "\n";
+            int num = 0;
+            foreach (KeyValuePair<int, CEffect> item in m_mapEffect)
+            {
+                Entity ent = item.Value.GetEntity();
+                if (ent == null)
+                {
+                    info += "当前特效的ent为空" + "\n";
+                }
+                else
+                {
+                    if (ent.GetObject() == null)
+                    {
+                        info += num + ".当前特效的object为空了" + " " + ent.GetEntityBaseInfo().m_strName + "\n";
+                    }
+                    else
+                    {
+                        info += num + "." + ent.GetObject().name + "\n";
+                    }
+                }
+                num++;
+            }
+            return " 数量[" + num + "]:" + info;
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace Roma
 
     public class EffectData
     {
-        public uint nEffectID;
+        public int nEffectID;
         public int nResID;
         public string strDesc;
         public float fLiveTime = 0;
@@ -32,7 +32,7 @@ namespace Roma
         protected override void _Save()
         {
             base._Save();
-            foreach (KeyValuePair<uint, EffectData> key in m_mapEffectCSV)
+            foreach (KeyValuePair<int, EffectData> key in m_mapEffectCSV)
             {
                 int nRow = m_csv.AddRow();
                 m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_EffectID,  key.Value.nEffectID.ToString());
@@ -56,7 +56,7 @@ namespace Roma
             for (int i = 0; i < m_csv.GetRows(); i++)
             {
                 EffectData effect = new EffectData();
-                effect.nEffectID = (uint)m_csv.GetIntData(i, (int)eEffectCSV_Enum.eEE_EffectID);
+                effect.nEffectID = m_csv.GetIntData(i, (int)eEffectCSV_Enum.eEE_EffectID);
                 effect.nResID = m_csv.GetIntData(i, (int)eEffectCSV_Enum.eEE_ResID);
                 effect.strDesc = m_csv.GetData(i, (int)eEffectCSV_Enum.eEE_EffectDesc);
                 effect.fLiveTime = m_csv.GetFloatData(i, (int)eEffectCSV_Enum.eEE_LiveTime);
@@ -73,7 +73,7 @@ namespace Roma
             return new EffectCsv();
         }
 
-        public EffectData GetEffect(uint uID)
+        public EffectData GetData(int uID)
         {
             EffectData effect = null;
             if (m_mapEffectCSV.TryGetValue(uID, out effect))
@@ -88,7 +88,7 @@ namespace Roma
         {
             string[] nameList = new string[m_mapEffectCSV.Count];
             int i = 0;
-            foreach (KeyValuePair<uint, EffectData> item in m_mapEffectCSV)
+            foreach (KeyValuePair<int, EffectData> item in m_mapEffectCSV)
             {
                 nameList[i] = item.Value.strDesc;
                 i++;
@@ -98,7 +98,7 @@ namespace Roma
 
         public int GetId(string npcName)
         {
-            foreach (KeyValuePair<uint, EffectData> item in m_mapEffectCSV)
+            foreach (KeyValuePair<int, EffectData> item in m_mapEffectCSV)
             {
                 if (item.Value.strDesc == npcName)
                 {
@@ -111,7 +111,7 @@ namespace Roma
         public int GetIndex(int effecfId)
         {
             int index = 0;
-            foreach (KeyValuePair<uint, EffectData> item in m_mapEffectCSV)
+            foreach (KeyValuePair<int, EffectData> item in m_mapEffectCSV)
             {
                 if (item.Value.nEffectID == effecfId)
                     break;
@@ -123,7 +123,7 @@ namespace Roma
         public int GetId(int index)
         {
             int curIndex = 0;
-            foreach (KeyValuePair<uint, EffectData> item in m_mapEffectCSV)
+            foreach (KeyValuePair<int, EffectData> item in m_mapEffectCSV)
             {
                 if (curIndex == index)
                     return (int)item.Key;
@@ -132,6 +132,6 @@ namespace Roma
             return curIndex;
         }
 
-        public Dictionary<uint, EffectData> m_mapEffectCSV = new Dictionary<uint, EffectData>();
+        public Dictionary<int, EffectData> m_mapEffectCSV = new Dictionary<int, EffectData>();
     }
 }

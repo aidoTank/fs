@@ -25,6 +25,10 @@ namespace Roma
         private FspManager m_fspMgr;      // FSP管理器
         private int m_gameState; // 游戏状态
 
+        private bool m_bRunning;
+        private float m_sendProgressTime;  // 发送进度间隔
+        private bool m_bSendLoaded;        // 是否发送加载结束
+
         public override void Init()
         {
             FspNetRunTime.Inst = new FspNetRunTime();
@@ -32,7 +36,6 @@ namespace Roma
 
 
         }
-
         /// <summary>
         /// 服务器收到所有人准备后，开始游戏
         /// </summary>
@@ -53,12 +56,46 @@ namespace Roma
             MainModule mainModule = (MainModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelMain);
             mainModule.SetVisible(false);
 
-            LogicSystem.Inst.LoadMap(1, () =>
+            //LogicSystem.Inst.LoadMap(1, () =>
+            //{
+            //    CPlayer p = CPlayerMgr.CreateMaster(1);
+            //    p.InitConfigure();
+            //    p.SetPos(60, 27);
+            //});
+            SceneManager.Inst.LoadScene(1, null);
+            m_bRunning = true;
+        }
+
+
+        public void HandleLoadingProcess()
+        {
+            if (!m_bRunning)
+                return;
+            if (m_bSendLoaded)
+                return;
+            // 进度完成，直接再发送一次
+            if (LogicSystem.Inst.GetMapLoadProcess().fPercent >= 1.0f)
             {
-                CPlayer p = CPlayerMgr.CreateMaster(1);
-                p.InitConfigure();
-                p.SetPos(60, 27);
-            });
+                m_bSendLoaded = true;
+                m_sendProgressTime = 1;
+
+                FspMsgLoadProgress msgPro = (FspMsgLoadProgress)NetManager.Inst.GetMessage(eNetMessageID.FspMsgLoadProgress);
+                msgPro.m_progress = 1.0f;
+                FspNetRunTime.Inst.SendMessage(msgPro);
+
+                FspMsgStartControl msg = (FspMsgStartControl)NetManager.Inst.GetMessage(eNetMessageID.FspMsgStartControl);
+                FspNetRunTime.Inst.SendMessage(msg);
+                return;
+            }
+            // 场景加载进度不用帧指令,间隔发送
+            m_sendProgressTime += Time.deltaTime;
+            if(m_sendProgressTime >= 1)
+            {
+                m_sendProgressTime = 0;
+                FspMsgLoadProgress msg = (FspMsgLoadProgress)NetManager.Inst.GetMessage(eNetMessageID.FspMsgLoadProgress);
+                msg.m_progress = LogicSystem.Inst.GetMapLoadProcess().fPercent;
+                FspNetRunTime.Inst.SendMessage(msg);
+            }
         }
 
         public void FixedUpdate()
@@ -66,6 +103,8 @@ namespace Roma
             FspNetRunTime.Inst.Update(0,0);
             if(m_fspMgr != null)
                 m_fspMgr.FixedUpdate();
+
+            HandleLoadingProcess();
         }
 
         public void AddFrameMsg(NetMessage msg)
