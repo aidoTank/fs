@@ -23,11 +23,11 @@ namespace Roma
         {
             m_mainCam = GameObject.Find("Camera").GetComponent<Camera>();
             m_cam = m_mainCam.transform;
-            m_target = CPlayerMgr.GetMaster().GetEntity().GetObject().transform;
-            m_bInit = true;
-            // 初始化摄像机
-            m_cam.eulerAngles = m_curEulerAngle;
-            m_cam.position = m_target.position + Quaternion.Euler(m_curEulerAngle) * m_direction;
+            //m_target = CPlayerMgr.GetMaster().GetEntity().GetObject().transform;
+            //m_bInit = true;
+            //// 初始化摄像机
+            //m_cam.eulerAngles = m_curEulerAngle;
+            //m_cam.position = m_target.position + Quaternion.Euler(m_curEulerAngle) * m_direction;
         }
 
         private static void OnDown()

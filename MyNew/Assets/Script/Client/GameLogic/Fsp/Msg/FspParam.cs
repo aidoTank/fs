@@ -10,7 +10,6 @@ namespace Roma
     {
         public const int Move = 1;
         public const int Stop = 2;
-
     }
 
 

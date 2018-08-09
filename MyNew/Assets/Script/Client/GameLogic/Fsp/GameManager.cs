@@ -56,13 +56,13 @@ namespace Roma
             MainModule mainModule = (MainModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelMain);
             mainModule.SetVisible(false);
 
-            //LogicSystem.Inst.LoadMap(1, () =>
-            //{
-            //    CPlayer p = CPlayerMgr.CreateMaster(1);
-            //    p.InitConfigure();
-            //    p.SetPos(60, 27);
-            //});
-            SceneManager.Inst.LoadScene(1, null);
+            
+            CMap map = CMapMgr.Create(1);
+            map.Create();
+
+            CPlayer master = CPlayerMgr.CreateMaster(1);
+            map.Enter(master);
+
             m_bRunning = true;
         }
 

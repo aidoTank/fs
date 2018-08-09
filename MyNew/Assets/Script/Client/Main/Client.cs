@@ -155,7 +155,7 @@ namespace Roma
 
             if(Input.GetKeyDown(KeyCode.F1))
             {
-                CPlayerMgr.GetMaster().GoTo(216, 226, eControlMode.eCM_mouse, 0);
+                //CPlayerMgr.GetMaster().GoTo(216, 226, eControlMode.eCM_mouse, 0);
             }
         }
 

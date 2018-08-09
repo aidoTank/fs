@@ -23,27 +23,17 @@ namespace Roma
 
             PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
             PlayerCsvData data = playerCsv.GetData(1);
-            if (null == m_ent)
-            {
-                EntityBaseInfo info = new EntityBaseInfo();
-                info.m_resID = data.ModelResId;
-                info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
 
-                //uint uH = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, this.OnEntityLoaded, info);
-                //m_ent = EntityManager.Inst.GetEnity(uH, false) as BoneEntity;
-                //m_ent.SetUserString(eUserData.Uid, m_uId);
-            }
+            // 测试，需建立表现层
+            EntityBaseInfo info = new EntityBaseInfo();
+            info.m_resID = data.ModelResId;
+            info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
+
+            int uH = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, info, null);
+
+
             return true;
         }
-
-        public override void OnEntityLoaded(Entity entity, object userObject)
-        {
-            base.OnEntityLoaded(entity, userObject);
-
-
-        }
-
-
     }
 }
 

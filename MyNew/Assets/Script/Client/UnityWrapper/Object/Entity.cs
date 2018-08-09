@@ -83,11 +83,6 @@ namespace Roma
             OnInited();
         }
 
-        //public void AddInitNofity(Action<Entity> notity)
-        //{
-        //    m_entityInitNofity += notity;
-        //}
-
         public virtual void Update(float fTime, float fDTime)
         {
             if (m_bNeedLoadResource)

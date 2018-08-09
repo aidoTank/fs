@@ -19,13 +19,6 @@ namespace Roma
             return base.InitConfigure();
         }
 
-        public override void OnEntityLoaded(Entity entity, object userObject)
-        {
-            base.OnEntityLoaded(entity, userObject);
-            //GetEntity().SetCollider(false);
-
-            CCameraMgr.Init();
-        }
     }
 }
 
