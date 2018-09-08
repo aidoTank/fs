@@ -41,6 +41,17 @@ namespace Roma
         public bool m_bDrawGrid = false;
         public float m_timeScale = 1;
 
+
+        public int m_mobaCameraDis = 30;
+        public int m_mobaCameraDir = 50;
+        public int m_mobaCameraFov = 20;
+        public float m_mobaCameraZOffset = 1f;
+
+        public bool m_bSkillCamera = true;
+        public float m_skillStartTime = 0.2f;
+        public float m_skillEndTime = 30f;
+
+
         public GameInit m_gameInit = null;
         private GameUpdate m_gameUpdate = null;
         private GameQuit m_gameQuit = null;

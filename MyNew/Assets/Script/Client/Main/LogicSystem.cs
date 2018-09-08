@@ -42,7 +42,10 @@ namespace Roma
             SingletonManager.Inst.AddSingleton(SingleName.m_Entity, EntityManager.Inst);
             //SoundManager.Inst = new SoundManager();
             //SingletonManager.Inst.AddSingleton(SingleName.m_sound, SoundManager.Inst);
-        
+
+
+            CameraMgr.Inst = new CameraMgr();
+            SingletonManager.Inst.AddSingleton("cam", CameraMgr.Inst);
             SingletonManager.Inst.Init();
 
             //// 初始化csv配置
@@ -54,41 +57,7 @@ namespace Roma
             //InitMapData();
         }
 
-       
-
-
-
-        //public int GetMapId()
-        //{
-        //    return (int)SceneManager.Inst.GetMap().GetMapID();
-        //}
-
-        //public void LoadMap(uint mapId, SceneLoaded loaded)
-        //{
-        //    if(mapId != SceneManager.Inst.GetMap().GetMapID())
-        //    {
-        //        m_mapLoadFinshed = loaded;
-        //        // 逻辑相关
-        //        SceneManager.Inst.LoadMap(mapId, ref m_mapLoadProcess, OnMapLoaded);
-        //        // 打开进度条
-        //        //CSharpCallLua.OpenLoading(true);
-        //    }
-        //    else
-        //    {
-        //        Debug.LogWarning("同一场景无需加载" + mapId);
-        //    }
-        //}
-
-        //private void OnMapLoaded()
-        //{
-        //    // 关闭进度条
-        //    //CSharpCallLua.OpenLoading(false);
-        //    if (m_mapLoadFinshed != null)
-        //    {
-        //        m_mapLoadFinshed();
-        //    }
-        //}
-
+      
         /// <summary>
         /// 0到3，高到低
         /// </summary>
@@ -112,6 +81,7 @@ namespace Roma
 
         public void LateUpdateModule(float fTime, float fDTime)
         {
+            SingletonManager.Inst.LateUpdate(fTime, fDTime);
             //Profiler.BeginSample("LateUpdateModule");
             //if (SceneManager.Inst.IsLoaded())
             //{

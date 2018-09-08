@@ -14,7 +14,8 @@ namespace Roma
 
         public void LateUpdate(float fTime, float fDTime)
         {
-            LogicSystem.Inst.LateUpdateModule(fTime, fDTime);
+            if (LogicSystem.Inst != null)
+                LogicSystem.Inst.LateUpdateModule(fTime, fDTime);
         }
     }
 }

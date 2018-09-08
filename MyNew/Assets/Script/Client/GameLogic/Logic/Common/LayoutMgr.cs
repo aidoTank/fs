@@ -15,6 +15,8 @@ namespace Roma
         eLM_PanelSelectHero = 4, 
 
         eLM_PanelLoading = 5,      // 加载
+
+        eLM_PanelJoyStick = 6,
     }
 
     public class LayoutMgr : Singleton

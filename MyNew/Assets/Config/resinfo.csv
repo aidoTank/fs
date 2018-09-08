@@ -1,20 +1,12 @@
 Id,ResName,url,type
 ID,文件,网络路径,类型（比如 模型 纹理 骨骼 特效 地图配置 光照图 材质）
 uint,string,string,string
-0,allresinfo,config/allresinfo,resinfo
-1,allcsvinfo,config/allcsvinfo,csv
+0,allresinfo,,
+1,allcsvinfo,,
 2,alllua,config/alllua,lua
 3,panel_joy_stick,ui/prefab/panel_joy_stick,面板
 100,场景段100-1000,,
-101,cfg_1,scene/1/cfg_1,地图配置
-102,lm_1,scene/1/1/lm_1,光照图
-103,mo_1,scene/1/prefab/mo_1,模型
-104,mo_2,scene/1/prefab/mo_2,模型
-105,mo_1_1,scene/1/prefab/mo_1_1,模型
-106,mo_1_2,scene/1/prefab/mo_1_2,模型
-107,mo_1_3,scene/1/prefab/mo_1_3,模型
-201,cfg_2,scene/2/cfg_2,地图配置
-202,lm_2,,
+101,mo_1,scene/1/prefab/mo_1,模型
 10000,面板段10000-11000,,
 10001,panel_login,ui/prefab/panel_login,面板
 10002,panel_create_role,ui/prefab/panel_create_role,面板

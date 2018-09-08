@@ -10,6 +10,9 @@ namespace Roma
 
     public partial class CPlayer : CCreature
     {
+        public VCreature m_vCreature;
+
+
         public CPlayer(long id)
             : base(id)
         {
@@ -25,15 +28,11 @@ namespace Roma
             PlayerCsvData data = playerCsv.GetData(1);
 
             // 测试，需建立表现层
-            EntityBaseInfo info = new EntityBaseInfo();
-            info.m_resID = data.ModelResId;
-            info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
-
-            int uH = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, info, null);
-
-
+            m_vCreature = new VCreature(data.ModelResId);
             return true;
         }
+
+
     }
 }
 

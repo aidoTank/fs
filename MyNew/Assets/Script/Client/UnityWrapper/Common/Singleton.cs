@@ -24,7 +24,8 @@ public class Singleton
 	public virtual void Init(){}
 
     public virtual void Update(float fTime, float fDTime) { }
-	
-	public virtual void Destroy(){}
+    public virtual void LateUpdate(float fTime, float fDTime) { }
+    
+    public virtual void Destroy(){}
 	
 }

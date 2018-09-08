@@ -87,6 +87,20 @@ public class SingletonManager
         }
     }
 
+    public void LateUpdate(float fTime, float fDTime)
+    {
+        Dictionary<string, Singleton>.Enumerator map = m_singletonMap.GetEnumerator();
+        while (map.MoveNext())
+        {
+            if (map.Current.Value.IsAutoUpdate())
+            {
+                //Profiler.BeginSample(map.Current.Key);
+                map.Current.Value.LateUpdate(fTime, fDTime);
+                //Profiler.EndSample();
+            }
+        }
+    }
+
     public void Destroy()
     {
         foreach (KeyValuePair<string, Singleton> item in m_singletonMap)
