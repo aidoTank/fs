@@ -42,3 +42,4 @@ D:\Unity5\fs\trunk\SERVER\ser\obj\Debug\ser.pdb
 D:\Unity5\fs\trunk\SERVER\ser\bin\Debug\ser.exe.config
 D:\Unity5\fs\trunk\SERVER\ser\bin\Debug\ser.exe
 D:\Unity5\fs\trunk\SERVER\ser\bin\Debug\ser.pdb
+D:\Unity5\fs\trunk\SERVER\ser\obj\Debug\ser.csprojResolveAssemblyReference.cache

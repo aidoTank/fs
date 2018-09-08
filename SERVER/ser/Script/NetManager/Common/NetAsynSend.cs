@@ -77,7 +77,8 @@ namespace Roma
                 {
                     Console.WriteLine("[错误]发送消息异常,id:" + (eNetMessageID)msg.msgID + " " + conn.GetAdress() + " : " + e.Message);
                 }
-                msgList.RemoveAt(0);
+                if(msgList.Count > 0)
+                    msgList.RemoveAt(0);
                 m_bSending = true;
             } 
         }

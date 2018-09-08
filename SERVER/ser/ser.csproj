@@ -57,6 +57,8 @@
     <Compile Include="Script\FSP\FspRoom.cs" />
     <Compile Include="Script\FSP\FspServerManager.cs" />
     <Compile Include="Script\FSP\FspParam.cs" />
+    <Compile Include="Script\FSP\Msg\FspMsgStartControl.cs" />
+    <Compile Include="Script\FSP\Msg\FspMsgLoadProgress.cs" />
     <Compile Include="Script\FSP\Msg\FspMsgJoinRoom.cs" />
     <Compile Include="Script\FSP\Msg\FspMsgPlayerData.cs" />
     <Compile Include="Script\FSP\Msg\FspMsgFrame.cs" />
