@@ -32,6 +32,8 @@ namespace Roma
             {(int)LogicModuleIndex.eLM_PanelCreate, CreateRoleModule.CreateLogicModule},
             {(int)LogicModuleIndex.eLM_PanelMain, MainModule.CreateLogicModule},
             {(int)LogicModuleIndex.eLM_PanelSelectHero, SelectHeroModule.CreateLogicModule},
+            
+            {(int)LogicModuleIndex.eLM_PanelJoyStick, JoyStickModule.CreateLogicModule},
         };
 
 

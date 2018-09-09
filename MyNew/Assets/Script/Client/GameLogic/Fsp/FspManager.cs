@@ -100,11 +100,23 @@ namespace Roma
             // 场景帧心跳等
         }
 
+        /// <summary>
+        /// 组合逻辑指令
+        /// </summary>
         private void HandleServerCmd(FspVKey cmd)
         {
-            switch (cmd.vkey)
+            CmdFspEnum type = (CmdFspEnum)cmd.vkey;
+            uint uid = cmd.playerId;
+            CPlayer player = CPlayerMgr.Get(uid);
+            switch (type)
             {
-    
+                case CmdFspEnum.eFspStopMove:
+                    Debug.Log(uid + " 停止移动");
+                break;
+                case CmdFspEnum.eFspMove:
+                    Debug.Log(uid + " 移动 " + cmd.args[0] + " " + cmd.args[1]);
+                break;
+
             }
         }
 

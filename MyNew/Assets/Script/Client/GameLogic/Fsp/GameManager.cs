@@ -56,6 +56,9 @@ namespace Roma
             MainModule mainModule = (MainModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelMain);
             mainModule.SetVisible(false);
 
+            JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
+            js.SetVisible(true);
+            
             
             CMap map = CMapMgr.Create(1);
             map.Create();

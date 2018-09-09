@@ -30,10 +30,10 @@ public class FspMsgFrame : NetMessage
             m_frameData = GetData<FspFrame>(structBytes);
             Debug.Log("接受帧消息：");
 
-            //for (int i = 0; i < frameMsg.vkeys.Count; i++)
-            //{
-            //    HandleServerCmd(frameMsg.vkeys[i]);
-            //}
+            for (int i = 0; i < m_frameData.vkeys.Count; i++)
+            {
+                //HandleServerCmd(frameMsg.vkeys[i]);
+            }
 
         }
     }

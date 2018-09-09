@@ -331,107 +331,30 @@ namespace Roma
             return iconObject;
         }
 
-        public static GameObject SetImage(GameObject item, int iconId)
+              public static void SetRawImage(Transform item, string imageTitle, int resId, UIBase refUI = null)
         {
-            Image image = item.GetComponent<Image>();
-            if(image != null)
-            {
-                SetImage(image, iconId);
-            }
-            return item;
+            if (item == null)
+                return;
+            Transform image = item.FindChild(imageTitle);
+            SetRawImage(image, resId, refUI);
         }
 
-        public static GameObject SetImage(Transform item, string iconTitle, string iconName)
+        public static void SetRawImage(Transform item, int resId, UIBase refUI = null)
         {
-            GameObject iconObject = item.FindChild(iconTitle).gameObject;
-            int iconId;
-            if (int.TryParse(iconName, out iconId))
-            {
-                if (iconId == 0)
-                {
-                    iconObject.SetActive(false);
-                    return iconObject;
-                }
-                else iconObject.SetActive(true);
-            }
-            //UILoadImage comIcon = UILoadImage.Get(iconObject);
-            //comIcon.Load(iconId);
-            return iconObject;
-        }
+            if (item == null)
+                return;
+            RawImage label = item.GetComponent<RawImage>();
+            if (label == null)
+                Debug.LogError("rawImage is null : " + item);
 
-        /// <summary>
-        /// 设置动态下载的图片，直接通过IconCsv加载
-        /// </summary>
-        public static void SetImage(Image image, string iconName)
-        {
-            int iconId;
-            if(int.TryParse(iconName, out iconId))
+            if (resId == -1)
             {
-                if (iconId == 0)
-                {
-                    image.gameObject.SetActive(false);
-                    return;
-                }
-                else image.gameObject.SetActive(true);
-                //UILoadImage comIcon = UILoadImage.Get(image.gameObject);
-                //comIcon.Load(iconId);
-            }
-        }
-
-        /// <summary>
-        /// 设置动态下载的图片，直接通过IconCsv加载
-        /// </summary>
-        public static void SetImage(Image image, int iconId)
-        {
-            if (iconId == 0)
-            {
-                image.gameObject.SetActive(false);
+                label.enabled = false;
                 return;
             }
-            else image.gameObject.SetActive(true);
-            //UILoadImage comIcon = UILoadImage.Get(image.gameObject);
-            //comIcon.Load(iconId);
+
+            TextureManager.SetImage(resId, label);
         }
-
-        /// <summary>
-        /// 设置动态下载的图片,图集通过资源配置UIIconID加载
-        /// </summary>
-        //public static GameObject SetImage(Transform item, string iconTitle, UIAtlasID iconID, string val, bool isHandle)
-        //{
-        //    if (val.Equals(""))
-        //    {
-        //        item.FindChild(iconTitle).gameObject.SetActive(false);
-        //        return null;
-        //    }
-        //    GameObject iconObject = item.FindChild(iconTitle).gameObject;
-        //    iconObject.SetActive(true);
-        //    UILoadImage comIcon = UILoadImage.Get(iconObject);
-        //    comIcon.Load((uint)iconID, val);
-        //    return iconObject;
-        //}
-
-        /// <summary>
-        /// 指定图集的，设置动态下载的图片
-        /// </summary>
-        //public static GameObject SetImage(Transform item, string iconTitle, UIAtlasID iconID, string val, bool nativeSize = false)
-        //{
-        //    GameObject iconObject = item.FindChild(iconTitle).gameObject;
-        //    iconObject.SetActive(true);
-        //    UILoadImage comIcon = UILoadImage.Get(iconObject);
-        //    comIcon.m_nativeSize = nativeSize;
-        //    comIcon.Load((uint)iconID, val);
-        //    return iconObject;
-        //}
-        /// <summary>
-        /// 设置动态下载的图片
-        /// </summary>
-        //public static GameObject SetImage(Transform item, string iconTitle, UIAtlasID iconID, string val)
-        //{
-        //    GameObject iconObject = item.FindChild(iconTitle).gameObject;
-        //    UILoadImage comIcon = UILoadImage.Get(iconObject);
-        //    comIcon.Load((uint)iconID, val);
-        //    return iconObject;
-        //}
 
         /// <summary>
         /// 设置子对象CD

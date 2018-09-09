@@ -224,4 +224,43 @@ namespace Roma
         eEL_NavMesh = 1 << 31,
     }
 
+    public static class OverrideFunction
+    {
+        public static void SetActiveNew(this GameObject go, bool bShow)
+        {
+            if (bShow)
+            {
+                if (!go.activeSelf)
+                    go.SetActive(true);
+                if(go.transform.localScale != Vector3.one)
+                {
+                    go.transform.localScale = Vector3.one;
+                }
+            }
+            else
+            {
+                if(go.transform.localScale != Vector3.zero)
+                {
+                    go.transform.localScale = Vector3.zero;
+                }
+            }
+        }
+
+        public static bool ActiveSelfNew(this GameObject go)
+        {
+            //if (go.transform.localScale == Vector3.one)
+            //    return true;
+            if (go.transform.localScale.y > 0.9f)//屏幕分辨率变化后 localScale != Vector3.one
+                return true;
+            return false;
+        }
+
+        //public static bool ActiveSelfNew(this Behaviour go)
+        //{
+        //    if (go.transform.localScale == Vector3.one)
+        //        return true;
+        //    return false;
+        //}
+    }
+
 }
