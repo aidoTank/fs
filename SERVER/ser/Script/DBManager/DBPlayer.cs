@@ -153,6 +153,7 @@ namespace Roma
             }
             catch (Exception e)
             {
+                Console.WriteLine("保存玩家数据异常:" + e);
                 return false;
             }
         }

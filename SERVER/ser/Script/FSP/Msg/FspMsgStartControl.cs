@@ -18,7 +18,7 @@ public class FspMsgStartControl : NetMessage
     public override void ToByte(ref LusuoStream ls)
     {
         eno = 0;
-        //SetByte<int[]>(m_enterInfo, ref ls);
+        SetByte<int>(0, ref ls);
     }
     
     public override void OnRecv(ref Conn conn)

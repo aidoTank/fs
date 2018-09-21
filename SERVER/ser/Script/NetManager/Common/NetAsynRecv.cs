@@ -81,6 +81,8 @@ namespace Roma
         {
             // 获取用户定义的数据
             Conn conn = (Conn)ar.AsyncState;
+            if (conn == null || conn.socket == null || !conn.socket.Connected)
+                return;
             lock (conn)
             {
                 try
@@ -97,8 +99,6 @@ namespace Roma
                     // 处理数据
                     ProcessData(conn);
                     // 继续接受，起点是缓冲区的当前位置，大小是缓冲区的剩余位置，用于分包时的接受
-                    if (conn.socket == null)   // 该conn客户端断开连接时，不在继续接受
-                        return;
                     conn.socket.BeginReceive(conn.readBuff,
                         conn.buffCount, conn.BuffRemain(),
                         SocketFlags.None, ReceiveCb, conn);

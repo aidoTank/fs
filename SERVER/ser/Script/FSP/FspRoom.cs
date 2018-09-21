@@ -80,14 +80,13 @@ namespace Roma
             Console.WriteLine("加入房间：" + player.id);
             // 通知当前所在玩家。更新房间的UI显示
             FspMsgJoinRoom msg = (FspMsgJoinRoom)NetManager.Inst.GetMessage(eNetMessageID.FspMsgJoinRoom);
-            msg.m_enterInfo[0] = m_id;
+            //msg.m_enterInfo[0] = m_id;
             // 玩家列表
             for(int i = 0;i < m_listPlayer.Count;  i ++)
             {
-                msg.m_enterInfo[1 + i] = (int)m_listPlayer[i].id;
+                msg.m_enterInfo[i] = (int)m_listPlayer[i].id;
+                FspNetRunTime.Inst.Send(m_listPlayer[i].conn, msg);
             }
-
-            FspNetRunTime.Inst.Send(player.conn, msg);
         }
 
         public void RemovePlayer(Player player)
@@ -108,7 +107,7 @@ namespace Roma
         }
 
         /// <summary>
-        /// 接受客户端消息
+        /// 接受客户端帧消息，转发给所有客户端
         /// </summary>
         public void OnRecvClient(ref Conn conn, FspFrame frames)
         {
@@ -120,19 +119,8 @@ namespace Roma
 
         private void HandleClientCmd(Player player, FspVKey cmd)
         {
-            switch(cmd.vkey)
-            {
-                //case FspVKeyType.LOAD_PROGRESS: // 加载进度
-                //    player.tempData.m_loadProgress = cmd.args[0];
-                //    break;
-                //case FspVKeyType.LOAD_END:     // 加载完成
-                //    player.tempData.bLoaded = true;
-                //    break;
-                //case FspVKeyType.CONTROL_START:  // 玩家的操作战斗指令
-                //    cmd.playerId = (uint)player.id;
-                //    m_lockedFrame.vkeys.Add(cmd);
-                //    break;
-            }
+            cmd.playerId = (uint)player.id;
+            m_lockedFrame.vkeys.Add(cmd);
         }
 
         public void EnterFrame()
@@ -148,6 +136,10 @@ namespace Roma
                 for(int i = 0; i < m_listPlayer.Count; i ++)
                 {
                     Player player = m_listPlayer[i];
+                    if(m_lockedFrame.vkeys.Count > 0 && m_lockedFrame.vkeys[0].args!= null && m_lockedFrame.vkeys[0].args.Length > 0)
+                    {
+                        Console.WriteLine("发送指令：" + m_lockedFrame.vkeys[0].ToString());
+                    }
                     player.Send(m_lockedFrame);
                 }
             }
@@ -156,6 +148,7 @@ namespace Roma
             if(m_state == FspGameState.StartControl)
             {
                 m_curFrameId++;
+                Console.WriteLine("当前帧率：" + m_curFrameId);
                 m_lockedFrame = new FspFrame();
                 m_lockedFrame.frameId = m_curFrameId;
             }

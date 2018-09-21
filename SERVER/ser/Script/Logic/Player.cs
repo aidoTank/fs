@@ -13,7 +13,6 @@ namespace Roma
     public class Player
     {
         public long id;
-        public int m_teamId;
         public Conn conn;
         public GC_PlayerPublicData publicData;   // 玩家公共数据，消息结构体
         public TablePlayer data;    // 逻辑不用的，在创建玩家时，先从数据中取tabData给到PublicData，保存时PublicData转tabData

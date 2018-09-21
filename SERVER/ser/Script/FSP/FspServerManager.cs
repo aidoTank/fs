@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
+using System.Timers;
+
+
 namespace Roma
 {
     
@@ -16,7 +18,7 @@ namespace Roma
         { }
 
         //线程模块
-        private Thread m_loopThread;
+        //private Thread m_loopThread;
         public bool m_bRuning = true;
 
         private long m_logicLastTicks;
@@ -25,6 +27,8 @@ namespace Roma
         /// </summary>
         private long FRAME_TICK_INTERVAL = 666666;
 
+
+        private Timer timer = new Timer(32);
 
         /// <summary>
         /// 帧服务器一开始就启动，只是暂时主要写一个房间，也在开始就创建吧(正式写法，由服务器创建房间)
@@ -36,11 +40,21 @@ namespace Roma
 
             m_logicLastTicks = DateTime.Now.Ticks;
 
-            m_loopThread = new Thread(OnLoopThread)
+            //m_loopThread = new Thread(OnLoopThread)
+            //{
+            //    IsBackground = true
+            //};
+            //m_loopThread.Start();
+
+
+            // 定时器
+            timer.Elapsed += new ElapsedEventHandler((sender, e) =>
             {
-                IsBackground = true
-            };
-            m_loopThread.Start();
+                //Update(Sys.GetTimeStamp());
+                EnterFram();
+            });
+            timer.AutoReset = true;    // 一直自动执行
+            timer.Enabled = true;
         }
 
 
@@ -55,17 +69,18 @@ namespace Roma
         {
             while (m_bRuning)
             {
-                try
-                {
+                //try
+                //{
                     Update();
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine("帧心态异常：" + e.Message);
-                    Thread.Sleep(10);
-                }
+               // }
+               // catch(Exception e)
+               // {
+               //     Console.WriteLine("帧心态异常：" + e.Message);
+                //    Thread.Sleep(10);
+               // }
             }
         }
+    
 
         public void Update()
         {

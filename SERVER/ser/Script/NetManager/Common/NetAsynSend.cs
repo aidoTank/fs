@@ -59,28 +59,35 @@ namespace Roma
         private void SendMessage()
         {
             // 一阵一个
-            if (m_bSending)
-                return;
-            if (msgList.Count > 0)
+            //if (m_bSending)
+            //     return;
+            for(int i = 0; i < msgList.Count; i ++)
             {
-                MessageCache cache = msgList[0];
+                MessageCache cache = msgList[i];
                 Conn conn = cache.conn;
-                NetMessage msg = cache.msg;
-                m_stream.Reset();
-                msg.ToByte(ref m_stream);
-                try
+                if (conn != null && conn.socket != null && conn.socket.Connected)
                 {
-                    Console.WriteLine("发送消息:" + (eNetMessageID)msg.msgID);
-                    conn.socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, SendedEnd, conn);
+                    NetMessage msg = cache.msg;
+                    m_stream.Reset();
+                    msg.ToByte(ref m_stream);
+                    try
+                    {
+                        if (msg.msgID != 200)
+                        {
+                            Console.WriteLine("发送消息:" + (eNetMessageID)msg.msgID);
+                        }
+                        conn.socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, null, conn);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("[错误]发送消息异常,id:" + (eNetMessageID)msg.msgID + " " + conn.GetAdress() + " : " + e.Message);
+                    }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("[错误]发送消息异常,id:" + (eNetMessageID)msg.msgID + " " + conn.GetAdress() + " : " + e.Message);
-                }
-                if(msgList.Count > 0)
-                    msgList.RemoveAt(0);
-                m_bSending = true;
-            } 
+                //if(msgList.Count > 0)
+                //    msgList.RemoveAt(0);
+                //m_bSending = true;
+            }
+            msgList.Clear();
         }
 
         private void SendedEnd(IAsyncResult ar)

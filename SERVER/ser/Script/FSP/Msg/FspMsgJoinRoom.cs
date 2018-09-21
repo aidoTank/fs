@@ -31,8 +31,13 @@ public class FspMsgJoinRoom : NetMessage
 
             // 从大厅获取玩家信息，加入到帧服务器房间,此时暂时给conn赋值玩家信息，没有分服
             Player player = LobbyManager.Inst.GetLobby(3).GetPlayer(room.userName);
-            FspServerManager.Inst.GetRoom(room.roomId).AddPlayer(player);
-            conn.player = player;
+            // 创建一个新的玩家类，里面包含了sokcet的连接信息
+            Player p = new Player(player.id, conn);
+            p.publicData = player.publicData;
+            p.tempData = player.tempData;
+            p.data = player.data;
+            conn.player = p;
+            FspServerManager.Inst.GetRoom(room.roomId).AddPlayer(p);
         }
     }
 
