@@ -33,8 +33,6 @@ namespace Roma
         {
             FspNetRunTime.Inst = new FspNetRunTime();
             FspNetRunTime.Inst.Init();
-
-
         }
         /// <summary>
         /// 服务器收到所有人准备后，开始游戏
@@ -44,10 +42,7 @@ namespace Roma
             m_fspMgr = new FspManager();
             m_fspMgr.Init();
 
-            for(int i = 0; i < playerData.Length; i ++)
-            {
-                Debug.Log("开始游戏的玩家id:" + playerData[i]);
-            }
+
             Debug.Log("开始加载场景，开始汇报场景进度");
 
             SelectHeroModule selectHero = (SelectHeroModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelSelectHero);
@@ -63,9 +58,24 @@ namespace Roma
             CMap map = CMapMgr.Create(1);
             map.Create();
 
-            CPlayer master = CPlayerMgr.CreateMaster(1);
-            map.Enter(master);
 
+            for(int i = 0; i < playerData.Length; i ++)
+            {
+             
+                if(EGame.m_openid.Equals(playerData[i].ToString()))
+                {
+                    Debug.Log("客户端主角:" + EGame.m_openid);
+                    CPlayer master = CPlayerMgr.CreateMaster(playerData[i]);
+                    map.Enter(master);
+                }
+                else
+                {
+                     Debug.Log("客户端玩家:" + playerData[i]);
+                    CPlayer master = CPlayerMgr.Create(playerData[i]);
+                    map.Enter(master);
+                }
+            }
+    
             m_bRunning = true;
         }
 
@@ -114,6 +124,14 @@ namespace Roma
         {
             if (m_fspMgr != null)
                 m_fspMgr.AddServerFrameMsg(msg);
+        }
+
+        public override void Destroy()
+        {
+            if(FspNetRunTime.Inst != null)
+            {
+                FspNetRunTime.Inst.Destroy();
+            }
         }
     }
 }

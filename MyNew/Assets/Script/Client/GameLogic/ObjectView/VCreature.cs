@@ -9,7 +9,7 @@ namespace Roma
 {
     public partial class VCreature
     {
-
+        public bool m_bMaster;
         public int m_hid;
 
         public VCreature(int ResId)
@@ -19,13 +19,21 @@ namespace Roma
             info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
             m_hid = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, info, (ent)=> 
             {
-                CameraMgr.Inst.InitCamera(this);
+                if(m_bMaster)
+                {
+                    CameraMgr.Inst.InitCamera(this);
+                }
             });
         }
 
         public Entity GetEnt()
         {
             return EntityManager.Inst.GetEnity(m_hid);
+        }
+
+        public void SetPos(Vector2 pos)
+        {
+            GetEnt().SetPos(new Vector3(pos.x, 0, pos.y));
         }
 
     }

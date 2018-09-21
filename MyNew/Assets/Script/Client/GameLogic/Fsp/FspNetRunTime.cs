@@ -67,6 +67,11 @@ namespace Roma
 
         }
 
+        public override void Destroy()
+        {
+            Stop();
+        }
+
         /// <summary>
         /// 断开连接
         /// </summary>
@@ -76,7 +81,8 @@ namespace Roma
             {
                 m_send.Stop();
                 m_recv.Stop();
-                //m_socket.Close();
+                m_socket.Close();
+                m_socket = null;
             }
             m_netState = NetState.Disconnected;
         }

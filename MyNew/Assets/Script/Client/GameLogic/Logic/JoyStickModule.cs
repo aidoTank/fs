@@ -120,15 +120,22 @@ namespace Roma
             }
             else
             {
-                //之后大于15度发送消息
-                float angle = Vector3.Angle(m_curVelocity, m_moveDir);
-                if (angle > 15)
+                m_time += Time.deltaTime;
+                if(m_time > 0.1f)
                 {
-                    PushMoveCommand();
+                    m_time = 0;
+                    //之后大于15度发送消息
+                    float angle = Vector3.Angle(m_curVelocity, m_moveDir);
+                    if (angle > 15)
+                    {
+                        PushMoveCommand();
+                    }
                 }
+
             }
         }
 
+        private float m_time =0;
         //直接发送移动消息
         private void PushMoveCommand()
         {

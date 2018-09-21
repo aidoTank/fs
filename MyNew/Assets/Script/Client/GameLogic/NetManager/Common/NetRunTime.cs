@@ -45,7 +45,7 @@ namespace Roma
         /// </summary>
         private void ConnSucc(IAsyncResult ar)
         {
-            //Debug.Log("客户端本地：连接成功");
+            Debug.Log("客户端本地：连接成功");
             m_socket.EndConnect(ar);
             m_netState = NetState.Connected;
             if (dgeconnet != null)
@@ -67,6 +67,11 @@ namespace Roma
 
         }
 
+        public override void Destroy()
+        {
+            Stop();
+        }
+
         /// <summary>
         /// 断开连接
         /// </summary>
@@ -76,7 +81,8 @@ namespace Roma
             {
                 m_send.Stop();
                 m_recv.Stop();
-                //m_socket.Close();
+                m_socket.Close();
+                m_socket = null;
             }
             m_netState = NetState.Disconnected;
         }

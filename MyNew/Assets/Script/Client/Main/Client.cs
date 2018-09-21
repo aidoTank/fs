@@ -180,6 +180,8 @@ namespace Roma
         {
             if (m_gameQuit != null)
                 m_gameQuit.Init();
+            if(GameManager.Inst != null)
+                GameManager.Inst.Destroy();
         }
 
         /// <summary>

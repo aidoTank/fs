@@ -72,7 +72,7 @@ namespace Roma
             eno = ls.ReadInt();
             structBytes = new byte[contentLen - StringHelper.s_ShortSize - StringHelper.s_IntSize];
             ls.Read(ref structBytes);
-            Debug.Log("消息:" + msgID + " eno:" + eno);
+            //Debug.Log("消息:" + msgID + " eno:" + eno);
         }
 
         public virtual T GetData<T>(byte[] bytes)

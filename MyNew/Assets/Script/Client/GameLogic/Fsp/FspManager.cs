@@ -33,14 +33,19 @@ namespace Roma
            if(m_curFrameIndex < m_clientNewFrameIndex)
            {
                 m_curFrameIndex++;
-
+                //Debug.LogWarning("当前帧率：" + m_curFrameIndex);
                 FspFrame frameMsg;
                 if(m_dicFrame.TryGetValue(m_curFrameIndex, out frameMsg))
                 {
                     ExecuteFrame(m_curFrameIndex, frameMsg);
                 }
            }
-
+           
+            // 场景帧心跳等.临时本地测试
+            // foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)
+            // {
+            //     item.Value.ExecuteFrame();
+            // }
             //HandleLoadingPro();
         }
 
@@ -81,7 +86,7 @@ namespace Roma
             }
 
             m_clientNewFrameIndex = frame.frameId;
-
+            //Debug.Log("add fram :" + m_clientNewFrameIndex);
             m_dicFrame.Add(frame.frameId, frame);
         }
 
@@ -98,26 +103,36 @@ namespace Roma
                 }
             }
             // 场景帧心跳等
+            foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)
+            {
+                item.Value.ExecuteFrame();
+            }
         }
 
         /// <summary>
-        /// 组合逻辑指令
+        /// 消息内容转指令对象
         /// </summary>
         private void HandleServerCmd(FspVKey cmd)
         {
             CmdFspEnum type = (CmdFspEnum)cmd.vkey;
             uint uid = cmd.playerId;
+            if(uid == 0)
+                return;
             CPlayer player = CPlayerMgr.Get(uid);
+            IFspCmdType logicCmd = null;
             switch (type)
             {
                 case CmdFspEnum.eFspStopMove:
                     Debug.Log(uid + " 停止移动");
+                    logicCmd = new CmdFspStopMove();
                 break;
                 case CmdFspEnum.eFspMove:
-                    Debug.Log(uid + " 移动 " + cmd.args[0] + " " + cmd.args[1]);
+                    Debug.Log(uid + " 客户端调用移动命令 " + cmd.args[0] + " " + cmd.args[1]);
+                    Vector2 v = new Vector2(cmd.args[0], cmd.args[1]) / 100;
+                    logicCmd = new CmdFspMove(ref v);
                 break;
-
             }
+            player.PushCommand(logicCmd);
         }
 
     }
