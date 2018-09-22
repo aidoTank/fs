@@ -11,6 +11,8 @@ namespace Roma
     {
         public bool m_bMaster;
         public int m_hid;
+        private CmdFspEnum m_state;
+        private BoneEntity m_ent;
 
         public VCreature(int ResId)
         {
@@ -24,16 +26,38 @@ namespace Roma
                     CameraMgr.Inst.InitCamera(this);
                 }
             });
+            m_ent = (BoneEntity)EntityManager.Inst.GetEnity(m_hid);
         }
 
-        public Entity GetEnt()
+        public BoneEntity GetEnt()
         {
-            return EntityManager.Inst.GetEnity(m_hid);
+            return m_ent;
         }
 
         public void SetPos(Vector2 pos)
         {
-            GetEnt().SetPos(new Vector3(pos.x, 0, pos.y));
+            m_ent.SetPos(new Vector3(pos.x, 0, pos.y));
+        }
+
+        public void PushCommand(IFspCmdType cmd)
+        {
+            m_state = cmd.GetCmdType();
+            if(cmd.GetCmdType() == CmdFspEnum.eFspStopMove)
+            {
+                AnimationAction animaInfo = new AnimationAction();
+                animaInfo.playSpeed = 1;
+                animaInfo.strFull = "stand";
+                animaInfo.eMode = WrapMode.Loop;
+                m_ent.Play(animaInfo);
+            }
+            else if(cmd.GetCmdType() == CmdFspEnum.eFspMove)
+            {
+                AnimationAction animaInfo = new AnimationAction();
+                animaInfo.playSpeed = 1;
+                animaInfo.strFull = "run";
+                animaInfo.eMode = WrapMode.Loop;
+                m_ent.Play(animaInfo);
+            }
         }
 
     }

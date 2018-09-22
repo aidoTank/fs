@@ -46,7 +46,13 @@ namespace Roma
 
             CameraMgr.Inst = new CameraMgr();
             SingletonManager.Inst.AddSingleton("cam", CameraMgr.Inst);
+
+            KeyMgr.Inst = new KeyMgr();
+            SingletonManager.Inst.AddSingleton("KeyMgr", KeyMgr.Inst);
+
             SingletonManager.Inst.Init();
+
+
 
             //// 初始化csv配置
             //InitCsv(ref CsvManager.Inst);

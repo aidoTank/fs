@@ -80,7 +80,7 @@ namespace Roma
             else
             {
                 OnMove(false, move.m_delta);
-                Debug.Log("发送移动。。。。。。。。。。。。。。。。。。。。。" + move.m_delta);
+                //Debug.Log("发送移动。。。。。。。。。。。。。。。。。。。。。" + move.m_delta);
             }
         }
 
@@ -97,7 +97,7 @@ namespace Roma
                 {
                     //发送停止消息
                     master.SendFspCmd(new CmdFspStopMove());
-                    Debug.Log("发送停止。。。。。。。。。。。。。。。。。。。。。");
+                    //Debug.Log("发送停止。。。。。。。。。。。。。。。。。。。。。");
                 }
                 return;
             }

@@ -8,6 +8,7 @@ namespace Roma
 		Name,
 		icon,
 		ModelResId,
+		
 	}
 
 	public class PlayerCsvData
@@ -18,20 +19,19 @@ namespace Roma
 		public int Id;
 
 		/// <summary>
-		/// 名字
-		/// </summary>
+		/// 鍚嶅瓧
+		/// </summary>						
 		public string Name;
 
 		/// <summary>
-		/// 图标
+		/// 鍥炬爣
 		/// </summary>
 		public int icon;
 
 		/// <summary>
-		/// 模型资源id
+		/// 妯″瀷璧勬簮id
 		/// </summary>
 		public int ModelResId;
-
 	}
 
 	public class PlayerCsv : CsvExWrapper

@@ -15,7 +15,7 @@ namespace Roma
         private CmdFspEnum m_logicState;
         private Vector2 m_curPos = Vector2.zero;
         private Vector2 m_curDir;
-        private float m_moveSpeed = 1;
+        private float m_moveSpeed = 0.4f;
 
         public CPlayer(long id)
             : base(id)
@@ -54,7 +54,6 @@ namespace Roma
             {
                 case CmdFspEnum.eFspStopMove:
                     msg.m_frameData.vkeys.Add(key);
-                    NetRunTime.Inst.SendMessage(msg);
                 break;
                 case CmdFspEnum.eFspMove:
                     CmdFspMove moveCmd = cmd as CmdFspMove;
@@ -62,13 +61,13 @@ namespace Roma
                     key.args[0] = (int)(moveCmd.m_dir.x * 100);
                     key.args[1] = (int)(moveCmd.m_dir.y * 100);
                     msg.m_frameData.vkeys.Add(key);
-                    NetRunTime.Inst.SendMessage(msg);
                 break;
             }
+            FspNetRunTime.Inst.SendMessage(msg);
         }
 
         /// <summary>
-        /// 直接指向指令
+        /// 执行指令
         /// </summary>
         public void PushCommand(IFspCmdType cmd)
         {
@@ -82,6 +81,7 @@ namespace Roma
                 CmdFspMove moveInfo = cmd as CmdFspMove;
                 m_curDir = moveInfo.m_dir;
             }
+            m_vCreature.PushCommand(cmd);
         }
 
         public override void ExecuteFrame()
