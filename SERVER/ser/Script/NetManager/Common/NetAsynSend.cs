@@ -15,12 +15,12 @@ namespace Roma
     {
         //发送时的中间变量
         private LusuoStream m_stream = new LusuoStream(new byte[1024]);
+        private List<MessageCache> m_msgList = new List<MessageCache>();
+        private eServerType m_serverType = eServerType.Lobby;
 
-        private List<MessageCache> msgList = new List<MessageCache>();
-        private bool m_bSending = false;
-
-        public NetAsynSend()
+        public NetAsynSend(eServerType type)
         {
+            m_serverType = type;
         }
 
         public void Init()
@@ -33,19 +33,7 @@ namespace Roma
             MessageCache cache;
             cache.conn = conn;
             cache.msg = msg;
-            msgList.Add(cache);
-
-            //m_stream.Reset();
-            //msg.ToByte(ref m_stream);
-            //try
-            //{
-            //    Console.WriteLine("发送消息:" + (eNetMessageID)msg.msgID);
-            //    conn.socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, null, null);
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine("[错误]发送消息异常,id:" + (eNetMessageID)msg.msgID + " " + conn.GetAdress() + " : " + e.Message);
-            //}
+            m_msgList.Add(cache);
         }
 
         public void Update()
@@ -58,12 +46,9 @@ namespace Roma
         /// </summary>
         private void SendMessage()
         {
-            // 一阵一个
-            //if (m_bSending)
-            //     return;
-            for(int i = 0; i < msgList.Count; i ++)
+            for (int i = 0; i < m_msgList.Count; i++)
             {
-                MessageCache cache = msgList[i];
+                MessageCache cache = m_msgList[i];
                 Conn conn = cache.conn;
                 if (conn != null && conn.socket != null && conn.socket.Connected)
                 {
@@ -74,29 +59,17 @@ namespace Roma
                     {
                         if (msg.msgID != 200)
                         {
-                            Console.WriteLine("发送消息:" + (eNetMessageID)msg.msgID);
+                            Console.WriteLine(m_serverType + ":发送消息:" + (eNetMessageID)msg.msgID);
                         }
                         conn.socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, null, conn);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("[错误]发送消息异常,id:" + (eNetMessageID)msg.msgID + " " + conn.GetAdress() + " : " + e.Message);
+                        Console.WriteLine(m_serverType + ":[错误]发送消息异常,id:" + (eNetMessageID)msg.msgID + " " + conn.GetAdress() + " : " + e.Message);
                     }
                 }
-                //if(msgList.Count > 0)
-                //    msgList.RemoveAt(0);
-                //m_bSending = true;
             }
-            msgList.Clear();
-        }
-
-        private void SendedEnd(IAsyncResult ar)
-        {
-            Conn conn = (Conn)ar.AsyncState;
-            conn.socket.EndSend(ar);
-            m_bSending = false;
-            ar = null;
-            //Debug.Log("发送成功！");
+            m_msgList.Clear();
         }
 
 

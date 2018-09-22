@@ -4,20 +4,24 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 namespace Roma
 {
+    public enum eServerType
+    {
+        Lobby,
+        Fsp,
+    }
+
     public class NetAsynRecv
     {
         public Socket listenfd;
         public Conn[] conns;
         public int maxConn = 50;
-        // 主定时器
-        System.Timers.Timer timer = new System.Timers.Timer(1000);
-        public long heartBeatTime = 180;
+        private eServerType m_serverType = eServerType.Lobby;
 
-
-        public NetAsynRecv(Socket socket, ref Conn[] conn)
+        public NetAsynRecv(Socket socket, ref Conn[] conn, eServerType sType)
         {
             listenfd = socket;
             conns = conn;
+            m_serverType = sType;
         }
 
         // 获取链接池索引，返回负数表示获取失败
@@ -56,14 +60,14 @@ namespace Roma
                 if (index < 0)
                 {
                     socket.Close();
-                    Console.Write("[警告]链接池已满");
+                    Console.Write(m_serverType + ":[警告]链接池已满");
                 }
                 else
                 {
                     Conn conn = conns[index];
                     conn.Init(socket);
                     string adr = conn.GetAdress();
-                    Console.WriteLine("客户端连接 [" + adr + "] conn池ID：" + index);
+                    Console.WriteLine(m_serverType + ":客户端连接 [" + adr + "] conn池ID：" + index);
                     conn.socket.BeginReceive(conn.readBuff,
                         conn.buffCount, conn.BuffRemain(),
                         SocketFlags.None, ReceiveCb, conn);
@@ -73,7 +77,7 @@ namespace Roma
             }
             catch (Exception e)
             {
-                Console.WriteLine("接受客户端失败:" + e.Message);
+                Console.WriteLine(m_serverType + ":接受客户端异常:" + e.Message);
             }
         }
 
@@ -91,7 +95,7 @@ namespace Roma
                     // 如果<=0，就是客户端关闭了
                     if (count <= 0)
                     {
-                        Console.WriteLine("收到 [" + conn.GetAdress() + "] 断开链接");
+                        Console.WriteLine(m_serverType + ":收到 [" + conn.GetAdress() + "] 断开链接");
                         conn.Close();
                         return;
                     }
@@ -105,7 +109,7 @@ namespace Roma
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("收到异常消息 [" + conn.GetAdress() + "] 断开链接:" + e);
+                    Console.WriteLine(m_serverType + ":收到异常消息 [" + conn.GetAdress() + "] 断开链接:" + e);
                     conn.Close();
                 }
             }
@@ -150,10 +154,9 @@ namespace Roma
             NetMessage msg = NetManager.Inst.GetMessage(msgId);
             if (msgId != (int)eNetMessageID.MsgHeartBeat)
             {
-                Console.WriteLine("接受消息：" + (eNetMessageID)msgId);
+                Console.WriteLine(m_serverType + ":接受消息：" + (eNetMessageID)msgId);
             }
             msg.OnRecv(ref conn, contentLen, ref stream);
-            //msg.OnRecv(ref conn);
 
             MessageCache cache;
             cache.conn = conn;
@@ -166,19 +169,10 @@ namespace Roma
         {
             for (int i = 0; i < msgList.Count; i++)
             {
-                //Console.WriteLine("处理消息：" + msgList[i].msg + " num:" + msgList.Count);
                 MessageCache msg = msgList[i];
                 msgList.RemoveAt(i);
                 msg.msg.OnRecv(ref msg.conn);
             }
-
-            //LinkedListNode<MessageCache> cache = msgList.First;
-            //if (cache == null)
-            //    return;
-            //Conn conn = cache.Value.conn;
-            //cache.Value.msg.OnRecv(ref conn);
-            //if (msgList.First != null)
-            //    msgList.RemoveFirst();
         }
 
         public void Update()
@@ -200,10 +194,7 @@ namespace Roma
             }
         }
 
-
         private List<MessageCache> msgList = new List<MessageCache>();
-        // 接受的消息队列，不能再异步回调的线程中操作模型
-        // private Dictionary<Conn, NetMessage> m_msgList = new Dictionary<Conn, NetMessage>();
 
 
         //打印信息

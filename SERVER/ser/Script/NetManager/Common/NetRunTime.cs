@@ -42,9 +42,9 @@ namespace Roma
             // 监听
             listenfd.Listen(maxConn);
 
-            recv = new NetAsynRecv(listenfd, ref conns);
+            recv = new NetAsynRecv(listenfd, ref conns, eServerType.Lobby);
             recv.Init();
-            send = new NetAsynSend();
+            send = new NetAsynSend(eServerType.Lobby);
             send.Init();
             Console.WriteLine("网络初始化完毕");
         }

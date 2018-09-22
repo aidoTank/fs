@@ -148,7 +148,7 @@ namespace Roma
             if(m_state == FspGameState.StartControl)
             {
                 m_curFrameId++;
-                Console.WriteLine("当前帧率：" + m_curFrameId);
+                //Console.WriteLine("当前帧率：" + m_curFrameId);
                 m_lockedFrame = new FspFrame();
                 m_lockedFrame.frameId = m_curFrameId;
             }
