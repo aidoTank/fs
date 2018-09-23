@@ -39,6 +39,12 @@ namespace Roma
             m_ent.SetPos(new Vector3(pos.x, 0, pos.y));
         }
 
+        public void SetDir(Vector2 dir)
+        {
+            Quaternion q = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.y));
+            m_ent.SetRot(q);
+        }
+
         public void PushCommand(IFspCmdType cmd)
         {
             m_state = cmd.GetCmdType();

@@ -11,6 +11,7 @@ namespace Roma
     /// </summary>
     public class FspManager
     {
+        private FSPFrameController m_frameCtrl;
         private Dictionary<int, FspFrame> m_dicFrame = new Dictionary<int, FspFrame>();
         private int m_curFrameIndex;
         /// <summary>
@@ -21,26 +22,34 @@ namespace Roma
         public void Init()
         {
             Time.fixedDeltaTime = FSPParam.clientFrameScTime;
+            m_frameCtrl = new FSPFrameController();
+            m_frameCtrl.Start();
         }
 
         public void Stop()
         {
             m_dicFrame.Clear();
+            m_frameCtrl.Close();
         }
 
         public void FixedUpdate()
         {
-           if(m_curFrameIndex < m_clientNewFrameIndex)
-           {
-                m_curFrameIndex++;
-                //Debug.LogWarning("当前帧率：" + m_curFrameIndex);
-                FspFrame frameMsg;
-                if(m_dicFrame.TryGetValue(m_curFrameIndex, out frameMsg))
+            int speed = m_frameCtrl.GetFrameSpeed(m_curFrameIndex);
+            while(speed > 0)
+            {
+                if(m_curFrameIndex < m_clientNewFrameIndex)
                 {
-                    ExecuteFrame(m_curFrameIndex, frameMsg);
+                        m_curFrameIndex++;
+                        Debug.LogWarning("当前帧率：" + m_curFrameIndex + " max:" + m_clientNewFrameIndex);
+                        FspFrame frameMsg;
+                        if(m_dicFrame.TryGetValue(m_curFrameIndex, out frameMsg))
+                        {
+                            ExecuteFrame(m_curFrameIndex, frameMsg);
+                        }
                 }
-           }
-           
+                speed--;
+            }
+
             // 场景帧心跳等.临时本地测试
             // foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)
             // {
@@ -86,8 +95,9 @@ namespace Roma
             }
 
             m_clientNewFrameIndex = frame.frameId;
-            //Debug.Log("add fram :" + m_clientNewFrameIndex);
             m_dicFrame.Add(frame.frameId, frame);
+            // 添加最新帧
+            m_frameCtrl.AddNewFrameId(frame.frameId);
         }
 
         // 正式的游戏逻辑帧

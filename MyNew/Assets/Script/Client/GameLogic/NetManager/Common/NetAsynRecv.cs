@@ -81,7 +81,7 @@ namespace Roma
             int msgLen = stream.ReadInt();
             ushort msgId = stream.ReadUShort();
             //Debug.Log("接受消息长度：" + msgLen);
-            //Debug.Log("接受消息ID：" + msgId);
+            Debug.Log("接受消息ID：" + (eNetMessageID)msgId);
             // 通过消息头，获取消息体
             NetMessage msg = NetManager.Inst.GetMessage((eNetMessageID)msgId);
             msg.OnRecv(msgLen, ref stream);

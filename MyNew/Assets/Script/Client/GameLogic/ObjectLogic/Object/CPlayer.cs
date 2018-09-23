@@ -100,6 +100,7 @@ namespace Roma
         {
             m_curPos = m_curPos + m_curDir * m_moveSpeed;
             m_vCreature.SetPos(m_curPos);
+            m_vCreature.SetDir(m_curDir);
         }
     }
 }
