@@ -32,11 +32,22 @@ namespace Roma
             PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
             m_csv = playerCsv.GetData(1);
 
-            // 测试，需建立表现层
+            // 数据
+            SetPublicPropList();
+            // 表现
             m_vCreature = new VCreature(m_csv.ModelResId);
             m_vCreature.m_bMaster = this is CMasterPlayer;
             return true;
         }
+
+        public override void SetPublicPropList()
+        {
+            InitPropNum(eCreatureProp.MoveSpeed, m_csv.moveSpeed);
+            InitPropNum(eCreatureProp.Force, m_csv.force);
+            InitPropNum(eCreatureProp.Agility, m_csv.agility);
+            InitPropNum(eCreatureProp.Brain, m_csv.brain);
+        }
+
 
         /// <summary>
         /// 指令对象转消息内容并发送
@@ -100,9 +111,23 @@ namespace Roma
 
         public void TickMove()
         {
-            m_curPos = m_curPos + m_curDir * m_moveSpeed;
+            int speed = GetPropNum(eCreatureProp.MoveSpeed);
+            m_curPos = m_curPos + m_curDir * FSPParam.clientFrameScTime * speed * 0.001f;
             m_vCreature.SetPos(m_curPos);
             m_vCreature.SetDir(m_curDir);
+        }
+
+
+        // UI相关
+        public void UpdateUI()
+        {
+            BattleModule bm = (BattleModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelBattle);
+            bm.m_openEnd = ()=>{
+                bm.SetPorp(0, "力量：" + GetPropNum(eCreatureProp.Force));
+                bm.SetPorp(1, "敏捷：" + GetPropNum(eCreatureProp.Agility));
+                bm.SetPorp(2, "智力：" + GetPropNum(eCreatureProp.Brain));
+            };
+            bm.SetVisible(true);
         }
     }
 }

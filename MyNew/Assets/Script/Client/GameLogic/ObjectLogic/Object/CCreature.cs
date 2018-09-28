@@ -13,7 +13,7 @@ namespace Roma
         public CCreature(long id)
             : base(id)
         {
-            m_arrPlayerData = new int[(int)eCreatureProp.Max];
+            m_arrProp = new int[(int)eCreatureProp.Max];
         }
 
         public virtual void ExecuteFrame()
@@ -52,28 +52,24 @@ namespace Roma
     
         }
 
- 
-        public virtual int GetPropNum(eCreatureProp propType)
+        public virtual void SetPublicPropList()
         {
-            int index = (int)propType;
-            if(index > 0 && index < m_arrPlayerData.Length)
-            {
-                return m_arrPlayerData[index];
-            }
-            else
-            {
-                Debug.LogError("属性索引越界" + index);
-            }
-            return 0;
+            
         }
 
+        public virtual void InitPropNum(eCreatureProp propType, int nValue)
+        {
+            SetPropNum(propType, nValue);
+        }
+
+        
         public virtual void SetPropNum(eCreatureProp propType, int newV)
         {
             int index = (int)propType;
-            if(index > 0 && index < m_arrPlayerData.Length)
+            if(index > 0 && index < m_arrProp.Length)
             {
-                int oldV = m_arrPlayerData[index];
-                m_arrPlayerData[index] = newV;
+                int oldV = m_arrProp[index];
+                m_arrProp[index] = newV;
                 ApplyAttrs(propType, newV, oldV);
             }
             else
@@ -85,17 +81,31 @@ namespace Roma
         public virtual void AddPropNum(eCreatureProp propType, int addV)
         {
             int index = (int)propType;
-            if(index > 0 && index < m_arrPlayerData.Length)
+            if(index > 0 && index < m_arrProp.Length)
             {
-                int oldV = m_arrPlayerData[index];
+                int oldV = m_arrProp[index];
                 int newV = oldV + addV;
-                m_arrPlayerData[index] = newV;
+                m_arrProp[index] = newV;
                 ApplyAttrs(propType, newV, oldV);
             }
             else
             {
                 Debug.LogError("属性索引越界" + index);
             }
+        }
+ 
+        public virtual int GetPropNum(eCreatureProp propType)
+        {
+            int index = (int)propType;
+            if(index > 0 && index < m_arrProp.Length)
+            {
+                return m_arrProp[index];
+            }
+            else
+            {
+                Debug.LogError("属性索引越界" + index);
+            }
+            return 0;
         }
 
         public virtual void ApplyAttrs(eCreatureProp propType, int newV, int oldV)
@@ -109,6 +119,6 @@ namespace Roma
         }
 
         public static Dictionary<int, Action<CCreature, int, int>> m_dicPlayerData;
-        public int[] m_arrPlayerData;
+        public int[] m_arrProp;
     }
 }

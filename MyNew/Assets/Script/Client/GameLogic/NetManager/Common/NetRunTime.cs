@@ -19,22 +19,27 @@ namespace Roma
 
         public override void Init()
         {
-            m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            m_send = new NetAsynSend(m_socket);
-            m_recv = new NetAsynRecv(m_socket);
-            m_send.Start();
+
         }
 
         public void ConServer(OnConnect onconnect)
         {
             if (m_netState == NetState.Disconnected)
             {
+                Stop();
                 Debug.Log("开始连接服务器");
                 m_netState = NetState.Connecting;
+
+                m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                m_send = new NetAsynSend(m_socket);
+                m_recv = new NetAsynRecv(m_socket);
+                m_send.Start();
+
                 int port = 0;
                 int.TryParse(GlobleConfig.s_gameServerPort, out port);
                 IPEndPoint serverIP = new IPEndPoint(IPAddress.Parse(GlobleConfig.s_gameServerIP), port);
                 m_socket.BeginConnect(serverIP, ConnSucc, null);
+
                 dgeconnet = onconnect;
                 lastTickTime = Time.time;
             }
@@ -87,15 +92,6 @@ namespace Roma
             m_netState = NetState.Disconnected;
         }
 
-        /// <summary>
-        /// 重新连接服务器
-        /// </summary>
-        public void ReConServer(OnConnect connend = null)
-        {
-            Stop();
-            ConServer(connend);
-        }
-
         public void SendMessage(NetMessage msg)
         {
             // 如果没连接不处理
@@ -121,8 +117,14 @@ namespace Roma
         public override void Update(float fTime, float fDTime)
         {
             UpdateState();
-            m_send.Update();
-            m_recv.Update();
+            if(m_send != null)
+            {
+                m_send.Update();
+            }
+            if(m_recv != null)
+            {
+                m_recv.Update();
+            }
             _HeartBeat();
         }
 

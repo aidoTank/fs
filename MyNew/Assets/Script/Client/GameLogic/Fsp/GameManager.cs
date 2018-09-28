@@ -33,6 +33,8 @@ namespace Roma
         {
             FspNetRunTime.Inst = new FspNetRunTime();
             FspNetRunTime.Inst.Init();
+
+            CreatureProp.Init();
         }
         /// <summary>
         /// 服务器收到所有人准备后，开始游戏
@@ -67,6 +69,7 @@ namespace Roma
                     Debug.Log("客户端主角:" + EGame.m_openid);
                     CPlayer master = CPlayerMgr.CreateMaster(playerData[i]);
                     map.Enter(master);
+                    master.UpdateUI();
                 }
                 else
                 {
