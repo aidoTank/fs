@@ -1,5 +1,5 @@
-id,名字,图标,模型资源id
-Id,Name,icon,ModelResId
-int,string,int,int
-1,名字1,2222,30001
-2,名字2,444444,30001
+id,名字,图标,模型资源id,移动速度,力量,敏捷,智力
+Id,Name,icon,ModelResId,moveSpeed,force,agility,brain
+int,string,int,int,int,int,int,int
+1,名字1,2222,30001,305,21000,23000,15000
+2,名字2,444444,30001,300,20000,15000,20000
