@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Roma
 {
-
+    
     public partial class CPlayer : CCreature
     {
         public VCreature m_vCreature;
@@ -16,6 +16,8 @@ namespace Roma
         private Vector2 m_curPos = Vector2.zero;
         private Vector2 m_curDir;
         private float m_moveSpeed = 0.4f;
+
+        private PlayerCsvData m_csv;
 
         public CPlayer(long id)
             : base(id)
@@ -28,10 +30,10 @@ namespace Roma
             base.InitConfigure();
 
             PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
-            PlayerCsvData data = playerCsv.GetData(1);
+            m_csv = playerCsv.GetData(1);
 
             // 测试，需建立表现层
-            m_vCreature = new VCreature(data.ModelResId);
+            m_vCreature = new VCreature(m_csv.ModelResId);
             m_vCreature.m_bMaster = this is CMasterPlayer;
             return true;
         }

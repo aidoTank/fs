@@ -8,7 +8,10 @@ namespace Roma
 		Name,
 		icon,
 		ModelResId,
-		
+		moveSpeed,
+		force,
+		agility,
+		brain,
 	}
 
 	public class PlayerCsvData
@@ -19,19 +22,40 @@ namespace Roma
 		public int Id;
 
 		/// <summary>
-		/// 鍚嶅瓧
-		/// </summary>						
+		/// 名字
+		/// </summary>
 		public string Name;
 
 		/// <summary>
-		/// 鍥炬爣
+		/// 图标
 		/// </summary>
 		public int icon;
 
 		/// <summary>
-		/// 妯″瀷璧勬簮id
+		/// 模型资源id
 		/// </summary>
 		public int ModelResId;
+
+		/// <summary>
+		/// 移动速度
+		/// </summary>
+		public int moveSpeed;
+
+		/// <summary>
+		/// 力量
+		/// </summary>
+		public int force;
+
+		/// <summary>
+		/// 敏捷
+		/// </summary>
+		public int agility;
+
+		/// <summary>
+		/// 智力
+		/// </summary>
+		public int brain;
+
 	}
 
 	public class PlayerCsv : CsvExWrapper
@@ -50,6 +74,10 @@ namespace Roma
 				data.Name = m_csv.GetData(i, (int)ePlayerCsv.Name);
 				data.icon = m_csv.GetIntData(i, (int)ePlayerCsv.icon);
 				data.ModelResId = m_csv.GetIntData(i, (int)ePlayerCsv.ModelResId);
+				data.moveSpeed = m_csv.GetIntData(i, (int)ePlayerCsv.moveSpeed);
+				data.force = m_csv.GetIntData(i, (int)ePlayerCsv.force);
+				data.agility = m_csv.GetIntData(i, (int)ePlayerCsv.agility);
+				data.brain = m_csv.GetIntData(i, (int)ePlayerCsv.brain);
 				m_dicData.Add(data.Id, data);
 			}
 		}
