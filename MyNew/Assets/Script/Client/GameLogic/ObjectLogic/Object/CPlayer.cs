@@ -17,7 +17,7 @@ namespace Roma
         private Vector2 m_curDir;
         private float m_moveSpeed = 0.4f;
 
-        private PlayerCsvData m_csv;
+        public PlayerCsvData m_csv;
 
         public CPlayer(long id)
             : base(id)
@@ -56,8 +56,8 @@ namespace Roma
         public void SendFspCmd(IFspCmdType cmd)
         {
             // 如果本地指令，这里就直接执行指令
-            //PushCommand(cmd);
-            //return;
+            PushCommand(cmd);
+            return;
             CmdFspEnum type = cmd.GetCmdType();
             FspMsgFrame msg = (FspMsgFrame)NetManager.Inst.GetMessage(eNetMessageID.FspMsgFrame);
             FspVKey key  = new FspVKey();
@@ -93,6 +93,11 @@ namespace Roma
             {
                 CmdFspMove moveInfo = cmd as CmdFspMove;
                 m_curDir = moveInfo.m_dir;
+            }
+            else if(cmd.GetCmdType() == CmdFspEnum.eFspSendSkill)
+            {
+                // 交给技能管理类处理技能逻辑
+                Debug.Log("通过技能管理类处理：");
             }
             m_vCreature.PushCommand(cmd);
         }

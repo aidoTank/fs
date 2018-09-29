@@ -1,0 +1,19 @@
+技能ID,技能名称,技能图标,技能类型 1.主动 2.被动,选择目标类型 1.指定目标 2.自己（炸弹技能也选择使用自身）,攻击类型 1.绑定技能（近战）2.范围技能 3.子弹 4.炸弹技能 5陷阱,施法范围类型 1.点 2.线形（以人为起点，打向鼠标位置）3.扇形（以自身为起点，180度打向鼠标位置）4.圆形（鼠标为原点或自身为原点）,施法距离,法术/攻击范围长度（长度、半径）,冷却时间,伤害值 作为BUFF配置更好,晕眩时间 作为BUFF配置更好,释放动作开始时间,释放动作持续时间,释放动作,释放特效开始时间,释放特效,轨迹特效,轨迹速度,受击动作开始时间 远程为轨迹发射时间,受击动作,受击特效开始时间,受击特效,受击特效绑定点,技能描述
+id,name,skillIcon,type,targetTpye,attackType,attackRangeType,attackDistance,attackRange,coolTime,damageValue,stunTime,castActionBeginTime,castActionDuration,castAction,castEffectBeginTime,castEffect,flyEffect,flySpeed,hitActionBeginTime,hitAction,hitEffectBeginTime,hitEffect,hitEffectPoint,skillIntro
+uint,string,string,uint,uint,uint,uint,uint,uint,uint,int,float,float,float,string,float,uint,uint,uint,float,string,float,uint,string,string
+1,抓宠扔石头1,,1,1,3,4,16,5,2,2,1,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,26,chest,抓宠物远程投资
+2,抓宠扔石头2,,1,1,3,4,16,5,2,4,1,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,26,chest,抓宠物远程投资
+3,抓宠扔石头3,,1,1,3,4,16,5,2,6,2,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,26,chest,抓宠物远程投资
+4,抓宠扔石头4,,1,1,3,4,16,5,2,8,2,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,26,chest,抓宠物远程投资
+5,抓宠扔石头5,,1,1,3,4,16,5,2,10,2,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,26,chest,抓宠物远程投资
+11,抓宠用的网1,,1,1,3,4,16,1,2,0,2,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,6300,origin,网
+12,抓宠用的网2,,1,1,3,4,16,1,2,0,3,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,6300,origin,网
+13,抓宠用的网3,,1,1,3,4,16,1,2,0,4,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,6300,origin,网
+14,抓宠用的网4,,1,1,3,4,16,1,2,1,5,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,6300,origin,网
+15,抓宠用的网5,,1,1,3,4,16,1,2,1,5,0,0.86,defense_2h_thrown,0.2,0,101,20,0.5,hit,0.8,6300,origin,网
+16,以前晕眩陷阱(暂留),,1,2,5,4,0,1,2,0,1,0,0.86,duck,0,0,101,20,0.5,hit,0.8,26,chest,陷阱
+20,宠物近战攻击,,1,1,1,1,4,0,2,1,0,0,0.86,attack_unarm,0,0,0,0,0.8,hit,0.8,26,chest,宠物攻击
+21,单体近战2,,1,1,1,1,4,0,2,1,0,0,0.86,attack_unarm,0,18,0,0,0.8,hit,0.8,26,chest,战士普通攻击，对目标造成100%普通伤害。
+22,潮汐大招(自身为原点),,1,2,2,4,0,5,2,1,0,0,0.86,spell_cast,0,20,0,0,0.8,hit,0.8,26,chest,战士普通攻击，对目标造成100%普通伤害。
+23,冰龙2技能(目标为原点),,1,1,2,4,40,5,2,1,0,0,0.86,spell_cast,0,18,0,0,0.8,hit,0.8,26,chest,战士普通攻击，对目标造成100%普通伤害。
+24,炸弹技能,,1,2,4,4,4,2,2,1,0,0,0.86,attack_1h_weapon,0,15,35,20,0,hit,0,26,chest,战士普通攻击，对目标造成100%普通伤害。

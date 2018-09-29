@@ -11,8 +11,6 @@ namespace Roma
         eEE_ResID,          // 资源ID
         eEE_EffectDesc,     // 描述
         eEE_LiveTime,       // 生存时间
-        eEE_BindBone1,      // 绑定骨骼点1
-        eEE_BindBone2,      // 绑定骨骼点2
         eEE_SoundRes,      // SoundResID
     }
 
@@ -22,8 +20,6 @@ namespace Roma
         public int nResID;
         public string strDesc;
         public float fLiveTime = 0;
-        public string strBindBone1 = "Bind_bone";
-        public string strBindBone2 = "Bind_bone";
         public string uSoundID;
     }
 
@@ -39,8 +35,6 @@ namespace Roma
                 m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_ResID,     key.Value.nResID.ToString());
                 m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_EffectDesc,key.Value.strDesc);
                 m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_LiveTime,  key.Value.fLiveTime.ToString());
-                m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_BindBone1, key.Value.strBindBone1);
-                m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_BindBone2, key.Value.strBindBone2);
                 m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_SoundRes, key.Value.uSoundID.ToString());
             }
         }
@@ -60,8 +54,6 @@ namespace Roma
                 effect.nResID = m_csv.GetIntData(i, (int)eEffectCSV_Enum.eEE_ResID);
                 effect.strDesc = m_csv.GetData(i, (int)eEffectCSV_Enum.eEE_EffectDesc);
                 effect.fLiveTime = m_csv.GetFloatData(i, (int)eEffectCSV_Enum.eEE_LiveTime);
-                effect.strBindBone1 = m_csv.GetData(i, (int)eEffectCSV_Enum.eEE_BindBone1);
-                effect.strBindBone2 = m_csv.GetData(i, (int)eEffectCSV_Enum.eEE_BindBone2);
                 effect.uSoundID = m_csv.GetData(i, (int)eEffectCSV_Enum.eEE_SoundRes);
 
                 m_mapEffectCSV.Add(effect.nEffectID, effect);

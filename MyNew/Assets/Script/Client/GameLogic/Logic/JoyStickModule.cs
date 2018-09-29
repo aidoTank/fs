@@ -25,6 +25,7 @@ namespace Roma
             SkillJoyStick[] skillList = m_ui.m_SkillBtn;
             for (int i = 0; i < skillList.Length; i++)
             {
+                skillList[i].SetLv(1);
                 skillList[i].OnJoyStickEvent = OnSkillEvent;
                 //skillList[i].OnLvUpEvent = OnClickLvUpBtn;
             }
@@ -158,10 +159,25 @@ namespace Roma
 
         private void OnSkillEvent(int index, eJoyStickEvent jsEvent, SkillJoyStick joyStick, bool bCancel)
         {
-           
+            m_curSkillJoyStick = jsEvent;
+            CMasterPlayer master = CPlayerMgr.GetMaster();
+
+            if(jsEvent == eJoyStickEvent.Down)
+            {
+                int skillId = master.m_csv.skill0;
+                skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(skillId);
+            }
+            else if(jsEvent == eJoyStickEvent.Up)
+            {
+                Debug.Log("发送技能：" + skillInfo.id);
+                CmdFspSendSkill cmd = new CmdFspSendSkill();
+                cmd.m_skillId = skillInfo.id;
+                cmd.m_dir = joyStick.m_delta;
+                master.SendFspCmd(cmd);
+            }
         }
 
-
+        private SkillCsvData skillInfo;
 
         /// <summary>
         /// 是否取消施法
@@ -176,6 +192,7 @@ namespace Roma
         private float m_sendMoveTime = 0;
         private float m_sendMoveInterval = 0;
         public bool m_isFirstJoyStick = true;
+
         public UIPanelJoyStick m_ui;
     }
 }

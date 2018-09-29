@@ -61,6 +61,17 @@ namespace Roma
         }
     }
 
-    
+    public class CmdFspSendSkill : IFspCmdType
+    {
+        public int m_skillId;
+        public long m_targetId;
+        public Vector2 m_startPos;
+        public Vector2 m_endPos;
+        public Vector2 m_dir;
 
+        public CmdFspSendSkill()
+        {
+            cmdenum = CmdFspEnum.eFspSendSkill;
+        }
+    }
 }

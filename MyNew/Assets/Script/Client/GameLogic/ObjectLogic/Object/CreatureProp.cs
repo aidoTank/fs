@@ -12,7 +12,7 @@ namespace Roma
         Force,   // 力量
 		Agility, // 敏捷
         Brain,   // 智力
-        
+        Armor,   // 护甲
         Max
     }
 
@@ -26,6 +26,7 @@ namespace Roma
                  {(int)eCreatureProp.Force,  CreatureProp.OnChangeForce},
                  {(int)eCreatureProp.Agility,  CreatureProp.OnChangeAgility},
                  {(int)eCreatureProp.Brain,  CreatureProp.OnChangeBrain},
+                 {(int)eCreatureProp.Armor,  CreatureProp.OnChangeArmor},
             };
         }
 
@@ -45,6 +46,11 @@ namespace Roma
         }
 
         public static void OnChangeBrain(CCreature obj, int newV, int oldV)
+        {
+
+        }
+
+        public static void OnChangeArmor(CCreature obj, int newV, int oldV)
         {
 
         }

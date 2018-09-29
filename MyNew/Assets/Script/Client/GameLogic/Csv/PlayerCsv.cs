@@ -12,6 +12,8 @@ namespace Roma
 		force,
 		agility,
 		brain,
+		armor,
+		skill0,
 	}
 
 	public class PlayerCsvData
@@ -56,6 +58,16 @@ namespace Roma
 		/// </summary>
 		public int brain;
 
+		/// <summary>
+		/// »¤¼×
+		/// </summary>
+		public int armor;
+
+		/// <summary>
+		/// ÆÕ¹¥¼¼ÄÜ
+		/// </summary>
+		public int skill0;
+
 	}
 
 	public class PlayerCsv : CsvExWrapper
@@ -78,6 +90,8 @@ namespace Roma
 				data.force = m_csv.GetIntData(i, (int)ePlayerCsv.force);
 				data.agility = m_csv.GetIntData(i, (int)ePlayerCsv.agility);
 				data.brain = m_csv.GetIntData(i, (int)ePlayerCsv.brain);
+				data.armor = m_csv.GetIntData(i, (int)ePlayerCsv.armor);
+				data.skill0 = m_csv.GetIntData(i, (int)ePlayerCsv.skill0);
 				m_dicData.Add(data.Id, data);
 			}
 		}
