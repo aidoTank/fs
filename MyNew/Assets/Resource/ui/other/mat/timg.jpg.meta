@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 06c98b20cabe159488b4c117676e89b5
-timeCreated: 1490757455
+guid: d94f3a0419de3ef43b0506d418e0fa21
+timeCreated: 1538278017
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName: {}
@@ -24,7 +24,7 @@ TextureImporter:
   generateCubemap: 6
   cubemapConvolution: 0
   seamlessCubemap: 0
-  textureFormat: -1
+  textureFormat: 1
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
@@ -64,5 +64,5 @@ TextureImporter:
     outline: []
   spritePackingTag: 
   userData: 
-  assetBundleName: moudle/bo_mx_baolong/fx/materials/ef_light-0021
+  assetBundleName: ui/other/mat/timg
   assetBundleVariant: 

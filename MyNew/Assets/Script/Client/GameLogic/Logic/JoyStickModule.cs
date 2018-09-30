@@ -45,30 +45,56 @@ namespace Roma
             };
         }
 
+        public override void InitData()
+        {
+            OnLoadSelect();
+        }
+
+        private void OnLoadSelect()
+        {
+            m_master = CPlayerMgr.GetMaster();
+            EntityBaseInfo info = new EntityBaseInfo();
+            info.m_resID = 3;
+            info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
+            m_skillChoseHid = EntityManager.Inst.CreateEntity(eEntityType.eNone, info, (ent) =>
+            {
+                ent.SetDirection(Vector3.zero);
+                //ent.SetColor(SKLL_BLUE);
+                ent.SetRenderQueue(3001);
+                GameObject skillChose = ent.GetObject();
+                m_skillChose = skillChose.transform;
+                m_skillDistance = m_skillChose.FindChild("distance");
+                m_skillCenter = m_skillChose.FindChild("center");
+                m_skillDir = m_skillCenter.FindChild("dir");
+            });
+        }
+
+        public override void UpdateUI(float time, float fdTime)
+        {
+            if(m_master != null && m_skillChose != null)
+            {
+                m_skillChose.position = m_master.m_vCreature.GetEnt().GetPos();
+            }
+        }
+
         private void SetSkillCancel(bool bCancel)
         {
-            //  if (bCancel)       // 红色,取消技能
-            // {
-            //     m_bSkillCancel = true;
-            //     NewEntity ent = EntityManager.Inst.GetEnity(m_skillChoseHid);
-            //     ent.SetColor(SKLL_RED);
-            //     int index = m_curSkillIndex;
-            //     if (index == 5)
-            //         index = 4;
-            //     m_ui.SetColor(index, SKLL_RED);
-            //     SetSelectColor(SKLL_RED);
-            // }
-            // else   // 不取消技能
-            // {
-            //     m_bSkillCancel = false;
-            //     NewEntity ent = EntityManager.Inst.GetEnity(m_skillChoseHid);
-            //     ent.SetColor(SKLL_BLUE);
-            //     int index = m_curSkillIndex;
-            //     if (index == 5)
-            //         index = 4;
-            //     m_ui.SetColor(index, SKLL_BLUE);
-            //     SetSelectColor(SKLL_BLUE);
-            // } 
+             if (bCancel)       // 红色,取消技能
+            {
+                m_bSkillCancel = true;
+                Entity ent = EntityManager.Inst.GetEnity(m_skillChoseHid);
+                ent.SetColor(SKLL_RED);
+                m_ui.SetColor(m_curSkillIndex, SKLL_RED);
+                //SetSelectColor(SKLL_RED);
+            }
+            else   // 不取消技能
+            {
+                m_bSkillCancel = false;
+                Entity ent = EntityManager.Inst.GetEnity(m_skillChoseHid);
+                ent.SetColor(SKLL_BLUE);
+                m_ui.SetColor(m_curSkillIndex, SKLL_BLUE);
+                //SetSelectColor(SKLL_BLUE);
+            } 
         }
 
         #region 移动相关
@@ -156,28 +182,94 @@ namespace Roma
         }
         #endregion
  
-
+        /// <summary>
+        /// 摇杆的场景指示器也只能主角自己有，并且是操作完成才发送指令
+        /// </summary>
         private void OnSkillEvent(int index, eJoyStickEvent jsEvent, SkillJoyStick joyStick, bool bCancel)
         {
+            m_curSkillIndex = index;
             m_curSkillJoyStick = jsEvent;
             CMasterPlayer master = CPlayerMgr.GetMaster();
 
+            Vector3 dir = new Vector3(joyStick.m_delta.x, 0 , joyStick.m_delta.y);
+         
+            dir.Normalize();
+            float distance = 0;
+            float length = 0;
+            float width = 0;
             if(jsEvent == eJoyStickEvent.Down)
             {
+                m_bSkillCancel = false;
+                m_ui.m_cancelBtn.SetActiveNew(true);
+                m_ui.SetColor(index, SKLL_BLUE);
+
                 int skillId = master.m_csv.skill0;
                 skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(skillId);
+
+                m_skillChose.gameObject.SetActiveNew(true);
+                m_skillCenter.gameObject.SetActiveNew(true);
+                m_skillDistance.gameObject.SetActiveNew(true);
+                m_skillDir.gameObject.SetActiveNew(true);
+
+                distance = skillInfo.distance;
+                length = skillInfo.length;
+                width = skillInfo.width;
+
+                m_skillDistance.localScale = new Vector3(distance, 0.01f, distance);
+                m_skillDir.localScale = new Vector3(distance, 0.01f, distance);
+            }
+            else if(jsEvent == eJoyStickEvent.Drag)
+            {
+                
             }
             else if(jsEvent == eJoyStickEvent.Up)
             {
-                Debug.Log("发送技能：" + skillInfo.id);
-                CmdFspSendSkill cmd = new CmdFspSendSkill();
-                cmd.m_skillId = skillInfo.id;
-                cmd.m_dir = joyStick.m_delta;
-                master.SendFspCmd(cmd);
+                // 发送技能
+                if (!m_bSkillCancel)
+                {
+                    m_bSkillCancel = true;
+                    Debug.Log("发送技能：" + skillInfo.id);
+                    CmdFspSendSkill cmd = new CmdFspSendSkill();
+                    cmd.m_skillId = skillInfo.id;
+                    cmd.m_dir = joyStick.m_delta;
+                    master.SendFspCmd(cmd);
+                }
+                // 还原指示器
+                CancelSkill();
+
+                m_skillChose.gameObject.SetActiveNew(false);
+
+ 
             }
+            m_skillCenter.rotation = Quaternion.LookRotation(dir);   // 只用控制中心点的方向
         }
 
+        /// <summary>
+        /// 本地还原指示器，取消技能
+        /// </summary>
+        public void CancelSkill()
+        {
+            if (m_skillChose == null)
+                return;
+            m_bSkillCancel = true;
+            m_ui.m_cancelBtn.SetActiveNew(false);
+            m_ui.CloseSkillFocus();
+            m_skillChose.gameObject.SetActiveNew(false);
+            //CameraMgr.Inst.OnFov(0, 30f, 0);
+            Entity ent = EntityManager.Inst.GetEnity(m_skillChoseHid);
+            ent.SetColor(SKLL_BLUE);
+        }
+
+        private CMasterPlayer m_master;
+        private int m_skillChoseHid;
+        private Transform m_skillChose;
+        private Transform m_skillCenter;
+        private Transform m_skillDistance;
+        private Transform m_skillDir;
+
         private SkillCsvData skillInfo;
+        private Color SKLL_BLUE = new Color(0f, 0.145f, 0.807f, 0.5f);
+        private Color SKLL_RED = new Color(0.345f, 0f, 0f, 0.5f);
 
         /// <summary>
         /// 是否取消施法
