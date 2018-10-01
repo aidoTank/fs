@@ -25,7 +25,7 @@ namespace Roma
 
         public void ExecuteFrame()
         {
-            CPlayerMgr.ExecuteFrame();
+            //CPlayerMgr.ExecuteFrame();
         }
 
         public void Enter(CCreature obj)

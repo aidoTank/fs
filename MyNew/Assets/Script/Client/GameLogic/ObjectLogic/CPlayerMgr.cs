@@ -66,11 +66,11 @@ namespace Roma
             }
         }
 
-        public static void ExecuteFrame()
+        public static void ExecuteFrame(int frameId)
         {
             foreach(KeyValuePair<long, CPlayer> item in m_dicPlayer)
             {
-                item.Value.ExecuteFrame();
+                item.Value.ExecuteFrame(frameId);
             }
         }
 

@@ -112,11 +112,9 @@ namespace Roma
                     HandleServerCmd(cmd);
                 }
             }
-            // 场景帧心跳等
-            foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)
-            {
-                item.Value.ExecuteFrame();
-            }
+            
+            CPlayerMgr.ExecuteFrame(frameId);            // 场景帧心跳等
+            CSkillMgr.ExecuteFrame(frameId);
         }
 
         /// <summary>
@@ -143,6 +141,11 @@ namespace Roma
                 break;
             }
             player.PushCommand(logicCmd);
+        }
+
+        public int GetCurFrameIndex()
+        {
+            return m_curFrameIndex;
         }
 
     }

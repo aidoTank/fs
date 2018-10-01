@@ -11,6 +11,7 @@ namespace Roma
         Player,             // 玩家
         NPC,                // NPC
         Monster,            // 怪物
+        Skill,
     }
     public class CThing
     {

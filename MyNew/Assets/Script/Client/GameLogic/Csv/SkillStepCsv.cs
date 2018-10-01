@@ -14,6 +14,15 @@ namespace Roma
 		speed,
 	}
 
+
+	public enum eSkillStepType
+	{
+		Caster = 1,
+        Hit = 2,
+        Fly = 3,
+        FlyHit = 4,
+	}
+
 	public class SkillStepCsvData
 	{
 		/// <summary>
@@ -78,20 +87,59 @@ namespace Roma
 				data.bindPoint = m_csv.GetIntData(i, (int)eSkillStepCsv.bindPoint);
 				data.startTime = m_csv.GetIntData(i, (int)eSkillStepCsv.startTime);
 				data.speed = m_csv.GetIntData(i, (int)eSkillStepCsv.speed);
-				m_dicData.Add(i, data);
+				m_dicData.Add(data);
 			}
 		}
 
-		public SkillStepCsvData GetData(int csvId)
-		{
-			SkillStepCsvData data;
-			if (m_dicData.TryGetValue(csvId, out data))
-			{
-				return data;
-			}
-			return null;
-		}
 
-		public Dictionary<int, SkillStepCsvData> m_dicData = new Dictionary<int, SkillStepCsvData>();
+		public SkillStepCsvData GetCasterData(int skillId)
+        {
+            foreach (SkillStepCsvData item in m_dicData)
+            {
+                if (item.id == skillId && item.step == (int)eSkillStepType.Caster)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public SkillStepCsvData GetHitData(int skillId)
+        {
+            foreach (SkillStepCsvData item in m_dicData)
+            {
+                if (item.id == skillId && item.step == (int)eSkillStepType.Hit)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public void GetFlyData(ref List<SkillStepCsvData> list, int skillId)
+        {
+            list.Clear();
+            foreach (SkillStepCsvData item in m_dicData)
+            {
+                if (item.id == skillId && item.step == (int)eSkillStepType.Fly)
+                {
+                    list.Add(item);
+                }
+            }
+        }
+
+        public SkillStepCsvData GetFlyHitData(int skillId)
+        {
+            foreach (SkillStepCsvData item in m_dicData)
+            {
+                if (item.id == skillId && item.step == (int)eSkillStepType.FlyHit)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+		 public List<SkillStepCsvData> m_dicData = new List<SkillStepCsvData>();
 	}
 }

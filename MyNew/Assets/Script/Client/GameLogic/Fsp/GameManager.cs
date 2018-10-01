@@ -22,7 +22,7 @@ namespace Roma
         public static GameManager Inst;
         public GameManager() : base(true) { }
 
-        private FspManager m_fspMgr;      // FSP管理器
+        public FspManager m_fspMgr;      // FSP管理器
         private int m_gameState; // 游戏状态
 
         private bool m_bRunning;
@@ -135,6 +135,11 @@ namespace Roma
             {
                 FspNetRunTime.Inst.Destroy();
             }
+        }
+
+        public FspManager GetFspManager()
+        {
+            return m_fspMgr;
         }
     }
 }

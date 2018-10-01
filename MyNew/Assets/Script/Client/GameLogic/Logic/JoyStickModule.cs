@@ -119,14 +119,12 @@ namespace Roma
                 m_moveDir = Vector3.zero;
                 m_curVelocity = Vector3.zero;
                 m_isFirstJoyStick = true;
-                CMasterPlayer master = CPlayerMgr.GetMaster();
-                if (master != null)
+                if (m_master != null)
                 {
                     //发送停止消息
-                    master.SendFspCmd(new CmdFspStopMove());
+                    m_master.SendFspCmd(new CmdFspStopMove());
                     //Debug.Log("发送停止。。。。。。。。。。。。。。。。。。。。。");
                 }
-                return;
             }
             else
             {
@@ -142,15 +140,16 @@ namespace Roma
         {
             if (m_isFirstJoyStick)
             {
+                m_isFirstJoyStick = false;
                 //第一次直接发送移动消息
                 PushMoveCommand();
             }
             else
             {
-                m_time += Time.deltaTime;
-                if(m_time > 0.1f)
+                m_sendMoveTime += Time.deltaTime;
+                if(m_sendMoveTime > m_sendMoveInterval)
                 {
-                    m_time = 0;
+                    m_sendMoveTime = 0;
                     //之后大于15度发送消息
                     float angle = Vector3.Angle(m_curVelocity, m_moveDir);
                     if (angle > 15)
@@ -158,11 +157,9 @@ namespace Roma
                         PushMoveCommand();
                     }
                 }
-
             }
         }
 
-        private float m_time =0;
         //直接发送移动消息
         private void PushMoveCommand()
         {
@@ -171,13 +168,10 @@ namespace Roma
                 return;
             }
 
-            CMasterPlayer master = CPlayerMgr.GetMaster();
-
-            if (master != null)
+            if (m_master != null)
             {
-                m_isFirstJoyStick = false;
                 CmdFspMove cmd = new CmdFspMove(ref m_moveDir);
-                master.SendFspCmd(cmd);
+                m_master.SendFspCmd(cmd);
             }
         }
         #endregion
@@ -282,7 +276,7 @@ namespace Roma
         private Vector3 m_curVelocity;
         private Vector2 m_moveDir;
         private float m_sendMoveTime = 0;
-        private float m_sendMoveInterval = 0;
+        private float m_sendMoveInterval = 0.1f;
         public bool m_isFirstJoyStick = true;
 
         public UIPanelJoyStick m_ui;

@@ -8,14 +8,18 @@ namespace Roma
 		id,
 		name,
 		type,
+		selectTargetType,
 		skillType,
-		selectTargetTpye,
+		checkTargetType,
 		distance,
 		length,
 		width,
+		launchTime,
+		hitTime,
+		flySpeed,
 	}
 
-    // 选择目标方式 1.自己 2.目标 3.方向 4.位置
+    // 指示器类型 1.自己 2.目标 3.方向 4.位置
     public enum eSelectTargetType
     {
        None = 0,          
@@ -33,6 +37,14 @@ namespace Roma
        Fly,     
 	   Aoe,            
     }
+
+	public enum eCheckTargetType
+	{
+		None,
+		Sector,
+		Circle,
+		Rect,
+	}
 
 	public class SkillCsvData
 	{
@@ -52,15 +64,19 @@ namespace Roma
 		public int type;
 
 		/// <summary>
-		/// 选择目标方式 1.自己 2.目标 3.方向 4.位置
+		/// 指示器类型 1.自己 2.目标 3.方向 4.位置
 		/// </summary>
 		public int selectTargetType;
 
 		/// <summary>
-		/// 技能类型（不同方式） 1.近战 2.子弹 3.远程区域 4.陷阱
+		/// 技能类型（不同实体类） 1.近战 2.子弹 3.远程区域 4.陷阱
 		/// </summary>
 		public int skillType;
 
+		/// <summary>
+		/// 检测目标方式(实体类的形状) 1扇形 2圆形 3矩形
+		/// </summary>
+		public int checkTargetType;
 
 		/// <summary>
 		/// 施法距离
@@ -77,6 +93,9 @@ namespace Roma
 		/// </summary>
 		public int width;
 
+		public int launchTime;
+		public int hitTime;
+		public int flySpeed;
 	}
 
 	public class SkillCsv : CsvExWrapper
@@ -94,11 +113,15 @@ namespace Roma
 				data.id = m_csv.GetIntData(i, (int)eSkillCsv.id);
 				data.name = m_csv.GetData(i, (int)eSkillCsv.name);
 				data.type = m_csv.GetIntData(i, (int)eSkillCsv.type);
+				data.selectTargetType = m_csv.GetIntData(i, (int)eSkillCsv.selectTargetType);
 				data.skillType = m_csv.GetIntData(i, (int)eSkillCsv.skillType);
-				data.selectTargetType = m_csv.GetIntData(i, (int)eSkillCsv.selectTargetTpye);
+				data.checkTargetType = m_csv.GetIntData(i, (int)eSkillCsv.checkTargetType);
 				data.distance = m_csv.GetIntData(i, (int)eSkillCsv.distance);
 				data.length = m_csv.GetIntData(i, (int)eSkillCsv.length);
 				data.width = m_csv.GetIntData(i, (int)eSkillCsv.width);
+				data.launchTime = m_csv.GetIntData(i, (int)eSkillCsv.launchTime);
+				data.hitTime = m_csv.GetIntData(i, (int)eSkillCsv.hitTime);
+				data.flySpeed = m_csv.GetIntData(i, (int)eSkillCsv.flySpeed);
 				m_dicData.Add(data.id, data);
 			}
 		}
