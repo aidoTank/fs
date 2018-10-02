@@ -43,7 +43,7 @@ namespace Roma
 		/// <summary>
 		/// 动作名
 		/// </summary>
-		public int animaName;
+		public string animaName;
 
 		/// <summary>
 		/// 特效id
@@ -82,7 +82,7 @@ namespace Roma
 				data.id = m_csv.GetIntData(i, (int)eSkillStepCsv.id);
 				data.name = m_csv.GetData(i, (int)eSkillStepCsv.name);
 				data.step = m_csv.GetIntData(i, (int)eSkillStepCsv.step);
-				data.animaName = m_csv.GetIntData(i, (int)eSkillStepCsv.animaName);
+				data.animaName = m_csv.GetData(i, (int)eSkillStepCsv.animaName);
 				data.effectId = m_csv.GetIntData(i, (int)eSkillStepCsv.effectId);
 				data.bindPoint = m_csv.GetIntData(i, (int)eSkillStepCsv.bindPoint);
 				data.startTime = m_csv.GetIntData(i, (int)eSkillStepCsv.startTime);

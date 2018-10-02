@@ -5,18 +5,18 @@ namespace Roma
 {
     public class CSkillMgr
     {
-        public static SkillBase Create(long uid, int skillId)
-        {
-            if (m_dicPlayer.ContainsKey(uid))
-            {
-                return m_dicPlayer[uid];
-            }
+        // public static SkillBase Create(long uid, int skillId)
+        // {
+        //     if (m_dicPlayer.ContainsKey(uid))
+        //     {
+        //         return m_dicPlayer[uid];
+        //     }
 
-            SkillBase player = new SkillBase(uid, skillId);
-            Add(uid, player);
+        //     SkillBase player = new SkillBase(uid, skillId);
+        //     Add(uid, player);
 
-            return player;
-        }
+        //     return player;
+        // }
 
         public static SkillBase Get(long uId)
         {

@@ -29,6 +29,10 @@ namespace Roma
             m_vCreature.SetDir(m_cmdFspMove.m_dir);
         }
 
+        public Vector2 GetPos()
+        {
+            return m_curPos;
+        }
     }
 
 

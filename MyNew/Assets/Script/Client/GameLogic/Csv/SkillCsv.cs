@@ -19,7 +19,7 @@ namespace Roma
 		flySpeed,
 	}
 
-    // Ö¸Ê¾Æ÷ÀàĞÍ 1.×Ô¼º 2.Ä¿±ê 3.·½Ïò 4.Î»ÖÃ
+    // æŒ‡ç¤ºå™¨ç±»å‹ 1.è‡ªå·± 2.ç›®æ ‡ 3.æ–¹å‘ 4.ä½ç½®
     public enum eSelectTargetType
     {
        None = 0,          
@@ -29,7 +29,7 @@ namespace Roma
        Pos,               
     }
 
-	// ¼¼ÄÜÀàĞÍ  1.½üÕ½ 2.×Óµ¯ 3.Ô¶³ÌÇøÓò 4.ÏİÚå
+	// æŠ€èƒ½ç±»å‹  1.è¿‘æˆ˜ 2.å­å¼¹ 3.è¿œç¨‹åŒºåŸŸ 4.é™·é˜±
     public enum eSkillType
     {
        None = 0,         
@@ -49,52 +49,52 @@ namespace Roma
 	public class SkillCsvData
 	{
 		/// <summary>
-		/// ¼¼ÄÜID
+		/// æŠ€èƒ½ID
 		/// </summary>
 		public int id;
 
 		/// <summary>
-		/// ¼¼ÄÜÃû³Æ
+		/// æŠ€èƒ½åç§°
 		/// </summary>
 		public string name;
 
 		/// <summary>
-		/// ¼¼ÄÜ´óÀàĞÍ 1.Ö÷¶¯ 2.±»¶¯
+		/// æŠ€èƒ½å¤§ç±»å‹ 1.ä¸»åŠ¨ 2.è¢«åŠ¨
 		/// </summary>
 		public int type;
 
 		/// <summary>
-		/// Ö¸Ê¾Æ÷ÀàĞÍ 1.×Ô¼º 2.Ä¿±ê 3.·½Ïò 4.Î»ÖÃ
+		/// æŒ‡ç¤ºå™¨ç±»å‹ 1.è‡ªå·± 2.ç›®æ ‡ 3.æ–¹å‘ 4.ä½ç½®
 		/// </summary>
 		public int selectTargetType;
 
 		/// <summary>
-		/// ¼¼ÄÜÀàĞÍ£¨²»Í¬ÊµÌåÀà£© 1.½üÕ½ 2.×Óµ¯ 3.Ô¶³ÌÇøÓò 4.ÏİÚå
+		/// æŠ€èƒ½ç±»å‹ï¼ˆä¸åŒå®ä½“ç±»ï¼‰ 1.è¿‘æˆ˜ 2.å­å¼¹ 3.è¿œç¨‹åŒºåŸŸ 4.é™·é˜±
 		/// </summary>
 		public int skillType;
 
 		/// <summary>
-		/// ¼ì²âÄ¿±ê·½Ê½(ÊµÌåÀàµÄĞÎ×´) 1ÉÈĞÎ 2Ô²ĞÎ 3¾ØĞÎ
+		/// æ£€æµ‹ç›®æ ‡æ–¹å¼(å®ä½“ç±»çš„å½¢çŠ¶) 1æ‰‡å½¢ 2åœ†å½¢ 3çŸ©å½¢
 		/// </summary>
 		public int checkTargetType;
 
 		/// <summary>
-		/// Ê©·¨¾àÀë
+		/// æ–½æ³•è·ç¦»
 		/// </summary>
 		public int distance;
 
 		/// <summary>
-		/// ·¶Î§³¤¶È£¨³¤¶È °ë¾¶£©
+		/// èŒƒå›´é•¿åº¦ï¼ˆé•¿åº¦ åŠå¾„ï¼‰
 		/// </summary>
 		public int length;
 
 		/// <summary>
-		/// ·¶Î§¿í¶È(¿í¶È ÉÈĞÎ½Ç¶È)
+		/// èŒƒå›´å®½åº¦(å®½åº¦ æ‰‡å½¢è§’åº¦)
 		/// </summary>
 		public int width;
 
 		public int launchTime;
-		public int hitTime;
+		public int  hitTime;
 		public int flySpeed;
 	}
 

@@ -99,7 +99,7 @@ namespace Roma
             // if effect have parent then parent object need clear bind objects
             if (m_parentEnt != null)
                 m_parentEnt.RemoveBindObject(m_ent);
-            //EntityManager.Inst.RemoveEntity(m_ent.m_hid, true);
+            EntityManager.Inst.RemoveEntity(m_ent.m_hid, true);
             //if (m_soundEnt != null)
             //{
             //    SoundManager.Inst.Remove(m_soundEnt.m_hid);

@@ -5,13 +5,13 @@ namespace Roma
 {
     public partial class SkillNear : SkillBase
     {
-        private int m_curTime;
+        private int m_curHitTime;
         private bool m_bHit;
 
-        public SkillNear(long id, int skillId)
-            : base(id, skillId)
+        public SkillNear(long id, int skillId, VSkillBase vSkill)
+            : base(id, skillId, vSkill)
         {
-           
+           m_bHit = true;
         }
 
         public override bool InitConfigure()
@@ -22,23 +22,27 @@ namespace Roma
 
         public override void ExecuteFrame(int frameId)
         {
+            base.ExecuteFrame(frameId);
             if(m_bHit)
-                return;
-
-            m_curTime += FSPParam.clientFrameMsTime;
-            if(m_curTime > m_skillInfo.hitTime - m_skillInfo.launchTime)
             {
-                m_bHit = true;
-                Debug.Log("近战击中，计算伤害");
+                m_curHitTime += FSPParam.clientFrameMsTime;
+                if(m_curHitTime > m_skillInfo.hitTime)
+                {
+                    m_bHit = false;
+                    Hit();
+                }
             }
+        }
+
+        public override void Hit()
+        {
+            Debug.Log("近战击中，计算伤害");
         }
 
         public override void Destory()
         {
 
         }
-
-
 
 
     }

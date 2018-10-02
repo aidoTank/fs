@@ -27,6 +27,7 @@ namespace Roma
             // 表现
             m_vCreature = new VCreature(m_csv.ModelResId);
             m_vCreature.m_bMaster = this is CMasterPlayer;
+            m_vCreature.Init();
             return true;
         }
 
@@ -69,9 +70,9 @@ namespace Roma
         }
 
         /// <summary>
-        /// 执行指令
+        /// 执行本地指令
         /// </summary>
-        public void PushCommand(IFspCmdType cmd)
+        public virtual void PushCommand(IFspCmdType cmd)
         {
             m_logicState = cmd.GetCmdType();
             if(cmd.GetCmdType() == CmdFspEnum.eFspStopMove)
@@ -104,7 +105,7 @@ namespace Roma
             }
             else if(m_logicState == CmdFspEnum.eFspSendSkill)
             {
-                TickSkill(frameId);
+                //TickSkill(frameId);
             }
         }
 

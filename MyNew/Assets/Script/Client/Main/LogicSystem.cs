@@ -77,6 +77,7 @@ namespace Roma
         {
             Lua_Update(fTime, fDTime);
             SingletonManager.Inst.Update(fTime, fDTime);
+            CEffectMgr.Update(fTime, fDTime);
             //if (SceneManager.Inst != null && SceneManager.Inst.IsLoaded())
             //{
             //    CPointMgr.Update(fTime, fDTime);

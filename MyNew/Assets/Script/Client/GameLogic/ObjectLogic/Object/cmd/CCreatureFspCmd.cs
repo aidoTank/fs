@@ -12,6 +12,9 @@ namespace Roma
         eFspRotation,       // 转向
         eFspSendSkill,      // 技能 逻辑，表现层公用
         eFspCancelSkill,    //取消技能
+
+
+        eHit,
     }
     public class IFspCmdType
     {
@@ -63,15 +66,37 @@ namespace Roma
 
     public class CmdFspSendSkill : IFspCmdType
     {
+        public int m_casterUid;
         public int m_skillId;
         public long m_targetId;
         public Vector2 m_startPos;
         public Vector2 m_endPos;
         public Vector2 m_dir;
 
+        //public int m_casterHid;
         public CmdFspSendSkill()
         {
             cmdenum = CmdFspEnum.eFspSendSkill;
+        }
+    }
+
+
+
+
+
+
+    public class CmdFspHit : IFspCmdType
+    {
+        public bool bPlayer;
+        /// <summary>
+        /// 玩家时，为hid
+        /// </summary>
+        public int hid;
+        public Vector3 pos; // 弹道爆炸的位置
+
+        public CmdFspHit()
+        {
+            cmdenum = CmdFspEnum.eHit;
         }
     }
 }

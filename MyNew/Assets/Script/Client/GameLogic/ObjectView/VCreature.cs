@@ -9,6 +9,7 @@ namespace Roma
 {
     public partial class VCreature
     {
+        public int m_resId;
         public bool m_bMaster;
         public int m_hid;
         private CmdFspEnum m_state;
@@ -16,8 +17,13 @@ namespace Roma
 
         public VCreature(int ResId)
         {
+            m_resId = ResId;
+        }
+
+        public virtual void Init()
+        {
             EntityBaseInfo info = new EntityBaseInfo();
-            info.m_resID = ResId;
+            info.m_resID = m_resId;
             info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
             m_hid = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, info, (ent)=> 
             {
@@ -34,18 +40,18 @@ namespace Roma
             return m_ent;
         }
 
-        public void SetPos(Vector2 pos)
+        public virtual void SetPos(Vector2 pos)
         {
             m_ent.SetPos(new Vector3(pos.x, 0, pos.y));
         }
 
-        public void SetDir(Vector2 dir)
+        public virtual void SetDir(Vector2 dir)
         {
             Quaternion q = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.y));
             m_ent.SetRot(q);
         }
 
-        public void PushCommand(IFspCmdType cmd)
+        public virtual void PushCommand(IFspCmdType cmd)
         {
             m_state = cmd.GetCmdType();
             if(cmd.GetCmdType() == CmdFspEnum.eFspStopMove)

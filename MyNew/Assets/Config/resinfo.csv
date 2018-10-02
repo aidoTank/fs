@@ -23,9 +23,9 @@ uint,string,string,string
 11003,icon_item_3,ui/dynamic/icon/item/icon_item_3,图标
 11004,icon_item_4,ui/dynamic/icon/item/icon_item_4,图标
 20000,特效段2000+,,
-20001,fx_1,effect/fx_1/fx_1,特效
-20002,fx_2,effect/fx_2/fx_2,特效
-20003,fx_3,effect/fx_3/fx_3,特效
+20011,fx_1_1,effect/fx_1/fx_1_1,特效
+20021,fx_2_1,effect/fx_2/fx_2_1,特效
+20022,fx_2_2,effect/fx_2/fx_2_2,特效
 30000,骨骼蒙皮,,
 30001,bo_mx_baolong_01,moudle/bo_mx_baolong/bo_mx_baolong_01,骨骼蒙皮
 30002,bo_mx_baolong_02,moudle/bo_mx_baolong/bo_mx_baolong_02,骨骼蒙皮

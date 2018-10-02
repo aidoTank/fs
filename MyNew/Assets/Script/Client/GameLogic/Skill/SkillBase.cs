@@ -8,23 +8,52 @@ namespace Roma
     /// </summary>
     public partial class SkillBase : CCreature
     {
-        public int m_skillId;
+        public CmdFspSendSkill m_curSkillCmd;
         public SkillCsvData m_skillInfo;
-        public SkillBase(long id, int skillId)
+        
+        private bool m_bLaunch;
+        private int m_curLaunchTime;
+
+        private VSkillBase m_vSkill;
+
+        public SkillBase(long id, int skillId, VSkillBase vSkill)
             : base(id)
         {
             m_type = EThingType.Skill;
-
-            m_skillId = skillId;
-            m_skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(skillId);
+            m_vSkill = vSkill;
         }
 
-        public override bool InitConfigure()
+        public override void PushCommand(IFspCmdType cmd)
         {
-            return true;
-        }
+            switch (cmd.GetCmdType())
+            {
+                case CmdFspEnum.eFspSendSkill:
+                    m_curSkillCmd = cmd as CmdFspSendSkill;
+                    m_skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(m_curSkillCmd.m_skillId);
+                    m_bLaunch = true;
+                    break;
+            }
+        }        
 
         public override void ExecuteFrame(int frameId)
+        {
+            if(m_bLaunch)
+            {
+                m_curLaunchTime += FSPParam.clientFrameMsTime;
+                if(m_curLaunchTime > m_skillInfo.launchTime)
+                {
+                    m_bLaunch = false;
+                    Launch();
+                }
+            }
+        }
+
+        public virtual void Launch()
+        {
+
+        }
+
+        public virtual void Hit()
         {
 
         }
@@ -33,9 +62,6 @@ namespace Roma
         {
 
         }
-
-
-
 
     }
 }

@@ -1,5 +1,6 @@
 EffectID ,ResID ,EffectDesc           ,LiveTime,soundID,bz
 表现id,资源id,描述,生存时间 程序删除填0,音效表名称ID,备注
 uint,uint,string,float,string,string
-1001,1001,fx_jn_quntigongji_01,0,,
-1002,1002,fx_huixinyiji,2,,
+20011,20011,fx_1_1,1,,
+20021,20021,fx_2_1,1,,
+20022,20022,fx_2_2,1,,

@@ -198,7 +198,7 @@ namespace Roma
                 m_ui.SetColor(index, SKLL_BLUE);
 
                 int skillId = master.m_csv.skill0;
-                skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(skillId);
+                skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(2);
 
                 m_skillChose.gameObject.SetActiveNew(true);
                 m_skillCenter.gameObject.SetActiveNew(true);
@@ -224,6 +224,7 @@ namespace Roma
                     m_bSkillCancel = true;
                     Debug.Log("发送技能：" + skillInfo.id);
                     CmdFspSendSkill cmd = new CmdFspSendSkill();
+                    cmd.m_casterUid = (int)m_master.GetUid();
                     cmd.m_skillId = skillInfo.id;
                     cmd.m_dir = joyStick.m_delta;
                     master.SendFspCmd(cmd);
