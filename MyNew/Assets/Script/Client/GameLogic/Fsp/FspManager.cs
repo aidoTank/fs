@@ -136,8 +136,21 @@ namespace Roma
                 break;
                 case CmdFspEnum.eFspMove:
                     Debug.Log(uid + " 客户端调用移动命令 " + cmd.args[0] + " " + cmd.args[1]);
-                    Vector2 v = new Vector2(cmd.args[0], cmd.args[1]) / 100;
+                    Vector2 v = new Vector2(cmd.args[0], cmd.args[1]) * 0.01f;
                     logicCmd = new CmdFspMove(ref v);
+                break;
+                case CmdFspEnum.eFspSendSkill:
+                    Debug.Log(uid + " 客户端调用技能 " + cmd.args[0] + " " + cmd.args[1]);
+                    
+                    CmdFspSendSkill skill = new CmdFspSendSkill();
+                    skill.m_casterUid = cmd.args[0];
+                    skill.m_skillId = cmd.args[1];
+                    skill.m_targetId = cmd.args[2];
+                    Vector2 dir = new Vector2(cmd.args[3], cmd.args[4])  * 0.01f;
+                    Vector2 endPos = new Vector2(cmd.args[5], cmd.args[6])  * 0.01f;
+                    skill.m_dir = dir;
+                    skill.m_endPos = endPos;
+                    logicCmd = skill;
                 break;
             }
             player.PushCommand(logicCmd);

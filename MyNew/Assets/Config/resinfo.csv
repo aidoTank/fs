@@ -27,7 +27,7 @@ uint,string,string,string
 20021,fx_2_1,effect/fx_2/fx_2_1,特效
 20022,fx_2_2,effect/fx_2/fx_2_2,特效
 20023,fx_2_3,effect/fx_2/fx_2_3,特效
-20032,fx_3_2,,
+20032,fx_3_2,effect/fx_3/fx_3_2,特效
 30000,骨骼蒙皮,,
 30001,bo_mx_baolong_01,moudle/bo_mx_baolong/bo_mx_baolong_01,骨骼蒙皮
 30002,bo_mx_baolong_02,moudle/bo_mx_baolong/bo_mx_baolong_02,骨骼蒙皮

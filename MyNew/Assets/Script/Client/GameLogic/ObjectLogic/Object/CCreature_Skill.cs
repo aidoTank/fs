@@ -39,6 +39,12 @@ namespace Roma
                 break;
                 case (int)eSkillType.Aoe:
                     // 创建AOE技能
+                    // 创建飞行技能
+                    VSkillNear vAoe = (VSkillNear)VObjectMgr.Create(eVOjectType.SkillAoe);
+                    vAoe.PushCommand(m_cmdFspSendSkill);
+
+                    SkillAoe aoe = (SkillAoe)CSkillMgr.Create(eCSkillType.SkillAoe, vAoe);
+                    aoe.PushCommand(m_cmdFspSendSkill);
                 break;
             }  
         }

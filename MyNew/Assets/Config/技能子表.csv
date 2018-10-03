@@ -5,7 +5,7 @@ int,string,int,string,int,int,int,int
 1,近战,2,hit,0,chest,0,0
 2,魔法球,1,spell_cast,20021,origin,500,
 2,魔法球,2,hit,0,chest,0,0
-2,魔法球,3,0,20022,0,0,0
+2,魔法球飞行特效,3,0,20022,0,0,0
 2,魔法球,4,0,20023,0,0,0
 3,AOE施法,1,spell_cast,20021,origin,500,0
 3,AOE受击,2,hit,0,,0,0

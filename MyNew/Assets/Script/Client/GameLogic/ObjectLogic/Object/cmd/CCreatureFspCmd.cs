@@ -79,10 +79,10 @@ namespace Roma
         public int m_casterUid;
         public int m_skillId;
         public long m_targetId;
+        public Vector2 m_dir;
         public Vector2 m_startPos;
         public Vector2 m_endPos;
-        public Vector2 m_dir;
-
+ 
         //public int m_casterHid;
         public CmdFspSendSkill()
         {

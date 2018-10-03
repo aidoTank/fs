@@ -9,6 +9,7 @@ namespace Roma
         Creature,
         SkllNear,
         SkillSingleFly,
+        SkillAoe,
     }
 
     public class VObjectMgr
@@ -41,6 +42,9 @@ namespace Roma
                 break;
                 case eVOjectType.SkillSingleFly:
                     obj = new VSkillSingleFly();
+                break;
+                 case eVOjectType.SkillAoe:
+                    obj = new VSkillNear();
                 break;
             }
             Add(m_uid ++, obj);

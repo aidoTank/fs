@@ -48,15 +48,14 @@ namespace Roma
             }
         }
 
+        /// <summary>
+        /// 弹道起飞,近战，AOE受击
+        /// </summary>
         public virtual void Launch()
         {
 
         }
 
-        public virtual void Hit()
-        {
-
-        }
 
         public override void Destory()
         {

@@ -48,8 +48,8 @@ namespace Roma
         public void SendFspCmd(IFspCmdType cmd)
         {
             // 如果本地指令，这里就直接执行指令
-            PushCommand(cmd);
-            return;
+            //PushCommand(cmd);
+            //return;
             CmdFspEnum type = cmd.GetCmdType();
             FspMsgFrame msg = (FspMsgFrame)NetManager.Inst.GetMessage(eNetMessageID.FspMsgFrame);
             FspVKey key  = new FspVKey();
@@ -65,6 +65,21 @@ namespace Roma
                     key.args = new int[2];
                     key.args[0] = (int)(moveCmd.m_dir.x * 100);
                     key.args[1] = (int)(moveCmd.m_dir.y * 100);
+                    msg.m_frameData.vkeys.Add(key);
+                break;
+                case CmdFspEnum.eFspSendSkill:
+                    CmdFspSendSkill skill = cmd as CmdFspSendSkill;
+                    key.args = new int[7];
+                    key.args[0] = (int)skill.m_casterUid;
+                    key.args[1] = (int)skill.m_skillId;
+                    key.args[2] = (int)skill.m_targetId;
+
+                    key.args[3] = (int)(skill.m_dir.x * 100);
+                    key.args[4] = (int)(skill.m_dir.y * 100);
+
+                    key.args[5] = (int)(skill.m_endPos.x * 100);
+                    key.args[6] = (int)(skill.m_endPos.y * 100);
+
                     msg.m_frameData.vkeys.Add(key);
                 break;
             }

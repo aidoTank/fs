@@ -66,6 +66,7 @@ namespace Roma
                 m_skillDistance = m_skillChose.FindChild("distance");
                 m_skillCenter = m_skillChose.FindChild("center");
                 m_skillDir = m_skillCenter.FindChild("dir");
+                m_skillPos = m_skillCenter.FindChild("pos");
             });
         }
 
@@ -185,12 +186,9 @@ namespace Roma
             m_curSkillJoyStick = jsEvent;
             CMasterPlayer master = CPlayerMgr.GetMaster();
 
-            Vector3 dir = new Vector3(joyStick.m_delta.x, 0 , joyStick.m_delta.y);
-         
-            dir.Normalize();
-            float distance = 0;
-            float length = 0;
-            float width = 0;
+            m_curSkillDir = new Vector3(joyStick.m_delta.x, 0 , joyStick.m_delta.y);
+            m_curSkillDir.Normalize();
+          
             if(jsEvent == eJoyStickEvent.Down)
             {
                 m_bSkillCancel = false;
@@ -203,40 +201,62 @@ namespace Roma
                 m_skillChose.gameObject.SetActiveNew(true);
                 m_skillCenter.gameObject.SetActiveNew(true);
                 m_skillDistance.gameObject.SetActiveNew(true);
-                m_skillDir.gameObject.SetActiveNew(true);
+                m_skillDir.gameObject.SetActiveNew(false);
+                m_skillPos.gameObject.SetActiveNew(false);
 
-                distance = skillInfo.distance;
-                length = skillInfo.length;
-                width = skillInfo.width;
-
-                m_skillDistance.localScale = new Vector3(distance, 0.01f, distance) * 2;
-                m_skillDir.localScale = new Vector3(distance, 0.01f, distance);
+                m_skillDistance.localScale = new Vector3(skillInfo.distance, 0.01f, skillInfo.distance) * 2;
             }
-            else if(jsEvent == eJoyStickEvent.Drag)
+
+            if(skillInfo.selectTargetType == (int)eSelectTargetType.Dir)
             {
-                
+                if(jsEvent == eJoyStickEvent.Down)
+                {
+                    m_skillDir.gameObject.SetActiveNew(true);
+                    m_skillDir.localScale = new Vector3(skillInfo.distance, 0.01f, skillInfo.distance);
+                }
+                else if(jsEvent == eJoyStickEvent.Drag)
+                {
+                    m_skillCenter.rotation = Quaternion.LookRotation(m_curSkillDir);  // 只用控制中心点的方向
+                }
             }
-            else if(jsEvent == eJoyStickEvent.Up)
+            else if(skillInfo.selectTargetType == (int)eSelectTargetType.Pos)
+            {
+                if(jsEvent == eJoyStickEvent.Down)
+                {
+                    m_curSkilPos = m_master.GetPos();
+
+                    m_skillPos.gameObject.SetActiveNew(true);
+                    m_skillPos.position = m_curSkilPos;
+                    m_skillPos.localScale = new Vector3(skillInfo.length, 0.001f, skillInfo.length);
+                }
+                else if(jsEvent == eJoyStickEvent.Drag)
+                {
+                    Vector3 atkOffset = m_curSkillDir * joyStick.m_delta.magnitude * skillInfo.distance;
+                    m_curSkilPos = m_master.m_vCreature.GetEnt().GetPos() + atkOffset;
+                    m_skillPos.position = m_curSkilPos;
+                }
+            }
+            
+            if(jsEvent == eJoyStickEvent.Up)
             {
                 // 发送技能
                 if (!m_bSkillCancel)
                 {
                     m_bSkillCancel = true;
-                    Debug.Log("发送技能：" + skillInfo.id);
+                    Debug.Log("发送技能：" + skillInfo.id  + " pos:" + m_curSkilPos);
                     CmdFspSendSkill cmd = new CmdFspSendSkill();
                     cmd.m_casterUid = (int)m_master.GetUid();
                     cmd.m_skillId = skillInfo.id;
-                    cmd.m_dir = joyStick.m_delta;
+                    cmd.m_dir = new Vector2(m_curSkillDir.x, m_curSkillDir.z);
+                    cmd.m_endPos = new Vector2(m_curSkilPos.x, m_curSkilPos.z);
                     master.SendFspCmd(cmd);
                 }
                 // 还原指示器
                 CancelSkill();
 
                 m_skillChose.gameObject.SetActiveNew(false);
-
- 
             }
-            m_skillCenter.rotation = Quaternion.LookRotation(dir);   // 只用控制中心点的方向
+
         }
 
         /// <summary>
@@ -259,12 +279,19 @@ namespace Roma
         private int m_skillChoseHid;
         private Transform m_skillChose;
         private Transform m_skillCenter;
-        private Transform m_skillDistance;
+        private Transform m_skillDistance; // 范围圈
         private Transform m_skillDir;
+        private Transform m_skillPos;
 
+        
         private SkillCsvData skillInfo;
+        private Vector3 m_curSkillDir;
+        private Vector3 m_curSkilPos;
+
+
         private Color SKLL_BLUE = new Color(0f, 0.145f, 0.807f, 0.5f);
         private Color SKLL_RED = new Color(0.345f, 0f, 0f, 0.5f);
+
 
         /// <summary>
         /// 是否取消施法
