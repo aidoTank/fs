@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Roma
 {
     /// <summary>
-    /// 技能的逻辑层
+    /// 当前技能的表现层，可以检测碰撞的弹道
     /// </summary>
     public partial class VSkillBase : VObject
     {
@@ -77,11 +77,19 @@ namespace Roma
             AnimationAction anim = new AnimationAction();
             anim.strFull = m_casterData.animaName;
             anim.eMode = WrapMode.Once;
+            anim.endEvent = (a)=> {
+                CmdFspStopMove stop = new CmdFspStopMove();
+                player.m_vCreature.PushCommand(stop);
+            };
             ent.Play(anim);
 
-            // 播放施法特效
-            Debug.Log("播放施法特效" + m_casterData.effectId);
-            CEffectMgr.Create(m_casterData.effectId, player.m_vCreature.GetEnt().GetPos(), Vector3.zero);
+            TimeMgr.Inst.RegisterEvent(m_casterData.startTime * 0.001f, ()=>
+            {
+                // 播放施法特效
+                Debug.Log("播放施法特效" + m_casterData.effectId);
+                CEffectMgr.Create(m_casterData.effectId, ent.GetPos(),ent.GetRotate());
+            });
         }
+ 
     }
 }

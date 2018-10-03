@@ -50,6 +50,9 @@ namespace Roma
             KeyMgr.Inst = new KeyMgr();
             SingletonManager.Inst.AddSingleton("KeyMgr", KeyMgr.Inst);
 
+            TimeMgr.Inst = new TimeMgr();
+            SingletonManager.Inst.AddSingleton("timeMgr", TimeMgr.Inst);
+
             SingletonManager.Inst.Init();
 
 

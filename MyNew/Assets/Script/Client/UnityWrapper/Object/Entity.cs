@@ -348,6 +348,8 @@ namespace Roma
                 m_object.gameObject.layer = layer;
                 for (int i = 0; i < m_listRenderer.Count; i++)
                 {
+                    if(m_listRenderer[i] == null)
+                        continue;
                     m_listRenderer[i].gameObject.layer = (int)layer;
                 }
             }
@@ -462,11 +464,15 @@ namespace Roma
                 m_orderList = new int[m_listRenderer.Count];
                 for (int i = 0; i < m_listRenderer.Count; i++)
                 {
+                    if(m_listRenderer[i] == null)
+                        continue;
                     m_orderList[i] = m_listRenderer[i].sortingOrder;
                 }
             }
             for (int i = 0; i < m_listRenderer.Count; i++)
             {
+                if(m_listRenderer[i] == null)
+                    continue;
                 m_listRenderer[i].sortingOrder = layer + m_orderList[i];
             }
         }
@@ -505,6 +511,8 @@ namespace Roma
                 return;
             for (int i = 0; i < m_listRenderer.Count; i++)
             {
+                if(m_listRenderer[i] == null)
+                    continue;
                 m_listRenderer[i].enabled = bActive;
             }
         }

@@ -66,6 +66,8 @@ namespace Roma
             {
                 for (int i = 0; i < m_listParticle.Length; i++)
                 {
+                    if(m_listParticle[i] == null)
+                        continue;
                     if (bActive)
                     {
                         m_listParticle[i].Play(true);
@@ -83,6 +85,8 @@ namespace Roma
                 for (int i = 0; i < m_listAnimation.Length; i++)
                 {
                     Animation anima = m_listAnimation[i];
+                    if(anima == null)
+                        continue;
                     if (bActive)
                     {
                         anima.Play();

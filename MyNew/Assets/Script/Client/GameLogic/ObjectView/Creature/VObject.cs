@@ -27,6 +27,10 @@ namespace Roma
        
         }
 
+        
+        /// <summary>
+        /// 创建模型
+        /// </summary>
         public virtual void Create(sVOjectBaseInfo baseInfo)
         {
             EntityBaseInfo info = new EntityBaseInfo();
@@ -50,14 +54,11 @@ namespace Roma
         public virtual void SetPos(Vector2 pos)
         {
             m_moveInfo.m_pos = new Vector3(pos.x, 0 , pos.y);
-            //m_ent.SetPos(new Vector3(pos.x, 0, pos.y));
         }
 
         public virtual void SetDir(Vector2 dir)
         {
             m_moveInfo.m_dir = new Vector3(dir.x, 0 , dir.y);
-            //Quaternion q = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.y));
-            //m_ent.SetRot(q);
         }
         
 
@@ -89,7 +90,7 @@ namespace Roma
             }
         }
 
-        public void Update(float time, float fdTime)
+        public virtual void Update(float time, float fdTime)
         {
             if(m_ent == null || !m_ent.IsInited())
                 return;
@@ -105,7 +106,7 @@ namespace Roma
         {
             if(m_ent != null)
             {
-                m_ent.Destroy();
+                EntityManager.Inst.RemoveEntity(m_ent.m_hid, true);
                 m_ent = null;
             }
         }

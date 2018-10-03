@@ -1,9 +1,12 @@
-技能ID,技能名称,技能阶段 1释放 2受击 3飞行 4飞行自爆,动作名,特效id,特效绑定点,特效开始时间,弹道速度
+技能ID,技能名称,技能阶段 1释放 2受击 3飞行/AOE特效 4飞行自爆,动作名,特效id,特效绑定点,特效开始时间,弹道速度
 id,name,step,animaName,effectId,bindPoint,startTime,speed
 int,string,int,string,int,int,int,int
-1,近战,1,attack_unarm,20011,origin,0,0
-1,近战,2,hit,20011,chest,0,0
-2,魔法球,1,spell_cast,20021,origin,0,
-2,魔法球,2,hit,20022,chest,0,0
+1,近战,1,attack_unarm,20011,origin,500,0
+1,近战,2,hit,0,chest,0,0
+2,魔法球,1,spell_cast,20021,origin,500,
+2,魔法球,2,hit,0,chest,0,0
 2,魔法球,3,0,20022,0,0,0
-2,魔法球,4,0,20011,0,0,0
+2,魔法球,4,0,20023,0,0,0
+3,AOE施法,1,spell_cast,20021,origin,500,0
+3,AOE受击,2,hit,0,,0,0
+3,AOE特效,3,,20032,,0,0

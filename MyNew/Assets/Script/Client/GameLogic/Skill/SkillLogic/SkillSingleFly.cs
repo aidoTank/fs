@@ -28,7 +28,7 @@ namespace Roma
                 {
                     CmdSkillHit cmd = new CmdSkillHit();
                     cmd.bPlayer = false;
-                    cmd.pos = m_curPos;
+                    cmd.pos = new Vector3(m_curPos.x, 0, m_curPos.y);
                     m_vSkill.PushCommand(cmd);
                     m_bFly = false;
                     Destory();
@@ -41,7 +41,7 @@ namespace Roma
         public override void Launch()
         {
             Debug.Log("发射技能");
-            m_curPos = CPlayerMgr.Get(m_curSkillCmd.m_casterUid).GetPos();
+            m_curPos = CPlayerMgr.Get(m_curSkillCmd.m_casterUid).GetPos() + m_curSkillCmd.m_dir.normalized;
             m_startPos = m_curPos;
 
             CmdSkillCreate cmd = new CmdSkillCreate();

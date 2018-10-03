@@ -198,7 +198,7 @@ namespace Roma
                 m_ui.SetColor(index, SKLL_BLUE);
 
                 int skillId = master.m_csv.skill0;
-                skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(2);
+                skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(index);
 
                 m_skillChose.gameObject.SetActiveNew(true);
                 m_skillCenter.gameObject.SetActiveNew(true);
