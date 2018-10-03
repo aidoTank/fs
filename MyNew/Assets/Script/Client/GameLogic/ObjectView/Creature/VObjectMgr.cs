@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Roma
 {
-    public enum eCSkillType
+    public enum eVOjectType
     {
         None,
         Creature,
@@ -11,7 +11,7 @@ namespace Roma
         SkillSingleFly,
     }
 
-    public class CSkillMgr
+    public class VObjectMgr
     {
         // public static SkillBase Create(long uid, int skillId)
         // {
@@ -28,25 +28,28 @@ namespace Roma
 
         private static int m_uid;
 
-        public static SkillBase Create(eCSkillType type, VSkillBase vSkill)
+        public static VObject Create(eVOjectType type)
         {
-            SkillBase obj = null;
+            VObject obj = null;
             switch (type)
             {
-                case eCSkillType.SkllNear:
-                    obj = new SkillNear(m_uid, vSkill);
+                case eVOjectType.Creature:
+                    obj = new VObject();
                 break;
-                case eCSkillType.SkillSingleFly:
-                    obj = new SkillSingleFly(m_uid, vSkill);
+                case eVOjectType.SkllNear:
+                    obj = new VSkillNear();
+                break;
+                case eVOjectType.SkillSingleFly:
+                    obj = new VSkillSingleFly();
                 break;
             }
             Add(m_uid ++, obj);
             return obj;
         }
 
-        public static SkillBase Get(long uId)
+        public static VObject Get(int uId)
         {
-            SkillBase cc;
+            VObject cc;
             if (m_dicPlayer.TryGetValue(uId, out  cc))
             {
                 return cc;
@@ -54,12 +57,12 @@ namespace Roma
             return null;
         }
 
-        public static void Add(long uid, SkillBase creature)
+        public static void Add(int uid, VObject creature)
         {
             m_dicPlayer[uid] = creature;
         }
 
-        public static void Remove(long uid, bool destroy)
+        public static void Remove(int uid, bool destroy)
         {
             if (m_dicPlayer.ContainsKey(uid))
             {
@@ -71,14 +74,14 @@ namespace Roma
             }
         }
 
-        public static void ExecuteFrame(int frameId)
+        public static void Update(float time, float fdTime)
         {
-            foreach(KeyValuePair<long, SkillBase> item in m_dicPlayer)
+            foreach(KeyValuePair<int, VObject> item in m_dicPlayer)
             {
-                item.Value.ExecuteFrame(frameId);
+                item.Value.Update(time, fdTime);
             }
         }
 
-        public static Dictionary<long, SkillBase> m_dicPlayer = new Dictionary<long, SkillBase>();
+        public static Dictionary<int, VObject> m_dicPlayer = new Dictionary<int, VObject>();
     }
 }

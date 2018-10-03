@@ -25,9 +25,11 @@ namespace Roma
             // 数据
             SetPublicPropList();
             // 表现
-            m_vCreature = new VCreature(m_csv.ModelResId);
+            m_vCreature = VObjectMgr.Create(eVOjectType.Creature);
             m_vCreature.m_bMaster = this is CMasterPlayer;
-            m_vCreature.Init();
+            sVOjectBaseInfo info = new sVOjectBaseInfo();
+            info.m_resId = m_csv.ModelResId;
+            m_vCreature.Create(info);
             return true;
         }
 
@@ -194,6 +196,15 @@ namespace Roma
         }
 
 
+        public override void Destory()
+        {
+            if(m_vCreature != null)
+            {
+                m_vCreature.Destory();
+                m_vCreature = null;
+            }
+        }
+
 
         // 逻辑状态数据
         public CmdFspEnum m_logicState;
@@ -206,6 +217,6 @@ namespace Roma
         public int[] m_arrProp;
 
         // 表现层
-        public VCreature m_vCreature;
+        public VObject m_vCreature;
     }
 }

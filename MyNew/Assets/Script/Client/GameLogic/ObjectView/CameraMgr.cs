@@ -15,7 +15,7 @@ namespace Roma
         public Transform m_camTransform;
         private Transform m_audioListener;
 
-        private VCreature m_hero;
+        private VObject m_hero;
         private Vector3 m_exViewPos;
 
         // 战斗摄像机设置
@@ -59,7 +59,7 @@ namespace Roma
         /// 初始化相机为跟随hero
         /// </summary>
         /// <param name="hero"></param>
-        public void InitCamera(VCreature hero)
+        public void InitCamera(VObject hero)
         {
             m_hero = hero;
         }

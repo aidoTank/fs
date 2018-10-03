@@ -209,7 +209,7 @@ namespace Roma
                 length = skillInfo.length;
                 width = skillInfo.width;
 
-                m_skillDistance.localScale = new Vector3(distance, 0.01f, distance);
+                m_skillDistance.localScale = new Vector3(distance, 0.01f, distance) * 2;
                 m_skillDir.localScale = new Vector3(distance, 0.01f, distance);
             }
             else if(jsEvent == eJoyStickEvent.Drag)

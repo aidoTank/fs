@@ -14,7 +14,8 @@ namespace Roma
         eFspCancelSkill,    //取消技能
 
 
-        eHit,
+        eSkillCreate,
+        eSkillHit,
     }
     public class IFspCmdType
     {
@@ -53,6 +54,15 @@ namespace Roma
         }
     }
 
+    public class CmdFspRotation : IFspCmdType
+    {
+        public Vector3 m_rotation;
+        public CmdFspRotation()
+        {
+            cmdenum = CmdFspEnum.eFspRotation;
+        }
+    }
+
     /// <summary>
     /// 停止移动
     /// </summary>
@@ -84,8 +94,15 @@ namespace Roma
 
 
 
+    public class CmdSkillCreate : IFspCmdType
+    {
+        public CmdSkillCreate()
+        {
+            cmdenum = CmdFspEnum.eSkillCreate;
+        }
+    }
 
-    public class CmdFspHit : IFspCmdType
+    public class CmdSkillHit : IFspCmdType
     {
         public bool bPlayer;
         /// <summary>
@@ -94,9 +111,10 @@ namespace Roma
         public int hid;
         public Vector3 pos; // 弹道爆炸的位置
 
-        public CmdFspHit()
+        public CmdSkillHit()
         {
-            cmdenum = CmdFspEnum.eHit;
+            cmdenum = CmdFspEnum.eSkillHit;
         }
     }
+
 }

@@ -11,6 +11,8 @@ namespace Roma
     public partial class CCreature
     {
         private SkillCsvData m_skillInfo;
+        private int m_vSkillHid;
+        private int m_skillUid;
 
         public void EnterSkill()
         {
@@ -21,21 +23,18 @@ namespace Roma
             switch(m_skillInfo.skillType)
             {
                 case (int)eSkillType.Near:
-                
-                    VSkillNear vSkill = new VSkillNear(1, m_skillInfo.id);
+                    VSkillNear vSkill = (VSkillNear)VObjectMgr.Create(eVOjectType.SkllNear);
                     vSkill.PushCommand(m_cmdFspSendSkill);
 
-                    SkillNear sNear = new SkillNear(1, m_skillInfo.id, vSkill);
-                    CSkillMgr.Add(1, sNear);
+                    SkillNear sNear = (SkillNear)CSkillMgr.Create(eCSkillType.SkllNear, vSkill);
                     sNear.PushCommand(m_cmdFspSendSkill);
                 break;
                 case (int)eSkillType.Fly:
                     // 创建飞行技能
-                    VSkillSingleFly sing = new VSkillSingleFly(1, m_skillInfo.id);
+                    VSkillSingleFly sing = (VSkillSingleFly)VObjectMgr.Create(eVOjectType.SkillSingleFly);
                     sing.PushCommand(m_cmdFspSendSkill);
 
-                    SkillSingleFly singFly = new SkillSingleFly(1, m_skillInfo.id, sing);
-                    CSkillMgr.Add(1, singFly);
+                    SkillSingleFly singFly = (SkillSingleFly)CSkillMgr.Create(eCSkillType.SkillSingleFly, sing);
                     singFly.PushCommand(m_cmdFspSendSkill);
                 break;
                 case (int)eSkillType.Aoe:

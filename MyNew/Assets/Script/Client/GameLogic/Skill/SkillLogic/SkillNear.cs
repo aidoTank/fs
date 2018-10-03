@@ -8,8 +8,8 @@ namespace Roma
         private int m_curHitTime;
         private bool m_bHit;
 
-        public SkillNear(long id, int skillId, VSkillBase vSkill)
-            : base(id, skillId, vSkill)
+        public SkillNear(int uid, VSkillBase vSkill)
+            : base(uid, vSkill)
         {
            m_bHit = true;
         }

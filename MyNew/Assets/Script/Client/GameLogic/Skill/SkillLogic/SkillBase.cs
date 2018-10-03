@@ -14,9 +14,9 @@ namespace Roma
         private bool m_bLaunch;
         private int m_curLaunchTime;
 
-        private VSkillBase m_vSkill;
+        public VSkillBase m_vSkill;
 
-        public SkillBase(long id, int skillId, VSkillBase vSkill)
+        public SkillBase(long id, VSkillBase vSkill)
             : base(id)
         {
             m_type = EThingType.Skill;
@@ -60,7 +60,12 @@ namespace Roma
 
         public override void Destory()
         {
-
+            if(m_vSkill != null)
+            {
+                m_vSkill.Destory();
+                m_vSkill = null;
+            }
+ 
         }
 
     }

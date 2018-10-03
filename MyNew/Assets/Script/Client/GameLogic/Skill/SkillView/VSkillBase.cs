@@ -6,7 +6,7 @@ namespace Roma
     /// <summary>
     /// 技能的逻辑层
     /// </summary>
-    public partial class VSkillBase : VCreature
+    public partial class VSkillBase : VObject
     {
         public CmdFspSendSkill m_curSkillCmd;
         // 本地CSV数据
@@ -15,12 +15,6 @@ namespace Roma
         public List<SkillStepCsvData> m_flyData = new List<SkillStepCsvData>();
         public SkillStepCsvData m_flyHitData;
 
-        public VSkillBase(int resId, int skillId)
-            : base(resId)
-        {
-
-        }
-
         public override void PushCommand(IFspCmdType cmd)
         {
             switch (cmd.GetCmdType())
@@ -28,9 +22,14 @@ namespace Roma
                 case CmdFspEnum.eFspSendSkill:
                     m_curSkillCmd = cmd as CmdFspSendSkill;
                     Start();
-                    break;
-                case CmdFspEnum.eHit:
-                    CmdFspHit hit = cmd as CmdFspHit;
+                break;
+                case CmdFspEnum.eSkillCreate:
+                    sVOjectBaseInfo info = new sVOjectBaseInfo();
+                    info.m_resId = m_flyData[0].effectId;
+                    Create(info);
+                break;
+                case CmdFspEnum.eSkillHit:
+                    CmdSkillHit hit = cmd as CmdSkillHit;
                     if(hit.bPlayer)   // 玩家身上
                     {
                         if (m_hitData == null)
@@ -67,23 +66,22 @@ namespace Roma
 
             CPlayer player =  CPlayerMgr.Get(m_curSkillCmd.m_casterUid);
             Debug.Log("播放施法动作" + m_casterData.animaName);
+
+            BoneEntity ent = player.m_vCreature.GetEnt();
+        
+            Vector3 dir = new Vector3(m_curSkillCmd.m_dir.x, 0 , m_curSkillCmd.m_dir.y);
+            if (dir != Vector3.zero)
+                ent.SetRot(Quaternion.LookRotation(dir));
+
+            // 获取施法动作
             AnimationAction anim = new AnimationAction();
             anim.strFull = m_casterData.animaName;
             anim.eMode = WrapMode.Once;
-            player.m_vCreature.GetEnt().Play(anim);
-            // 获取施法动作
-   
+            ent.Play(anim);
+
             // 播放施法特效
             Debug.Log("播放施法特效" + m_casterData.effectId);
             CEffectMgr.Create(m_casterData.effectId, player.m_vCreature.GetEnt().GetPos(), Vector3.zero);
         }
-
-        
-
-       
-
-
-
-
     }
 }

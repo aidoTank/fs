@@ -9,12 +9,7 @@ namespace Roma
     public partial class VSkillNear : VSkillBase
     {
 
-        public VSkillNear(int resId, int skillId)
-            : base(resId, skillId)
-        {
- 
-        }
-
+     
 
        
 

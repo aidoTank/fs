@@ -9,11 +9,7 @@ namespace Roma
     public partial class VSkillSingleFly : VSkillBase
     {
 
-        public VSkillSingleFly(int resId, int skillId)
-            : base(resId, skillId)
-        {
- 
-        }
+    
 
     
 
