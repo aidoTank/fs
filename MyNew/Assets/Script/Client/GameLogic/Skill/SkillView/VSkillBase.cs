@@ -35,14 +35,22 @@ namespace Roma
                         if (m_hitData == null)
                             return;
                         // 播放动作
-                        // BattleEntity ent = EntityManager.Inst.GetEnity(hit.hid) as BattleEntity;
-                        // int animaId = 0;
-                        // int.TryParse(m_hitData.animId, out animaId);
-                        // ent.PlayAnima(animaId);
-                        // // 播放特效
-                        // int effectId = m_hitData.effectId;
-                        // string bindPoint = m_hitData.bindPoint;
-                        // CEffectMgr.Create(effectId, hit.hid, bindPoint);
+                        CPlayer player =  CPlayerMgr.Get(hit.uid);
+            
+                        AnimationAction anim = new AnimationAction();
+                        anim.crossTime = AnimationInfo.m_crossTime;
+                        anim.strFull = m_hitData.animaName;
+                        anim.eMode = WrapMode.Once;
+                        anim.endEvent = (a)=> {
+                            CmdFspStopMove stop = new CmdFspStopMove();
+                            player.m_vCreature.PushCommand(stop);
+                        };
+                        player.m_vCreature.GetEnt().Play(anim);
+
+                        // 播放特效
+                        int effectId = m_hitData.effectId;
+                        string bindPoint = m_hitData.bindPoint;
+                        CEffectMgr.Create(effectId, player.m_vCreature.m_hid, bindPoint);
                     }
                     else // 子弹自爆
                     {
@@ -75,6 +83,7 @@ namespace Roma
 
             // 获取施法动作
             AnimationAction anim = new AnimationAction();
+            anim.crossTime = AnimationInfo.m_crossTime;
             anim.strFull = m_casterData.animaName;
             anim.eMode = WrapMode.Once;
             anim.endEvent = (a)=> {

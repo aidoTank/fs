@@ -108,7 +108,6 @@ namespace Roma
             else
             {
                 OnMove(false, move.m_delta);
-                //Debug.Log("发送移动。。。。。。。。。。。。。。。。。。。。。" + move.m_delta);
             }
         }
 
@@ -116,63 +115,51 @@ namespace Roma
         {
             if (bUp)
             {
-                //停止事件
-                m_moveDir = Vector3.zero;
-                m_curVelocity = Vector3.zero;
+                m_preMoveDir = Vector3.zero;
                 m_isFirstJoyStick = true;
                 if (m_master != null)
                 {
-                    //发送停止消息
                     m_master.SendFspCmd(new CmdFspStopMove());
-                    //Debug.Log("发送停止。。。。。。。。。。。。。。。。。。。。。");
                 }
             }
             else
             {
-                m_moveDir = delta;
-                m_moveDir.Normalize();
-                MasterMove();
+                delta.Normalize();
+                MasterMove(delta);
             }
         }
 
-
-        //主角移动, 如果是update心跳。避免频繁发送消息，加入15度和时间的概念。如果是fixupdate心跳，可以取消这个设置。（暂时放入update心跳中）
-        public void MasterMove()
+        public void MasterMove(Vector2 dir)
         {
             if (m_isFirstJoyStick)
             {
-                m_isFirstJoyStick = false;
-                //第一次直接发送移动消息
-                PushMoveCommand();
+                PushMoveCommand(dir);
             }
             else
             {
-                m_sendMoveTime += Time.deltaTime;
-                if(m_sendMoveTime > m_sendMoveInterval)
+                float angle = Vector3.Angle(m_preMoveDir, dir);
+                if (angle > 15)
                 {
-                    m_sendMoveTime = 0;
-                    //之后大于15度发送消息
-                    float angle = Vector3.Angle(m_curVelocity, m_moveDir);
-                    if (angle > 15)
-                    {
-                        PushMoveCommand();
-                    }
+                    PushMoveCommand(dir);
                 }
             }
         }
 
         //直接发送移动消息
-        private void PushMoveCommand()
+        private void PushMoveCommand(Vector2 dir)
         {
-            if (m_moveDir == Vector2.zero)
+            if (dir == Vector2.zero)
             {
                 return;
             }
 
             if (m_master != null)
             {
-                CmdFspMove cmd = new CmdFspMove(ref m_moveDir);
+                CmdFspMove cmd = new CmdFspMove(ref dir);
                 m_master.SendFspCmd(cmd);
+
+                m_preMoveDir = dir;
+                m_isFirstJoyStick = false;
             }
         }
         #endregion
@@ -301,11 +288,9 @@ namespace Roma
         private eJoyStickEvent m_curSkillJoyStick = eJoyStickEvent.Up;
 
         //摇杆控制参数
-        private Vector3 m_curVelocity;
-        private Vector2 m_moveDir;
-        private float m_sendMoveTime = 0;
-        private float m_sendMoveInterval = 0.1f;
         public bool m_isFirstJoyStick = true;
+        private Vector3 m_preMoveDir;
+  
 
         public UIPanelJoyStick m_ui;
     }

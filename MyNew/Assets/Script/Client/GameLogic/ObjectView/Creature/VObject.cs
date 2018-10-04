@@ -14,7 +14,6 @@ namespace Roma
 
     public partial class VObject
     {
-        public int m_resId;
         public bool m_bMaster;
         public int m_hid;
         private CmdFspEnum m_state;
@@ -51,9 +50,9 @@ namespace Roma
             return m_ent;
         }
 
-        public virtual void SetPos(Vector2 pos)
+        public virtual void SetPos(Vector3 pos)
         {
-            m_moveInfo.m_pos = new Vector3(pos.x, 0 , pos.y);
+            m_moveInfo.m_pos = pos;
         }
 
         public virtual void SetDir(Vector2 dir)
@@ -74,6 +73,7 @@ namespace Roma
             {
                 m_state = cmd.GetCmdType();
                 AnimationAction animaInfo = new AnimationAction();
+                animaInfo.crossTime = AnimationInfo.m_crossTime;
                 animaInfo.playSpeed = 1;
                 animaInfo.strFull = "stand";
                 animaInfo.eMode = WrapMode.Loop;
@@ -83,6 +83,7 @@ namespace Roma
             {
                 m_state = cmd.GetCmdType();
                 AnimationAction animaInfo = new AnimationAction();
+                animaInfo.crossTime = AnimationInfo.m_crossTime;
                 animaInfo.playSpeed = 1;
                 animaInfo.strFull = "run";
                 animaInfo.eMode = WrapMode.Loop;

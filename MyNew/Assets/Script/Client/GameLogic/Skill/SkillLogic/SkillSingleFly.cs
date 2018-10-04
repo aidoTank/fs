@@ -18,23 +18,39 @@ namespace Roma
         public override void ExecuteFrame(int frameId)
         {
             base.ExecuteFrame(frameId);
-            if(m_bFly)
+            if(m_vSkill != null && m_bFly)
             {
                 m_curPos = m_curPos + m_curSkillCmd.m_dir * FSPParam.clientFrameScTime * m_skillInfo.flySpeed * 0.001f;
-                m_vSkill.SetPos(m_curPos);
+                Vector3 pos = new Vector3(m_curPos.x, 1, m_curPos.y);
+                m_vSkill.SetPos(pos);
                 m_vSkill.SetDir(m_curSkillCmd.m_dir);
 
                 if(Vector2.Distance(m_startPos, m_curPos) >= m_skillInfo.distance)
                 {
                     CmdSkillHit cmd = new CmdSkillHit();
                     cmd.bPlayer = false;
-                    cmd.pos = new Vector3(m_curPos.x, 0, m_curPos.y);
+                    cmd.pos = new Vector3(m_curPos.x, 1, m_curPos.y);
                     m_vSkill.PushCommand(cmd);
                     m_bFly = false;
                     Destory();
                     return;
                 }
                 // 检测碰撞
+                foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)
+                {
+                    Vector2 focusPos = item.Value.GetPos();
+                    if(Collide.bSphereInside(m_curPos, m_skillInfo.length * 0.5f, focusPos))
+                    {
+                        Debug.Log("检测:" + item.Value.GetUid());
+                        CmdSkillHit cmd = new CmdSkillHit();
+                        cmd.bPlayer = true;
+                        cmd.uid = (int)item.Value.GetUid();
+                        m_vSkill.PushCommand(cmd);
+
+                        Destory();
+                        return;
+                    }
+                }
             }
         }
 

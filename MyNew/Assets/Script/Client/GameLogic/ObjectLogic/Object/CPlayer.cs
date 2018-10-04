@@ -27,9 +27,9 @@ namespace Roma
         {
             BattleModule bm = (BattleModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelBattle);
             bm.m_openEnd = ()=>{
-                bm.SetPorp(0, "力量：" + GetPropNum(eCreatureProp.Force));
-                bm.SetPorp(1, "敏捷：" + GetPropNum(eCreatureProp.Agility));
-                bm.SetPorp(2, "智力：" + GetPropNum(eCreatureProp.Brain));
+                bm.SetPorp(0, "力量：" + GetPropNum(eCreatureProp.Force) * 0.001f);
+                bm.SetPorp(1, "敏捷：" + GetPropNum(eCreatureProp.Agility) * 0.001f);
+                bm.SetPorp(2, "智力：" + GetPropNum(eCreatureProp.Brain) * 0.001f);
             };
             bm.SetVisible(true);
         }

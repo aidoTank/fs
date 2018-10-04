@@ -53,7 +53,7 @@ namespace Roma
 		/// <summary>
 		/// 特效绑定点
 		/// </summary>
-		public int bindPoint;
+		public string bindPoint;
 
 		/// <summary>
 		/// 特效开始时间
@@ -84,7 +84,7 @@ namespace Roma
 				data.step = m_csv.GetIntData(i, (int)eSkillStepCsv.step);
 				data.animaName = m_csv.GetData(i, (int)eSkillStepCsv.animaName);
 				data.effectId = m_csv.GetIntData(i, (int)eSkillStepCsv.effectId);
-				data.bindPoint = m_csv.GetIntData(i, (int)eSkillStepCsv.bindPoint);
+				data.bindPoint = m_csv.GetData(i, (int)eSkillStepCsv.bindPoint);
 				data.startTime = m_csv.GetIntData(i, (int)eSkillStepCsv.startTime);
 				data.speed = m_csv.GetIntData(i, (int)eSkillStepCsv.speed);
 				m_dicData.Add(data);

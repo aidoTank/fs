@@ -81,6 +81,7 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         m_energeTxt = transform.FindChild("btn_skill/txt_energe").GetComponent<Text>();
 
         m_lvParent = transform.FindChild("btn_skill/lv");
+        m_lvParent.gameObject.SetActiveNew(false);
 
         m_levelUp = transform.FindChild("btn_up").transform;
         m_btnFocus = transform.FindChild("select/focus").GetComponent<RectTransform>();

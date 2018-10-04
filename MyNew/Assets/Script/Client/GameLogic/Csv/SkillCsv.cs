@@ -94,6 +94,7 @@ namespace Roma
 		public int width;
 
 		public int launchTime;
+		// 暂时无用，近战 AOE都用launchTime作为hit时间
 		public int  hitTime;
 		public int flySpeed;
 	}

@@ -106,9 +106,9 @@ namespace Roma
     {
         public bool bPlayer;
         /// <summary>
-        /// 玩家时，为hid
+        /// 玩家时，为uid
         /// </summary>
-        public int hid;
+        public int uid;
         public Vector3 pos; // 弹道爆炸的位置
 
         public CmdSkillHit()

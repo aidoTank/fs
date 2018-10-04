@@ -18,7 +18,8 @@ namespace Roma
             base.ExecuteFrame(frameId);
             if(m_aoeHit)
             {
-                m_vSkill.SetPos(m_curSkillCmd.m_endPos);
+                Vector3 pos = new Vector3(m_curSkillCmd.m_endPos.x, 0, m_curSkillCmd.m_endPos.y);
+                m_vSkill.SetPos(pos);
 
                 AoeHit();
                 m_aoeHit = false;
@@ -37,10 +38,26 @@ namespace Roma
         private void AoeHit()
         {
             Debug.Log("aoe伤害计算");
+
+            // 检测播放受击动作
+            Vector2 pos = CPlayerMgr.Get(m_curSkillCmd.m_casterUid).GetPos();
+            Vector2 dir = m_curSkillCmd.m_dir;
+            
+            foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)
+            {
+                Vector2 focusPos = item.Value.GetPos();
+                if(Collide.bSphereInside(m_curSkillCmd.m_endPos, m_skillInfo.length * 0.5f, focusPos))
+                {
+                    Debug.Log("检测:" + item.Value.GetUid());
+                    CmdSkillHit cmd = new CmdSkillHit();
+                    cmd.bPlayer = true;
+                    cmd.uid = (int)item.Value.GetUid();
+                    m_vSkill.PushCommand(cmd);
+                }
+            }
         }
 
     
-
         public override void Destory()
         {
 
