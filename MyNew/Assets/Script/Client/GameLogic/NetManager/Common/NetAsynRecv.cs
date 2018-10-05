@@ -119,7 +119,10 @@ namespace Roma
         {
             for (int i = 0; i < m_msgList.Count; i ++)
             {
-                m_msgList[i].OnRecv();
+                if(m_msgList[i] != null)
+                {
+                    m_msgList[i].OnRecv();
+                }
                 m_msgList.RemoveAt(i);
             }
 

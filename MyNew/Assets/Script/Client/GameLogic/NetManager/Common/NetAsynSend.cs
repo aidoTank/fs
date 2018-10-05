@@ -59,7 +59,7 @@ namespace Roma
                 msg.ToByte(ref m_stream);
                 m_socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, SendedEnd, null);
                 m_listMsg.RemoveAt(0);
-                Debug.Log("最后发送消息：" + (eNetMessageID)msg.msgID);
+                //Debug.Log("最后发送消息：" + (eNetMessageID)msg.msgID);
             }
         }
 
