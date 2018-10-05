@@ -25,31 +25,50 @@ namespace Roma
                 m_vSkill.SetPos(pos);
                 m_vSkill.SetDir(m_curSkillCmd.m_dir);
 
-                if(Vector2.Distance(m_startPos, m_curPos) >= m_skillInfo.distance)
-                {
-                    CmdSkillHit cmd = new CmdSkillHit();
-                    cmd.bPlayer = false;
-                    cmd.pos = new Vector3(m_curPos.x, 1, m_curPos.y);
-                    m_vSkill.PushCommand(cmd);
-                    m_bFly = false;
-                    Destory();
-                    return;
-                }
-                // 检测碰撞
+                // 动态检测
                 foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)
                 {
-                    Vector2 focusPos = item.Value.GetPos();
-                    if(Collide.bSphereInside(m_curPos, m_skillInfo.length * 0.5f, focusPos))
-                    {
-                        Debug.Log("检测:" + item.Value.GetUid());
-                        CmdSkillHit cmd = new CmdSkillHit();
-                        cmd.bPlayer = true;
-                        cmd.uid = (int)item.Value.GetUid();
-                        m_vSkill.PushCommand(cmd);
+                    CCreature creature = item.Value;
+                    if(creature.GetUid() ==  GetCaster().GetUid())
+                        continue;
+                    Sphere flyS = new Sphere();
+                    flyS.c = m_curPos;
+                    flyS.r = m_skillInfo.length;
 
+                    Sphere playerS = new Sphere();
+                    playerS.c = creature.GetPos();
+                    playerS.r = creature.GetR();
+
+                    if(Collide.bSphereSphere(flyS, playerS))
+                    {
+                        Debug.Log("检测:" + creature.GetUid());
+                        OnHit(creature);
+                        m_bFly = false;
                         Destory();
                         return;
                     }
+                }
+                // 静态碰撞检测
+                foreach(OBB item in CMapMgr.m_map.m_listBarrier)
+                {
+                    Sphere s = new Sphere();
+                    s.c = m_curPos;
+                    s.r = 1;
+                    if(Collide.bSphereOBB(s, item))
+                    {
+                        OnHit(m_curPos);
+                        m_bFly = false;
+                        Destory();
+                        return;
+                    }
+                }
+                // 自爆
+                if(Vector2.Distance(m_startPos, m_curPos) >= m_skillInfo.distance)
+                {
+                    OnHit(m_curPos);
+                    m_bFly = false;
+                    Destory();
+                    return;
                 }
             }
         }

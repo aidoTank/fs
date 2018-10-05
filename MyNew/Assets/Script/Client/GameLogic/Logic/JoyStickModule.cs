@@ -65,6 +65,7 @@ namespace Roma
                 m_skillChose = skillChose.transform;
                 m_skillDistance = m_skillChose.FindChild("distance");
                 m_skillCenter = m_skillChose.FindChild("center");
+                m_skillSectorDir = m_skillCenter.FindChild("sector_dir");
                 m_skillDir = m_skillCenter.FindChild("dir");
                 m_skillPos = m_skillCenter.FindChild("pos");
             });
@@ -74,7 +75,7 @@ namespace Roma
         {
             if(m_master != null && m_skillChose != null)
             {
-                m_skillChose.position = m_master.m_vCreature.GetEnt().GetPos();
+                m_skillChose.position = m_master.m_vCreature.GetEnt().GetPos() + Vector3.up * 0.01f;
             }
         }
 
@@ -188,13 +189,26 @@ namespace Roma
                 m_skillChose.gameObject.SetActiveNew(true);
                 m_skillCenter.gameObject.SetActiveNew(true);
                 m_skillDistance.gameObject.SetActiveNew(true);
+                m_skillSectorDir.gameObject.SetActiveNew(false);
                 m_skillDir.gameObject.SetActiveNew(false);
                 m_skillPos.gameObject.SetActiveNew(false);
 
                 m_skillDistance.localScale = new Vector3(skillInfo.distance, 0.01f, skillInfo.distance) * 2;
             }
 
-            if(skillInfo.selectTargetType == (int)eSelectTargetType.Dir)
+            if(skillInfo.selectTargetType == (int)eSelectTargetType.SectorDir)
+            {
+                if(jsEvent == eJoyStickEvent.Down)
+                {
+                    m_skillSectorDir.gameObject.SetActiveNew(true);
+                    m_skillSectorDir.localScale = new Vector3(skillInfo.distance, 0.01f, skillInfo.distance);
+                }
+                else if(jsEvent == eJoyStickEvent.Drag)
+                {
+                    m_skillCenter.rotation = Quaternion.LookRotation(m_curSkillDir);  // 只用控制中心点的方向
+                }
+            }
+            else if(skillInfo.selectTargetType == (int)eSelectTargetType.Dir)
             {
                 if(jsEvent == eJoyStickEvent.Down)
                 {
@@ -267,6 +281,7 @@ namespace Roma
         private Transform m_skillChose;
         private Transform m_skillCenter;
         private Transform m_skillDistance; // 范围圈
+        private Transform m_skillSectorDir;
         private Transform m_skillDir;
         private Transform m_skillPos;
 

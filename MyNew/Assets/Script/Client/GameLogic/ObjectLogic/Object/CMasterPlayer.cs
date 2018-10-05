@@ -14,11 +14,6 @@ namespace Roma
             m_type = EThingType.Master;
         }
 
-        public override bool InitConfigure()
-        {
-            return base.InitConfigure();
-        }
-
     }
 }
 

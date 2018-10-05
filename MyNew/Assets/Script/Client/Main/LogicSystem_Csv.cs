@@ -10,6 +10,7 @@ namespace Roma
     {
         eAC_None = 0,
         eAC_Scene,
+        eAC_SceneBarrier,
         eAC_GameText,
         eAC_Player,
         eAC_Effect,
@@ -38,6 +39,7 @@ namespace Roma
         {
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_GameText, "游戏文本表", new GameTextCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Scene, "地图表", new SceneCsv());
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_SceneBarrier, "地图障碍表", new SceneBarrierCsv());
 
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Player, "角色表", new PlayerCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Effect, "特效表", new EffectCsv());

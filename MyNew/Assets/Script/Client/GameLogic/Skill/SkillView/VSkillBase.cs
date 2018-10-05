@@ -26,7 +26,9 @@ namespace Roma
                 case CmdFspEnum.eSkillCreate:
                     sVOjectBaseInfo info = new sVOjectBaseInfo();
                     info.m_resId = m_flyData[0].effectId;
+                    //info.m_pos =
                     Create(info);
+                    m_state = CmdFspEnum.eFspMove;  // 技能都是移动状态
                 break;
                 case CmdFspEnum.eSkillHit:
                     CmdSkillHit hit = cmd as CmdSkillHit;

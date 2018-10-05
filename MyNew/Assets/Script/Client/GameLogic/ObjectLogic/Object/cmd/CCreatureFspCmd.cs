@@ -7,6 +7,8 @@ namespace Roma
 {
     public enum CmdFspEnum
     {
+        none,
+
         eFspMove,           // 移动
         eFspStopMove,       // 停止移动
         eFspRotation,       // 转向

@@ -24,7 +24,7 @@ namespace Roma
     {
        None = 0,          
        Self,           
-       Creature,          
+       SectorDir,          
        Dir,
        Pos,               
     }

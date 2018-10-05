@@ -194,7 +194,7 @@ namespace Roma
             }
 
             //下载主资源
-            Debug.Log("加载资源：" + res.m_fullUrl);
+            //Debug.Log("加载资源：" + res.m_fullUrl);
             m_www = new WWW(res.m_fullUrl);
             yield return m_www;
             if (m_www.error != null)

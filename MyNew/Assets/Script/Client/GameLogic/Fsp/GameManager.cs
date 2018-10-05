@@ -68,14 +68,17 @@ namespace Roma
                 {
                     Debug.Log("客户端主角:" + EGame.m_openid);
                     CPlayer master = CPlayerMgr.CreateMaster(playerData[i]);
-                    map.Enter(master);
+                    map.Enter(master, new Vector2(8, 8), 60);
                     master.UpdateUI();
+
+                    //CPlayer p1 = CPlayerMgr.Create(999);
+                    //map.Enter(p1, new Vector2(10, 10), 60);
                 }
                 else
                 {
-                     Debug.Log("客户端玩家:" + playerData[i]);
+                    Debug.Log("客户端玩家:" + playerData[i]);
                     CPlayer master = CPlayerMgr.Create(playerData[i]);
-                    map.Enter(master);
+                    map.Enter(master, new Vector2(8, 8), 60);
                 }
             }
     

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Roma
 {
@@ -11,6 +11,7 @@ namespace Roma
     public class CMap
     {
         public int m_mapId;
+        public List<OBB> m_listBarrier = new List<OBB>();
 
         public CMap(int mapId)
         {
@@ -19,8 +20,25 @@ namespace Roma
 
         public void Create()
         {
-            // 创建NPC
+            // 地图
             SceneManager.Inst.LoadScene(m_mapId, null);
+            // 障碍数据
+            SceneBarrierCsv csv = CsvManager.Inst.GetCsv<SceneBarrierCsv>((int)eAllCSV.eAC_SceneBarrier);
+            List<SceneBarrierCsvData> list = new List<SceneBarrierCsvData>();
+            csv.GetData(ref list, m_mapId);
+            Debug.Log("障碍数量：" + list.Count);
+            for(int i = 0; i < list.Count; i ++)
+            {
+                SceneBarrierCsvData data = list[i];
+                if(data.shapeType == 1)
+                {
+                    Vector2 pos = new Vector2(data.vPos.x, data.vPos.z);
+                    float dir = data.vDir.y;
+                    Vector2 scale = new Vector2(data.vScale.x, data.vScale.z);
+                    OBB obb = new OBB(pos, scale, dir);
+                    m_listBarrier.Add(obb);
+                }
+            }
         }
 
         public void ExecuteFrame()
@@ -28,15 +46,9 @@ namespace Roma
             //CPlayerMgr.ExecuteFrame();
         }
 
-        public void Enter(CCreature obj)
+        public void Enter(CCreature obj, Vector2 pos, float dir)
         {
-            if(obj is CPlayer)
-            {
-                CPlayer player = obj as CPlayer;
-                CPlayerMgr.Add(obj.GetUid(), player);
-
-                player.InitConfigure();
-            }
+            obj.Create(pos, dir);
         }
 
         public void Destroy()

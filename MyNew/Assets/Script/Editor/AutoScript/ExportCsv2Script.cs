@@ -17,6 +17,43 @@ public class Csv2ScriptWindow : EditorWindow
     private string[] m_listParam;
     private string[] m_listType;
 
+    [MenuItem("ScriptTools/获取位置信息")]
+    static void CreatePosInfo()
+    {
+        string sceneAllName = EditorApplication.currentScene;
+        sceneAllName = sceneAllName.Replace("Assets", "");
+        int startPos = sceneAllName.LastIndexOf("/") + 1;
+        string sceneName = sceneAllName.Substring(startPos, sceneAllName.Length - startPos);
+        string sceneNamePre = sceneName.Replace(".unity", "");
+        int iSceneId = int.Parse(sceneNamePre);
+        
+
+        string scriptFile = Application.dataPath + "/posInfo.txt";
+        FileStream file = new FileStream(scriptFile, FileMode.OpenOrCreate);
+        StreamWriter sr = new StreamWriter(file, Encoding.Default);
+
+        UnityEngine.Object[] objects = GameObject.FindObjectsOfType(typeof(GameObject));
+        for(int i = 0 ; i < objects.Length; i ++)
+        {
+            GameObject obj = objects[i] as GameObject;
+            if(obj.name.Contains("rect"))
+            {
+                string name = obj.name + ",";
+                Vector3 p = obj.transform.position;
+                Vector3 r = obj.transform.eulerAngles;
+                Vector3 s = obj.transform.localScale;
+                string pos = p.x + "_" + p.y + "_" + p.z + ",";
+                string dir = r.x + "_" + r.y + "_" + r.z + ",";
+                string scale = s.x + "_" + s.y + "_" + s.z;
+                string str = iSceneId +"," + iSceneId +",1," + name + pos + dir + scale;
+                sr.WriteLine(str);
+            }
+        }
+
+        sr.Close();
+        AssetDatabase.Refresh();
+    }
+
     [MenuItem("ScriptTools/Csv2Script")]
     static void OpenWindow()
     {

@@ -56,6 +56,26 @@ namespace Roma
 
         }
 
+        public void OnHit(CCreature creature)
+        {
+            CmdSkillHit cmd = new CmdSkillHit();
+            cmd.bPlayer = true;
+            cmd.uid = (int)creature.GetUid();
+            m_vSkill.PushCommand(cmd);
+        }
+
+        public void OnHit(Vector2 pos)
+        {
+            CmdSkillHit cmd = new CmdSkillHit();
+            cmd.bPlayer = false;
+            cmd.pos = new Vector3(pos.x, 1, pos.y);
+            m_vSkill.PushCommand(cmd);
+        }
+
+        public CCreature GetCaster()
+        {
+            return CPlayerMgr.Get(m_curSkillCmd.m_casterUid);
+        }
 
         public override void Destory()
         {

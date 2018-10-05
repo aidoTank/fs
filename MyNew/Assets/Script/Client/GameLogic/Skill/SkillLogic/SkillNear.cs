@@ -31,10 +31,7 @@ namespace Roma
                 if(Collide.bSectorInside(pos, dir, m_skillInfo.width, m_skillInfo.length, focusPos))
                 {
                     Debug.Log("检测:" + item.Value.GetUid());
-                    CmdSkillHit cmd = new CmdSkillHit();
-                    cmd.bPlayer = true;
-                    cmd.uid = (int)item.Value.GetUid();
-                    m_vSkill.PushCommand(cmd);
+                    OnHit(item.Value);
                 }
             }
         }

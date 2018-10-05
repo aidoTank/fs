@@ -10,20 +10,22 @@ namespace Roma
     public struct sVOjectBaseInfo
     {
         public int m_resId;
+        public Vector3 m_pos;
+        public float m_dir;
     }
 
     public partial class VObject
     {
         public bool m_bMaster;
         public int m_hid;
-        private CmdFspEnum m_state;
+        public CmdFspEnum m_state;
         private BoneEntity m_ent;
 
         private MtBaseMoveInfo m_moveInfo = new MtBaseMoveInfo();
 
         public VObject()
         {
-       
+
         }
 
         
@@ -35,6 +37,8 @@ namespace Roma
             EntityBaseInfo info = new EntityBaseInfo();
             info.m_resID = baseInfo.m_resId;
             info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
+            info.m_vPos = baseInfo.m_pos;
+            info.m_vRotate = new Vector3(0, baseInfo.m_dir, 0);
             m_hid = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, info, (ent)=> 
             {
                 if(m_bMaster)
@@ -63,7 +67,7 @@ namespace Roma
 
         public virtual void PushCommand(IFspCmdType cmd)
         {
-            Debug.Log("切换：" + cmd.GetCmdType());
+            //Debug.Log("切换：" + cmd.GetCmdType());
             if(cmd.GetCmdType() == CmdFspEnum.eFspRotation)
             {
                 CmdFspRotation rota = cmd as CmdFspRotation;

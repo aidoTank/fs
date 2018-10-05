@@ -131,16 +131,16 @@ namespace Roma
             switch (type)
             {
                 case CmdFspEnum.eFspStopMove:
-                    Debug.Log(uid + " 停止移动");
+                    //Debug.Log(uid + " 停止移动");
                     logicCmd = new CmdFspStopMove();
                 break;
                 case CmdFspEnum.eFspMove:
-                    Debug.Log(uid + " 客户端调用移动命令 " + cmd.args[0] + " " + cmd.args[1]);
+                    //Debug.Log(uid + " 客户端调用移动命令 " + cmd.args[0] + " " + cmd.args[1]);
                     Vector2 v = new Vector2(cmd.args[0], cmd.args[1]) * 0.01f;
                     logicCmd = new CmdFspMove(ref v);
                 break;
                 case CmdFspEnum.eFspSendSkill:
-                    Debug.Log(uid + " 客户端调用技能 " + cmd.args[0] + " " + cmd.args[1]);
+                    //Debug.Log(uid + " 客户端调用技能 " + cmd.args[0] + " " + cmd.args[1]);
                     
                     CmdFspSendSkill skill = new CmdFspSendSkill();
                     skill.m_casterUid = cmd.args[0];

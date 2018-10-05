@@ -45,14 +45,22 @@ namespace Roma
             
             foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)
             {
-                Vector2 focusPos = item.Value.GetPos();
-                if(Collide.bSphereInside(m_curSkillCmd.m_endPos, m_skillInfo.length * 0.5f, focusPos))
+                CCreature creature = item.Value;
+                if(creature.GetUid() == GetCaster().GetUid())
+                    continue;
+
+                Sphere aoeS = new Sphere();
+                aoeS.c = m_curSkillCmd.m_endPos;
+                aoeS.r = m_skillInfo.length * 0.5f;
+
+                Sphere playerS = new Sphere();
+                playerS.c = creature.GetPos();
+                playerS.r = creature.GetR();
+
+                if(Collide.bSphereSphere(aoeS, playerS))
                 {
-                    Debug.Log("检测:" + item.Value.GetUid());
-                    CmdSkillHit cmd = new CmdSkillHit();
-                    cmd.bPlayer = true;
-                    cmd.uid = (int)item.Value.GetUid();
-                    m_vSkill.PushCommand(cmd);
+                    Debug.Log("检测:" + creature.GetUid());
+                    OnHit(creature);
                 }
             }
         }

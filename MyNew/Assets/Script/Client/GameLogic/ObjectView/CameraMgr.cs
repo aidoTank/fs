@@ -34,7 +34,7 @@ namespace Roma
             m_cam.cullingMask = (int)LusuoLayerMask.eEL_Dynamic;
             m_cam.renderingPath = RenderingPath.Forward;
             m_cam.nearClipPlane = 6f;
-            m_cam.farClipPlane = 80f;
+            m_cam.farClipPlane = 160f;
             SetClientConfigData();
 
         }
