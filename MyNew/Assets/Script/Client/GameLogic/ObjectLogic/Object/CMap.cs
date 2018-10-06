@@ -11,7 +11,7 @@ namespace Roma
     public class CMap
     {
         public int m_mapId;
-        public List<OBB> m_listBarrier = new List<OBB>();
+        public List<object> m_listBarrier = new List<object>();
 
         public CMap(int mapId)
         {
@@ -32,10 +32,16 @@ namespace Roma
                 SceneBarrierCsvData data = list[i];
                 if(data.shapeType == 1)
                 {
-                    Vector2 pos = new Vector2(data.vPos.x, data.vPos.z);
                     float dir = data.vDir.y;
                     Vector2 scale = new Vector2(data.vScale.x, data.vScale.z);
-                    OBB obb = new OBB(pos, scale, dir);
+                    OBB obb = new OBB(data.vPos.ToVector2(), scale, dir);
+                    m_listBarrier.Add(obb);
+                }
+                else if(data.shapeType == 2)
+                {
+                    Sphere obb = new Sphere();
+                    obb.c = data.vPos.ToVector2();
+                    obb.r = data.vScale.x * 0.5f;
                     m_listBarrier.Add(obb);
                 }
             }

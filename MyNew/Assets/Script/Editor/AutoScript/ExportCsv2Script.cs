@@ -28,10 +28,13 @@ public class Csv2ScriptWindow : EditorWindow
         int iSceneId = int.Parse(sceneNamePre);
         
 
-        string scriptFile = Application.dataPath + "/posInfo.txt";
+        string scriptFile = Application.dataPath + "/Config/地图障碍表.csv";
         FileStream file = new FileStream(scriptFile, FileMode.OpenOrCreate);
         StreamWriter sr = new StreamWriter(file, Encoding.Default);
 
+        sr.WriteLine("mapId,地图名字,形状类型（1矩形 2圆形 3三角形）,障碍物名字,位置,方向,缩放");
+        sr.WriteLine("mapId,mapName,shapeType,objName,pos,dir,scale");
+        sr.WriteLine("int,string,int,string,string,string,string");
         UnityEngine.Object[] objects = GameObject.FindObjectsOfType(typeof(GameObject));
         for(int i = 0 ; i < objects.Length; i ++)
         {
@@ -46,6 +49,18 @@ public class Csv2ScriptWindow : EditorWindow
                 string dir = r.x + "_" + r.y + "_" + r.z + ",";
                 string scale = s.x + "_" + s.y + "_" + s.z;
                 string str = iSceneId +"," + iSceneId +",1," + name + pos + dir + scale;
+                sr.WriteLine(str);
+            }
+            else if(obj.name.Contains("sphere"))
+            {
+                string name = obj.name + ",";
+                Vector3 p = obj.transform.position;
+                Vector3 r = obj.transform.eulerAngles;
+                Vector3 s = obj.transform.localScale;
+                string pos = p.x + "_" + p.y + "_" + p.z + ",";
+                string dir = ",";
+                string scale = s.x + "_" + s.y + "_" + s.z;
+                string str = iSceneId +"," + iSceneId +",2," + name + pos + dir + scale;
                 sr.WriteLine(str);
             }
         }

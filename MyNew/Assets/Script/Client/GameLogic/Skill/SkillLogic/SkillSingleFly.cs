@@ -49,12 +49,19 @@ namespace Roma
                     }
                 }
                 // 静态碰撞检测
-                foreach(OBB item in CMapMgr.m_map.m_listBarrier)
+                foreach(object item in CMapMgr.m_map.m_listBarrier)
                 {
                     Sphere s = new Sphere();
                     s.c = m_curPos;
                     s.r = 1;
-                    if(Collide.bSphereOBB(s, item))
+                    if(item is OBB && Collide.bSphereOBB(s, (OBB)item))
+                    {
+                        OnHit(m_curPos);
+                        m_bFly = false;
+                        Destory();
+                        return;
+                    }
+                    else if(item is Sphere && Collide.bSphereSphere(s, (Sphere)item))
                     {
                         OnHit(m_curPos);
                         m_bFly = false;

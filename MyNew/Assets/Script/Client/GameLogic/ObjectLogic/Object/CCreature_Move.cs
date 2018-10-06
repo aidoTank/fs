@@ -39,18 +39,39 @@ namespace Roma
         {
             for(int i = 0 ; i < CMapMgr.m_map.m_listBarrier.Count; i ++)
             {
-                OBB obb = CMapMgr.m_map.m_listBarrier[i];
+                object obj = CMapMgr.m_map.m_listBarrier[i];
+                
                 Sphere s = new Sphere();
                 s.c = m_tempPos;
                 s.r = GetR();
                 Vector2 point = Vector2.zero;
-                if(Collide.bOBBInside(s, obb, ref point))
+                if(obj is OBB && Collide.bOBBInside(s, (OBB)obj, ref point))
                 {
                     m_tempPos = m_curPos;
                     if(depth >= 1)
                         return;
                     // 碰撞了，修正移动方向
                     Vector2 n = point - m_tempPos;
+                    n.Normalize();
+                    Vector2 vertical2 = Collide.GetVerticalVector(n);
+                    float dot = Vector2.Dot(moveDir.normalized, vertical2.normalized);
+                    if (dot == 0)
+                        return;
+                    if (dot < 0) 
+                    {
+                        vertical2 = -vertical2;
+                    }
+                    m_tempPos += vertical2.normalized * FSPParam.clientFrameScTime * speed * 0.001f;
+                    depth++;
+                    CheckCollide(moveDir, speed, ref depth);
+                }
+                else if(obj is Sphere && Collide.bSphereSphere(s, (Sphere)obj))
+                {
+                    m_tempPos = m_curPos;
+                    if (depth >= 1)
+                        return;
+
+                    Vector2 n = (obj as Sphere).c - m_tempPos;
                     n.Normalize();
                     Vector2 vertical2 = Collide.GetVerticalVector(n);
                     float dot = Vector2.Dot(moveDir.normalized, vertical2.normalized);
