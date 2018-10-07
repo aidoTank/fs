@@ -47,7 +47,7 @@ namespace Roma
         public static Vector2 GetVector(float angle)
         {
             float rad = angle * Mathf.Deg2Rad;
-            return new Vector2(Mathf.Cos(rad), - Mathf.Sin(rad));
+            return new Vector2(Mathf.Sin(rad), Mathf.Cos(rad));
         } 
 
         /// <summary>

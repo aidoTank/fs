@@ -11,18 +11,21 @@ namespace Roma
     {
         public int m_resId;
         public Vector3 m_pos;
-        public float m_dir;
+        public Vector3 m_dir;  // 方向向量
     }
 
     public partial class VObject
     {
-        public bool m_bMaster;
+        // 人物和技能 共用实体对象创建，移动同步，销毁
         public int m_hid;
-        public CmdFspEnum m_state;
         private BoneEntity m_ent;
-
         private MtBaseMoveInfo m_moveInfo = new MtBaseMoveInfo();
+        public bool m_bMoveing;
 
+
+        public bool m_bMaster;
+        public CmdFspEnum m_state;
+        
         public VObject()
         {
 
@@ -38,7 +41,7 @@ namespace Roma
             info.m_resID = baseInfo.m_resId;
             info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
             info.m_vPos = baseInfo.m_pos;
-            info.m_vRotate = new Vector3(0, baseInfo.m_dir, 0);
+            info.m_vRotate = Quaternion.LookRotation(baseInfo.m_dir).eulerAngles;
             m_hid = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, info, (ent)=> 
             {
                 if(m_bMaster)
@@ -59,9 +62,9 @@ namespace Roma
             m_moveInfo.m_pos = pos;
         }
 
-        public virtual void SetDir(Vector2 dir)
+        public virtual void SetDir(Vector3 dir)
         {
-            m_moveInfo.m_dir = new Vector3(dir.x, 0 , dir.y);
+            m_moveInfo.m_dir = dir;
         }
         
 
@@ -76,6 +79,7 @@ namespace Roma
             else if(cmd.GetCmdType() == CmdFspEnum.eFspStopMove)
             {
                 m_state = cmd.GetCmdType();
+                m_bMoveing = false;
                 AnimationAction animaInfo = new AnimationAction();
                 animaInfo.crossTime = AnimationInfo.m_crossTime;
                 animaInfo.playSpeed = 1;
@@ -86,6 +90,7 @@ namespace Roma
             else if(cmd.GetCmdType() == CmdFspEnum.eFspMove)
             {
                 m_state = cmd.GetCmdType();
+                m_bMoveing = true;
                 AnimationAction animaInfo = new AnimationAction();
                 animaInfo.crossTime = AnimationInfo.m_crossTime;
                 animaInfo.playSpeed = 1;
@@ -99,7 +104,7 @@ namespace Roma
         {
             if(m_ent == null || !m_ent.IsInited())
                 return;
-            if(m_state == CmdFspEnum.eFspMove)
+            if(m_bMoveing) 
             {
                 Entity ent = m_ent as Entity;
                 _UpdateMove(time, fdTime, ref ent, m_moveInfo);
@@ -200,7 +205,7 @@ namespace Roma
     {
         public bool m_teleport;
         public Vector3 m_pos;
-        public Vector3 m_dir;
+        public Vector3 m_dir;   // 单位方向
         public float m_speed;
         // 平滑插值下限偏差（好像并没什么用）
         public int RepairFramesMin = 1;

@@ -10,10 +10,10 @@ namespace Roma
    
     public partial class CCreature
     {
-   
-        
         public Vector2 m_tempPos = Vector2.zero;
         public Vector2 m_curPos = Vector2.zero;
+        public Vector2 m_dir;
+
         public void EnterMove()
         {
 
@@ -23,16 +23,20 @@ namespace Roma
         {
             if(m_cmdFspMove == null)
                 return;
+
             Vector2 moveDir = m_cmdFspMove.m_dir.normalized;
             int speed = GetPropNum(eCreatureProp.MoveSpeed);
-            m_tempPos = m_tempPos + moveDir * FSPParam.clientFrameScTime * speed * 0.001f;
 
+            m_tempPos += moveDir * FSPParam.clientFrameScTime * speed * 0.001f;
             int depth = 0;
+
             CheckCollide(moveDir, speed, ref depth);
-  
-            m_curPos = m_tempPos;
+            
+            SetPos(m_tempPos);
+            SetDir(m_cmdFspMove.m_dir);
+
             m_vCreature.SetPos(m_curPos.ToVector3());
-            m_vCreature.SetDir(m_cmdFspMove.m_dir);
+            m_vCreature.SetDir(m_cmdFspMove.m_dir.ToVector3());
         }
 
         private void CheckCollide(Vector2 moveDir, float speed, ref int depth)
@@ -88,11 +92,31 @@ namespace Roma
             }
         }
 
+        
+        public virtual void SetPos(Vector2 pos)
+        {
+            m_curPos = pos;
+            m_tempPos = pos;
+        }
+
         public Vector2 GetPos()
         {
             return m_curPos;
         }
+
+        public virtual void SetDir(Vector2 dir)
+        {
+            m_dir = dir;
+        }
+
+        public virtual Vector2 GetDir()
+        {
+            return m_dir;
+        }
+
+        public float GetR()
+        {
+            return 0.5f;
+        }
     }
-
-
 }

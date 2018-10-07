@@ -20,10 +20,11 @@ namespace Roma
             base.ExecuteFrame(frameId);
             if(m_vSkill != null && m_bFly)
             {
-                m_curPos = m_curPos + m_curSkillCmd.m_dir * FSPParam.clientFrameScTime * m_skillInfo.flySpeed * 0.001f;
+                m_curPos += m_curSkillCmd.m_dir * FSPParam.clientFrameScTime * m_skillInfo.flySpeed * 0.001f;
                 Vector3 pos = new Vector3(m_curPos.x, 1, m_curPos.y);
                 m_vSkill.SetPos(pos);
-                m_vSkill.SetDir(m_curSkillCmd.m_dir);
+                m_vSkill.SetDir(m_curSkillCmd.m_dir.ToVector3());
+                m_vSkill.m_bMoveing = true;
 
                 // 动态检测
                 foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)

@@ -20,6 +20,7 @@ namespace Roma
             {
                 Vector3 pos = new Vector3(m_curSkillCmd.m_endPos.x, 0, m_curSkillCmd.m_endPos.y);
                 m_vSkill.SetPos(pos);
+                m_vSkill.m_bMoveing = true;
 
                 AoeHit();
                 m_aoeHit = false;

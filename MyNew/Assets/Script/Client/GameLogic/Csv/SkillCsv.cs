@@ -35,7 +35,8 @@ namespace Roma
        None = 0,         
        Near,                 
        Fly,     
-	   Aoe,            
+	   Aoe,
+	   Jump,           
     }
 
 	public enum eCheckTargetType
@@ -74,7 +75,7 @@ namespace Roma
 		public int skillType;
 
 		/// <summary>
-		/// 检测目标方式(实体类的形状) 1扇形 2圆形 3矩形
+		/// 检测目标方式(实体类的形状) 1扇形 2圆形 3矩形 (暂时无用)
 		/// </summary>
 		public int checkTargetType;
 

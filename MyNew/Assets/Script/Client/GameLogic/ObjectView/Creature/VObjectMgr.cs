@@ -7,6 +7,7 @@ namespace Roma
     {
         None,
         Creature,
+        SkillBase,
         SkllNear,
         SkillSingleFly,
         SkillAoe,
@@ -37,14 +38,17 @@ namespace Roma
                 case eVOjectType.Creature:
                     obj = new VObject();
                 break;
+                case eVOjectType.SkillBase:
+                    obj = new VSkillBase();
+                break;
                 case eVOjectType.SkllNear:
                     obj = new VSkillNear();
                 break;
                 case eVOjectType.SkillSingleFly:
                     obj = new VSkillSingleFly();
                 break;
-                 case eVOjectType.SkillAoe:
-                    obj = new VSkillNear();
+                case eVOjectType.SkillAoe:
+                    obj = new VSkillBase();
                 break;
             }
             Add(m_uid ++, obj);

@@ -52,7 +52,7 @@ namespace Roma
             //CPlayerMgr.ExecuteFrame();
         }
 
-        public void Enter(CCreature obj, Vector2 pos, float dir)
+        public void Enter(CCreature obj, Vector2 pos, Vector2 dir)
         {
             obj.Create(pos, dir);
         }

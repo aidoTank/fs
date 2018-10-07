@@ -17,22 +17,24 @@ namespace Roma
         }
 
 
-        public virtual bool Create(Vector2 pos, float dir)
+        public virtual bool Create(Vector2 pos, Vector2 dir)
         {
             PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
             m_csv = playerCsv.GetData(1);
 
             // 数据
+            SetPos(pos);
+            SetDir(dir);
             SetPublicPropList();
+
             // 表现
             m_vCreature = VObjectMgr.Create(eVOjectType.Creature);
             m_vCreature.m_bMaster = this is CMasterPlayer;
             sVOjectBaseInfo info = new sVOjectBaseInfo();
             info.m_resId = m_csv.ModelResId;
             info.m_pos = pos.ToVector3();
-            info.m_dir = dir;
+            info.m_dir = dir.ToVector3();
             m_vCreature.Create(info);
-            SetPos(pos);
             return true;
         }
 
@@ -130,31 +132,9 @@ namespace Roma
         }
 
 
-        public float GetR()
-        {
-            return 0.5f;
-        }
-
         public virtual void SetName(string name)
         {
            
-        }
-
-
-        public virtual void SetPos(Vector2 pos)
-        {
-            m_curPos = pos;
-            m_tempPos = pos;
-        }
-
-        public virtual void SetDir(int eularAngle)
-        {
-
-        }
-
-        public void SetQua(Quaternion vRot)
-        {
-    
         }
 
         public virtual void InitPropNum(eCreatureProp propType, int nValue)

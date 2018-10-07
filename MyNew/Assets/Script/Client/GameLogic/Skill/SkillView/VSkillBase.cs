@@ -25,8 +25,9 @@ namespace Roma
                 break;
                 case CmdFspEnum.eSkillCreate:
                     sVOjectBaseInfo info = new sVOjectBaseInfo();
+                    if(m_flyData == null || m_flyData.Count == 0)
+                        return;
                     info.m_resId = m_flyData[0].effectId;
-                    //info.m_pos =
                     Create(info);
                     m_state = CmdFspEnum.eFspMove;  // 技能都是移动状态
                 break;
@@ -79,9 +80,8 @@ namespace Roma
 
             BoneEntity ent = player.m_vCreature.GetEnt();
         
-            Vector3 dir = new Vector3(m_curSkillCmd.m_dir.x, 0 , m_curSkillCmd.m_dir.y);
-            if (dir != Vector3.zero)
-                ent.SetRot(Quaternion.LookRotation(dir));
+
+            ent.SetRot(Quaternion.LookRotation(m_curSkillCmd.m_dir.ToVector3()));
 
             // 获取施法动作
             AnimationAction anim = new AnimationAction();

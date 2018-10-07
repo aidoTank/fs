@@ -44,7 +44,6 @@ namespace Roma
             m_fspMgr = new FspManager();
             m_fspMgr.Init();
 
-
             Debug.Log("开始加载场景，开始汇报场景进度");
 
             SelectHeroModule selectHero = (SelectHeroModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelSelectHero);
@@ -68,7 +67,7 @@ namespace Roma
                 {
                     Debug.Log("客户端主角:" + EGame.m_openid);
                     CPlayer master = CPlayerMgr.CreateMaster(playerData[i]);
-                    map.Enter(master, new Vector2(8, 8), 60);
+                    map.Enter(master, new Vector2(8, 8), Collide.GetVector(60));
                     master.UpdateUI();
 
                     //CPlayer p1 = CPlayerMgr.Create(999);
@@ -78,7 +77,7 @@ namespace Roma
                 {
                     Debug.Log("客户端玩家:" + playerData[i]);
                     CPlayer master = CPlayerMgr.Create(playerData[i]);
-                    map.Enter(master, new Vector2(8, 8), 60);
+                    map.Enter(master, new Vector2(8, 8), Collide.GetVector(60));
                 }
             }
     

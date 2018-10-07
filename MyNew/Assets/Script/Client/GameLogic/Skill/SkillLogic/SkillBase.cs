@@ -31,6 +31,8 @@ namespace Roma
                     m_curSkillCmd = cmd as CmdFspSendSkill;
                     m_skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(m_curSkillCmd.m_skillId);
                     m_bLaunch = true;
+                    // 同步施法者方向
+                    GetCaster().SetDir(m_curSkillCmd.m_dir);
                     break;
             }
         }        

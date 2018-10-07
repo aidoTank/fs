@@ -10,6 +10,7 @@ namespace Roma
         SkllNear,
         SkillSingleFly,
         SkillAoe,
+        SkillJump,
     }
 
     public class CSkillMgr
@@ -40,8 +41,11 @@ namespace Roma
                 case eCSkillType.SkillSingleFly:
                     obj = new SkillSingleFly(m_uid, vSkill);
                 break;
-                 case eCSkillType.SkillAoe:
+                case eCSkillType.SkillAoe:
                     obj = new SkillAoe(m_uid, vSkill);
+                break;
+                case eCSkillType.SkillJump:
+                    obj = new SkillJump(m_uid, vSkill);
                 break;
             }
             Add(m_uid ++, obj);

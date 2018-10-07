@@ -40,11 +40,18 @@ namespace Roma
                 case (int)eSkillType.Aoe:
                     // 创建AOE技能
                     // 创建飞行技能
-                    VSkillNear vAoe = (VSkillNear)VObjectMgr.Create(eVOjectType.SkillAoe);
+                    VSkillNear vAoe = (VSkillNear)VObjectMgr.Create(eVOjectType.SkllNear);
                     vAoe.PushCommand(m_cmdFspSendSkill);
 
                     SkillAoe aoe = (SkillAoe)CSkillMgr.Create(eCSkillType.SkillAoe, vAoe);
                     aoe.PushCommand(m_cmdFspSendSkill);
+                break;
+                case (int)eSkillType.Jump:
+                    VSkillBase vjump = (VSkillBase)VObjectMgr.Create(eVOjectType.SkillBase);
+                    vjump.PushCommand(m_cmdFspSendSkill);
+
+                    SkillJump jump = (SkillJump)CSkillMgr.Create(eCSkillType.SkillJump, vjump);
+                    jump.PushCommand(m_cmdFspSendSkill);
                 break;
             }  
         }
