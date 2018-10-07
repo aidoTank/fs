@@ -76,7 +76,7 @@ namespace Roma
             m_flyHitData = step.GetFlyHitData(skillId);
 
             CPlayer player =  CPlayerMgr.Get(m_curSkillCmd.m_casterUid);
-            Debug.Log("播放施法动作" + m_casterData.animaName);
+            //Debug.Log("播放施法动作" + m_casterData.animaName);
 
             BoneEntity ent = player.m_vCreature.GetEnt();
         

@@ -234,7 +234,7 @@ namespace Roma
             {
                 if(jsEvent == eJoyStickEvent.Down)
                 {
-                    m_curSkilPos = m_master.GetPos();
+                    m_curSkilPos = m_master.GetPos().ToVector3();
 
                     m_skillPos.gameObject.SetActiveNew(true);
                     m_skillPos.position = m_curSkilPos;

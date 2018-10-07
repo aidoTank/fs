@@ -109,7 +109,7 @@ namespace Roma
             else if(cmd.GetCmdType() == CmdFspEnum.eFspSendSkill)
             {
                 m_cmdFspSendSkill = cmd as CmdFspSendSkill;
-                Debug.Log("切换技能状态：");
+                //Debug.Log("切换技能状态：");
                 EnterSkill();
             }
             m_vCreature.PushCommand(cmd);
