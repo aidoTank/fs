@@ -57,6 +57,29 @@ namespace Roma
             obj.Create(pos, dir);
         }
 
+        // 圆形在当前地图位置是否能走
+        public bool CanMove(Vector2 pos, float r)
+        {
+            for(int i = 0 ; i < CMapMgr.m_map.m_listBarrier.Count; i ++)
+            {
+                object obj = CMapMgr.m_map.m_listBarrier[i];
+                
+                Sphere s = new Sphere();
+                s.c = pos;
+                s.r = r;
+                Vector2 point = Vector2.zero;
+                if(obj is OBB && Collide.bOBBInside(s, (OBB)obj, ref point))
+                {
+                    return false;
+                }
+                else if(obj is Sphere && Collide.bSphereSphere(s, (Sphere)obj))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public void Destroy()
         {
 
