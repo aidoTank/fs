@@ -1,4 +1,4 @@
-编号,地图名称,资源id
-MapID,MapName,ResId
-int,string,int
-1,测试地图1,101
+编号,地图名称,资源id,静态碰撞
+MapID,MapName,ResId,StaticData
+int,string,int,int
+1,测试地图1,101,102

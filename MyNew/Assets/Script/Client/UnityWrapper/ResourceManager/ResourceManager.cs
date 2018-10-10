@@ -256,6 +256,9 @@ namespace Roma
                 case ResType.EffectResource:
                     resource = new EffectResource(ref resInfo);
                     break;
+                case ResType.SoundResource:
+                    resource = new SoundResource(ref resInfo);
+                    break;
 
                 case ResType.PanelResource:
                     resource = new PanelResource(ref resInfo);
@@ -272,6 +275,9 @@ namespace Roma
                     break;
                 case ResType.LightMapResource:
                     resource = new LightMapResource(ref resInfo);
+                    break;
+                case ResType.SceneDataResource:
+                    resource = new SceneDataResource(ref resInfo);
                     break;
 
                 case ResType.BoneResource:

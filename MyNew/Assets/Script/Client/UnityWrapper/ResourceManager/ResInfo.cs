@@ -17,6 +17,8 @@ namespace Roma
         ModelResource,
         SceneCfgResource,
         LightMapResource,
+        SceneDataResource,
+        SoundResource,
 
         BoneResource,   // 蒙皮骨骼
     }
@@ -94,6 +96,10 @@ namespace Roma
             {
                 return ResType.LightMapResource;
             }
+            else if (strName == "sd_")
+            {
+                return ResType.SceneDataResource;
+            }
             else if (strName == "bo_")
             {
                 return ResType.BoneResource;
@@ -141,6 +147,10 @@ namespace Roma
             {
                 return ResType.LightMapResource;
             }
+            else if (strName == "地图动态数据")
+            {
+                return ResType.SceneDataResource;
+            }
             else if (strName == "骨骼蒙皮")
             {
                 return ResType.BoneResource;
@@ -162,6 +172,7 @@ namespace Roma
                 case ResType.ModelResource: return "模型";
                 case ResType.SceneCfgResource: return "地图配置";
                 case ResType.LightMapResource: return "光照图";
+                case ResType.SceneDataResource: return "地图动态数据";
 
                 case ResType.BoneResource: return "骨骼蒙皮";
                 default: { return ""; }
@@ -186,7 +197,8 @@ namespace Roma
             "mo_",
             "cfg_",
             "lm_",
-
+            "sd_",
+            
             "bo_",
         };
 

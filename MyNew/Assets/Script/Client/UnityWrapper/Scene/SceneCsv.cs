@@ -7,6 +7,7 @@ namespace Roma
         eID = 0,
         eName = 1,
         eResId,
+        eStaticData,
     }
 
     public class SceneCsvData
@@ -14,6 +15,7 @@ namespace Roma
         public int id;
         public string name;
         public int resId;
+        public int staticData;
     }
 
     public class SceneCsv : CsvExWrapper
@@ -32,6 +34,7 @@ namespace Roma
                 ani.id = m_csv.GetIntData(i, (int)eMapCsv_Enum.eID);
                 ani.name = m_csv.GetData(i, (int)eMapCsv_Enum.eName);
                 ani.resId = m_csv.GetIntData(i, (int)eMapCsv_Enum.eResId);
+                ani.staticData = m_csv.GetIntData(i, (int)eMapCsv_Enum.eStaticData);
                 m_mapDataDic.Add(ani.id, ani);
             }
         }
