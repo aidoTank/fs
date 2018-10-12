@@ -26,11 +26,51 @@ namespace Roma
 
             Vector2 moveDir = m_cmdFspMove.m_dir.normalized;
             int speed = GetPropNum(eCreatureProp.MoveSpeed);
+            float delta = FSPParam.clientFrameScTime * speed * 0.001f;
+            m_tempPos += moveDir * delta;
+            // 获取当前方向的角度值
+            Debug.Log("moveDir:" + moveDir);
+            
+            if(!CMapMgr.m_map.bCanMove((int)m_tempPos.x, (int)m_tempPos.y))
+            {
+                m_tempPos = m_curPos;
+                Vector2 vertical2 = Collide.GetVerticalVector(moveDir);
+                m_tempPos += vertical2.normalized * delta;
+                if(!CMapMgr.m_map.bCanMove((int)m_tempPos.x, (int)m_tempPos.y))
+                {
+                    m_tempPos = m_curPos;
+                    vertical2 = -vertical2;
+                    m_tempPos += vertical2.normalized * delta;
+                }
+            }
 
-            m_tempPos += moveDir * FSPParam.clientFrameScTime * speed * 0.001f;
-            int depth = 0;
+        
 
-            CheckCollide(moveDir, speed, ref depth);
+
+
+
+            //int depth = 0;
+            //CheckCollide(moveDir, speed, ref depth);
+            // Vector2 checkPos = m_tempPos + moveDir * GetR();
+            // if(!CMapMgr.m_map.bCanMove((int)m_tempPos.x, (int)m_tempPos.y))
+            // {
+              
+            //         m_tempPos = m_curPos;
+
+            //        // Vector2 n = point - m_tempPos;
+            //         //n.Normalize();
+            //         Vector2 vertical2 = Collide.GetVerticalVector(moveDir);
+            //         // float dot = Vector2.Dot(moveDir.normalized, vertical2.normalized);
+            //         // if (dot == 0)
+            //         //     return;
+            //         // if (dot < 0) 
+            //         // {
+            //         //     vertical2 = -vertical2;
+            //         // }
+            //         m_tempPos += vertical2.normalized * FSPParam.clientFrameScTime * speed * 0.001f;
+           
+            //     return;
+            // }
             
             SetPos(m_tempPos);
             SetDir(m_cmdFspMove.m_dir);

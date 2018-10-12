@@ -133,7 +133,7 @@ namespace Roma
             return false;
         }
 
-        private static Vector2 VecRotationMatrix(Vector2 v, float angle)
+        public static Vector2 VecRotationMatrix(Vector2 v, float angle)
         {
             float rad = angle * Mathf.Deg2Rad;
             float sin = Mathf.Sin(rad);

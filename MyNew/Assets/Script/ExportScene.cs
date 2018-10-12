@@ -13,7 +13,7 @@ public class ExportScene : MonoBehaviour {
 	public int cellCount = 64;
 	public Color normalColor = Color.green;
 	public Color colliderColor = Color.red;
-	public bool reverse = false;
+
 
 	private const string filePath = "Resource/scene/";
 	public string fileName = "";

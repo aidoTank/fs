@@ -12,6 +12,7 @@ namespace Roma
     {
         public int m_mapId;
         public List<object> m_listBarrier = new List<object>();
+        private byte[] m_staticData;
 
         public CMap(int mapId)
         {
@@ -78,6 +79,11 @@ namespace Roma
                 }
             }
             return true;
+        }
+
+        public bool bCanMove(int x, int y)
+        {
+            return !SceneManager.Inst.Isblock(x, y);
         }
 
         public void Destroy()
