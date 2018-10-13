@@ -5,7 +5,7 @@ namespace Roma
     public class GameMain
     {
         // 主定时器
-        private Timer timer = new Timer(33);
+        private Timer timer = new Timer(32);
 
         public GameMain()
         {

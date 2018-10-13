@@ -9,9 +9,12 @@ namespace Roma
 
 
 
-
+    /// <summary>
+    /// 大厅服务器和帧服务器都用这个类
+    /// </summary>
     public class Player
     {
+
         public long id;
         public Conn conn;
         public GC_PlayerPublicData publicData;   // 玩家公共数据，消息结构体
@@ -67,12 +70,20 @@ namespace Roma
         {
             //事件处理，稍后实现
             //ServNet.instance.handlePlayerEvent.OnLogout(this);
-            Lobby map = LobbyManager.Inst.GetLobby(publicData.mapId);
-            if (map != null)
-                map.RemovePlayer(this);
-            Console.WriteLine("有玩家下线：" + id);
-            if (!DBPlayer.Inst.SavePlayer(this))
-                return false;
+            if(tempData.m_roomId != -1)
+            {
+                FspServerManager.Inst.GetRoom(conn.player.tempData.m_roomId).RemovePlayer(this);
+            }
+            else
+            {
+                Lobby map = LobbyManager.Inst.GetLobby(publicData.mapId);
+                if (map != null)
+                    map.RemovePlayer(this);
+                Console.WriteLine("有玩家下线：" + id);
+                if (!DBPlayer.Inst.SavePlayer(this))
+                    return false;
+            }
+
             //下线
             conn.player = null;
             conn.Close();

@@ -96,6 +96,10 @@ namespace Roma
                 Console.WriteLine("RemovePlayer:" + player.id);
                 m_listPlayer.Remove(player);
             }
+            if(m_listPlayer.Count == 0)
+            {
+                FspServerManager.Inst.RemoveRoom(m_id);
+            }
         }
         
         /// <summary>
@@ -148,7 +152,7 @@ namespace Roma
             if(m_state == FspGameState.StartControl)
             {
                 m_curFrameId++;
-                Console.WriteLine("当前帧率：" + m_curFrameId);
+                //Console.WriteLine("当前帧率：" + m_curFrameId);
                 m_lockedFrame = new FspFrame();
                 m_lockedFrame.frameId = m_curFrameId;
             }

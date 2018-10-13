@@ -127,5 +127,15 @@ namespace Roma
             return m_listRoom[id];
         }
 
+        public void RemoveRoom(int id)
+        {
+            if(m_listRoom.ContainsKey(id))
+            {
+                m_listRoom[id] = null;
+                m_listRoom.Remove(id);
+                Console.WriteLine("移除房间:" + id);
+            }
+        }
+
     }
 }
