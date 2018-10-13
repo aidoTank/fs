@@ -30,7 +30,7 @@ namespace Roma
             m_tempPos += moveDir * delta;
             // 获取当前方向的角度值
             Debug.Log("moveDir:" + moveDir);
-            
+            // 静态碰撞时的写法
             if(!CMapMgr.m_map.bCanMove((int)m_tempPos.x, (int)m_tempPos.y))
             {
                 m_tempPos = m_curPos;
@@ -44,11 +44,7 @@ namespace Roma
                 }
             }
 
-        
-
-
-
-
+            // 动态碰撞时的写法
             //int depth = 0;
             //CheckCollide(moveDir, speed, ref depth);
             // Vector2 checkPos = m_tempPos + moveDir * GetR();

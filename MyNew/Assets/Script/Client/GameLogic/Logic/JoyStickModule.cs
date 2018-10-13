@@ -48,6 +48,19 @@ namespace Roma
         public override void InitData()
         {
             OnLoadSelect();
+
+            SkillCsv skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill);
+            SkillCsvData skill0 = skillInfo.GetData(0);
+            SkillCsvData skill1 = skillInfo.GetData(1);
+            SkillCsvData skill2 = skillInfo.GetData(2);
+            SkillCsvData skill3 = skillInfo.GetData(3);
+            SkillCsvData skill4 = skillInfo.GetData(4);
+
+            m_ui.SetIcon(0, skill0.icon, false);
+            m_ui.SetIcon(1, skill1.icon, false);
+            m_ui.SetIcon(2, skill2.icon, false);
+            m_ui.SetIcon(3, skill3.icon, false);
+            m_ui.SetIcon(4, skill4.icon, false);
         }
 
         private void OnLoadSelect()
@@ -68,6 +81,8 @@ namespace Roma
                 m_skillSectorDir = m_skillCenter.FindChild("sector_dir");
                 m_skillDir = m_skillCenter.FindChild("dir");
                 m_skillPos = m_skillCenter.FindChild("pos");
+
+                CancelSkill();
             });
         }
 
@@ -275,12 +290,12 @@ namespace Roma
         /// </summary>
         public void CancelSkill()
         {
-            if (m_skillChose == null)
-                return;
+            if (m_skillChose != null)
+                m_skillChose.gameObject.SetActiveNew(false);
+
             m_bSkillCancel = true;
             m_ui.m_cancelBtn.SetActiveNew(false);
             m_ui.CloseSkillFocus();
-            m_skillChose.gameObject.SetActiveNew(false);
             //CameraMgr.Inst.OnFov(0, 30f, 0);
             Entity ent = EntityManager.Inst.GetEnity(m_skillChoseHid);
             ent.SetColor(SKLL_BLUE);

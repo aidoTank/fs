@@ -7,7 +7,7 @@ namespace Roma
 {
     public class UIPanelBattle : UIBase
     {
-        public Image m_icon; 
+        public RawImage m_icon; 
 
         public Transform m_propParent;
 
@@ -15,7 +15,7 @@ namespace Roma
         {
             base.Init();
             
-            m_icon = m_root.FindChild("panel/dynamic/left_top/icon").GetComponent<Image>();
+            m_icon = m_root.FindChild("panel/dynamic/left_top/icon").GetComponent<RawImage>();
             m_propParent = m_root.FindChild("panel/dynamic/left_top/prop");
         }
 
@@ -23,7 +23,12 @@ namespace Roma
         {
             UIItem.SetText(m_propParent, index.ToString(), text);
         }
-       
+        
+        public void SetMasterIcon(int icon)
+        {
+            UIItem.SetRawImage(m_icon.transform, icon);
+        }
+
     }
 }
 

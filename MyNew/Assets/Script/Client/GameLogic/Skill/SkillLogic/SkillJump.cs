@@ -27,11 +27,16 @@ namespace Roma
                 
                 if(!m_canJump)
                 {
-                    if(!CMapMgr.m_map.CanMove(m_tempPos, GetCaster().GetR()))
+                    if(!CMapMgr.m_map.bCanMove((int)m_tempPos.x, (int)m_tempPos.y))
                     {
                         m_tempPos = GetCaster().GetPos();
                         OnEndJump();
                     }
+                    // if(!CMapMgr.m_map.CanMove(m_tempPos, GetCaster().GetR()))
+                    // {
+                    //     m_tempPos = GetCaster().GetPos();
+                    //     OnEndJump();
+                    // }
                 }
   
                 if(Vector2.Distance(m_startPos, m_tempPos) >= m_skillInfo.distance)
@@ -51,7 +56,8 @@ namespace Roma
             m_startPos = GetCaster().GetPos();
             // 如果终点能跳就直接跳
             Vector2 end = m_startPos + m_curSkillCmd.m_dir.normalized * m_skillInfo.distance;
-            m_canJump = CMapMgr.m_map.CanMove(end, GetCaster().GetR());
+            m_canJump = CMapMgr.m_map.bCanMove((int)end.x, (int)end.y);
+            //m_canJump = CMapMgr.m_map.CanMove(end, GetCaster().GetR());
  
             // 逻辑创建特效
             CmdSkillCreate cmd = new CmdSkillCreate();

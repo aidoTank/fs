@@ -19,10 +19,13 @@ uint,string,string,string
 10007,panel_battle,ui/prefab/panel_battle,面板
 10008,panel_bag,ui/prefab/panel_bag,面板
 11000,图标段11000+,,
-11001,icon_item_1,ui/dynamic/icon/item/icon_item_1,图标
-11002,icon_item_2,ui/dynamic/icon/item/icon_item_2,图标
-11003,icon_item_3,ui/dynamic/icon/item/icon_item_3,图标
-11004,icon_item_4,ui/dynamic/icon/item/icon_item_4,图标
+11001,icon_player_1,ui/dynamic/icon/player/icon_player_1,图标
+11002,icon_player_2,ui/dynamic/icon/player/icon_player_2,图标
+12000,icon_skill_0,ui/dynamic/icon/skill/icon_skill_0,图标
+12001,icon_skill_1,ui/dynamic/icon/skill/icon_skill_1,图标
+12002,icon_skill_2,ui/dynamic/icon/skill/icon_skill_2,图标
+12003,icon_skill_3,ui/dynamic/icon/skill/icon_skill_3,图标
+12004,icon_skill_4,ui/dynamic/icon/skill/icon_skill_4,图标
 20000,特效段2000+,,
 20011,fx_1_1,effect/fx_1/fx_1_1,特效
 20021,fx_2_1,effect/fx_2/fx_2_1,特效

@@ -7,6 +7,7 @@ namespace Roma
 	{
 		id,
 		name,
+		icon,
 		type,
 		selectTargetType,
 		skillType,
@@ -58,6 +59,7 @@ namespace Roma
 		/// 技能名称
 		/// </summary>
 		public string name;
+		public int icon;
 
 		/// <summary>
 		/// 技能大类型 1.主动 2.被动
@@ -114,6 +116,7 @@ namespace Roma
 				SkillCsvData data = new SkillCsvData();
 				data.id = m_csv.GetIntData(i, (int)eSkillCsv.id);
 				data.name = m_csv.GetData(i, (int)eSkillCsv.name);
+				data.icon = m_csv.GetIntData(i, (int)eSkillCsv.icon);
 				data.type = m_csv.GetIntData(i, (int)eSkillCsv.type);
 				data.selectTargetType = m_csv.GetIntData(i, (int)eSkillCsv.selectTargetType);
 				data.skillType = m_csv.GetIntData(i, (int)eSkillCsv.skillType);

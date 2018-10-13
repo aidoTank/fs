@@ -22,6 +22,11 @@ namespace Roma
         {
             m_ui.SetPorp(index, text);
         }
+
+        public void SetMasterIcon(int icon)
+        {
+            m_ui.SetMasterIcon(icon);
+        }
         
         public UIPanelBattle m_ui;
     }
