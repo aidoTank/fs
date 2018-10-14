@@ -2,6 +2,7 @@
 id,name,step,animaName,effectId,bindPoint,startTime,speed
 int,string,int,string,int,int,int,int
 0,普攻,1,attack_unarm,0,0,0,0
+0,普攻,2,hit,20023,Bip001 Spine1,0,0
 1,近战,1,spell_cast,20011,origin,500,0
 1,近战,2,hit,20023,Bip001 Spine1,0,0
 2,魔法球,1,spell_cast,20021,origin,500,

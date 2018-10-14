@@ -70,8 +70,8 @@ namespace Roma
                     map.Enter(master, new Vector2(8, 8), Collide.GetVector(60));
                     master.UpdateUI();
 
-                    //CPlayer p1 = CPlayerMgr.Create(999);
-                    //map.Enter(p1, new Vector2(10, 10), 60);
+                    CPlayer p1 = CPlayerMgr.Create(999);
+                    map.Enter(p1, new Vector2(10, 10), Collide.GetVector(60));
                 }
                 else
                 {

@@ -29,7 +29,7 @@ namespace Roma
             float delta = FSPParam.clientFrameScTime * speed * 0.001f;
             m_tempPos += moveDir * delta;
             // 获取当前方向的角度值
-            Debug.Log("moveDir:" + moveDir);
+            //Debug.Log("moveDir:" + moveDir);
             // 静态碰撞时的写法
             if(!CMapMgr.m_map.bCanMove((int)m_tempPos.x, (int)m_tempPos.y))
             {

@@ -87,21 +87,21 @@ namespace Roma
             }
         }
 
-        // public virtual void AddPropNum(eCreatureProp propType, int addV)
-        // {
-        //     int index = (int)propType;
-        //     if(index > 0 && index < m_arrProp.Length)
-        //     {
-        //         int oldV = m_arrProp[index];
-        //         int newV = oldV + addV;
-        //         m_arrProp[index] = newV;
-        //         ApplyAttrs(propType, newV, oldV);
-        //     }
-        //     else
-        //     {
-        //         Debug.LogError("属性索引越界" + index);
-        //     }
-        // }
+        public virtual void AddPropNum(eCreatureProp propType, int addV)
+        {
+            int index = (int)propType;
+            if(index > 0 && index < m_arrProp.Length)
+            {
+                int oldV = m_arrProp[index];
+                int newV = oldV + addV;
+                m_arrProp[index] = newV;
+                ApplyAttrs(propType, newV, oldV);
+            }
+            else
+            {
+                Debug.LogError("属性索引越界" + index);
+            }
+        }
  
         public virtual int GetPropNum(eCreatureProp propType)
         {
