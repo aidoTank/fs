@@ -7,12 +7,25 @@ namespace Roma
     {
         Name,
 	    Occ,
-        MoveSpeed,
 
-        Force,   // 力量
-		Agility, // 敏捷
-        Brain,   // 智力
-        Armor,   // 护甲
+        // 一级属性
+        Force,       // 力量
+		Agility,     // 敏捷
+        Brain,       // 智力
+        InitAtk,     // 初始攻击力
+        InitArmor,   // 初始护甲
+        InitMoveSpeed, // 初始移速
+
+        // 二级属性
+        MaxHp,      // 力量*20
+        CurHp,
+        Armor,      // 默认+敏捷*0.17
+        MaxMp,      // 智力*12
+        CurMp,
+        Aspd,       // 默认100+敏捷
+        Atk,        // 默认+主属性
+        MoveSpeed,  // 默认+（默认*(敏捷*0.06)/100）
+
         Max
     }
 

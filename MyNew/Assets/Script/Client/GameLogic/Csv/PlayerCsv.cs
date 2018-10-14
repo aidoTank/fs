@@ -8,11 +8,13 @@ namespace Roma
 		Name,
 		icon,
 		ModelResId,
-		moveSpeed,
+
 		force,
 		agility,
 		brain,
+		atk,
 		armor,
+		moveSpeed,
 		skill0,
 	}
 
@@ -38,10 +40,6 @@ namespace Roma
 		/// </summary>
 		public int ModelResId;
 
-		/// <summary>
-		/// 移动速度
-		/// </summary>
-		public int moveSpeed;
 
 		/// <summary>
 		/// 力量
@@ -58,10 +56,17 @@ namespace Roma
 		/// </summary>
 		public int brain;
 
+		public int atk;
+
 		/// <summary>
 		/// 护甲
 		/// </summary>
 		public int armor;
+
+		/// <summary>
+		/// 移动速度
+		/// </summary>
+		public int moveSpeed;
 
 		/// <summary>
 		/// 普攻技能
@@ -86,11 +91,12 @@ namespace Roma
 				data.Name = m_csv.GetData(i, (int)ePlayerCsv.Name);
 				data.icon = m_csv.GetIntData(i, (int)ePlayerCsv.icon);
 				data.ModelResId = m_csv.GetIntData(i, (int)ePlayerCsv.ModelResId);
-				data.moveSpeed = m_csv.GetIntData(i, (int)ePlayerCsv.moveSpeed);
 				data.force = m_csv.GetIntData(i, (int)ePlayerCsv.force);
 				data.agility = m_csv.GetIntData(i, (int)ePlayerCsv.agility);
 				data.brain = m_csv.GetIntData(i, (int)ePlayerCsv.brain);
+				data.atk = m_csv.GetIntData(i, (int)ePlayerCsv.atk);
 				data.armor = m_csv.GetIntData(i, (int)ePlayerCsv.armor);
+				data.moveSpeed = m_csv.GetIntData(i, (int)ePlayerCsv.moveSpeed);
 				data.skill0 = m_csv.GetIntData(i, (int)ePlayerCsv.skill0);
 				m_dicData.Add(data.Id, data);
 			}
