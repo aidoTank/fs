@@ -16,6 +16,33 @@ namespace Roma
 
     public partial class Client : MonoBehaviour
     {
+    /// <summary>
+    /// 平台标识
+    /// 1.目录名和主资源名一样
+    /// 2.编辑器下，用于打包不同平台的资源，例如：是安卓平台就打包到安卓路径目录
+    /// 3.编辑器下，用于读取不同平台的资源，例如：是安卓平台就读取安卓路径资源
+    /// 4.也用于真机的平台区分
+    /// </summary>
+#if UNITY_IOS
+        public const string m_prefix = "ios";
+#elif UNITY_ANDROID
+        public const string m_prefix = "android";
+#elif UNITY_WEBPLAYER
+        public const string m_prefix = "web";
+#elif UNITY_WEBGL
+        public const string m_prefix = "webgl";
+#else
+        public const string m_prefix = "pc";       // 平台目标前缀
+#endif
+        public eDownLoadType editorResPath = eDownLoadType.None;
+
+
+
+        public bool isCheckAppVersion;
+        public bool isUpdate;
+        public bool isLua;
+
+
         public static Client m_client;
 
         public string s_gameServerIP;
@@ -152,7 +179,7 @@ namespace Roma
             }
             if (m_gameInit != null && m_gameUpdate != null)
             {
-                m_gameInit.Update();
+                m_gameInit.Update(RealTime.time, Time.deltaTime);
                 m_gameUpdate.Update(RealTime.time, Time.deltaTime);
             }
         }

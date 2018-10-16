@@ -54,7 +54,9 @@ namespace Roma
 
             JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
             js.SetVisible(true);
-            
+            HeadModule head = (HeadModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelHead);
+            head.SetVisible(true);
+
             
             CMap map = CMapMgr.Create(1);
             map.Create();
@@ -67,18 +69,21 @@ namespace Roma
                 {
                     Debug.Log("客户端主角:" + EGame.m_openid);
                     CPlayer master = CPlayerMgr.CreateMaster(playerData[i]);
-                    map.Enter(master, new Vector2(8, 8), Collide.GetVector(60));
+                    master.Create(playerData[i].ToString(), new Vector2(8, 8), Collide.GetVector(60));
                     master.UpdateUI();
-
-                    CPlayer p1 = CPlayerMgr.Create(999);
-                    map.Enter(p1, new Vector2(10, 10), Collide.GetVector(60));
                 }
                 else
                 {
                     Debug.Log("客户端玩家:" + playerData[i]);
                     CPlayer master = CPlayerMgr.Create(playerData[i]);
-                    map.Enter(master, new Vector2(8, 8), Collide.GetVector(60));
+                    master.Create(playerData[i].ToString(), new Vector2(8, 8), Collide.GetVector(60));
                 }
+            }
+
+            for(int i = 0; i < 6; i ++)
+            {
+                CPlayer p1 = CPlayerMgr.Create(i);
+                p1.Create("测试：" + i, new Vector2(4 + i * 5, 8), Collide.GetVector(60));
             }
     
             m_bRunning = true;

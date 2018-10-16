@@ -17,7 +17,7 @@ namespace Roma
         }
 
 
-        public virtual bool Create(Vector2 pos, Vector2 dir)
+        public virtual bool Create(string name, Vector2 pos, Vector2 dir)
         {
             PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
             m_csv = playerCsv.GetData(1);
@@ -36,8 +36,45 @@ namespace Roma
             info.m_pos = pos.ToVector3();
             info.m_dir = dir.ToVector3();
             m_vCreature.Create(info);
+
+            UpdateHeadName(name);
+            UpdateHeadLv();
+            UpdateHeadHp();
             return true;
         }
+
+        public void UpdateHeadName(string sName)
+        {
+            CmdUIHead name = new CmdUIHead();
+            name.type = 1;
+            name.name = sName;
+            m_vCreature.PushCommand(name);
+        }
+
+        public void UpdateHeadLv()
+        {
+            CmdUIHead lv = new CmdUIHead();
+            lv.type = 2;
+            lv.lv = GetPropNum(eCreatureProp.Lv);
+            m_vCreature.PushCommand(lv);
+        }
+
+        public void UpdateHeadHp()
+        {
+            CmdUIHead hp = new CmdUIHead();
+            hp.type = 3;
+            hp.curHp = (int)(GetPropNum(eCreatureProp.CurHp) * 0.001f);
+            hp.maxHp = (int)(GetPropNum(eCreatureProp.MaxHp) * 0.001f);
+            m_vCreature.PushCommand(hp);
+
+            if(GetPropNum(eCreatureProp.CurHp) <= 0)
+            {
+                CmdLife life = new CmdLife();
+                life.state = false;
+                m_vCreature.PushCommand(life);
+            }
+        }
+
     
         /// <summary>
         /// 指令对象转消息内容并发送

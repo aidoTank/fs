@@ -92,7 +92,7 @@ namespace Roma
             m_mapCSVString2Type.Clear();
         }
 
-        private Dictionary<int, CsvExWrapper> m_mapCSV = new Dictionary<int, CsvExWrapper>();
+        public Dictionary<int, CsvExWrapper> m_mapCSV = new Dictionary<int, CsvExWrapper>();
         //private Dictionary<int, CreateCSV> m_mapCSVCreate = new Dictionary<int, CreateCSV>();
         private Dictionary<int, string> m_mapCSVType2String = new Dictionary<int, string>();
         private Dictionary<string, int> m_mapCSVString2Type = new Dictionary<string, int>();

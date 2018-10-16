@@ -42,7 +42,8 @@ namespace Roma
         {
             // 获取伤害值，作用于目标
             int val = m_skillInfo.distance;
-            hitObj.AddPropNum(eCreatureProp.CurHp, - 100);
+            hitObj.AddPropNum(eCreatureProp.CurHp, - 100 * 1000);
+            hitObj.UpdateHeadHp();
             Debug.Log("=="+hitObj.GetPropNum(eCreatureProp.CurHp));
         }
 

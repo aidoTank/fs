@@ -1,0 +1,554 @@
+fileFormatVersion: 2
+guid: df78b85d66a4cdd489fa0d66129cf4ee
+timeCreated: 1534752025
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: fight_head_buff
+    21300002: fight_head_level_bg1.PNG
+    21300004: fight_head_level_bg2.PNG
+    21300006: fight_head_level_bg3.PNG
+    21300008: fight_head_level_blood
+    21300010: fight_head_level_exp
+    21300012: fight_head_level_sliderbg
+    21300014: fight_head_tieyin
+    21300016: img_level_0.PNG
+    21300018: img_level_1
+    21300020: img_level_10
+    21300022: img_level_11
+    21300024: img_level_12
+    21300026: img_level_13
+    21300028: img_level_14
+    21300030: img_level_2.PNG
+    21300032: img_level_3.PNG
+    21300034: img_level_4
+    21300036: img_level_5
+    21300038: img_level_6
+    21300040: img_level_7
+    21300042: img_level_8
+    21300044: img_level_9
+    21300046: img_hud_crit
+    21300048: img_hud_exp
+    21300050: fight_head_buff_bg
+    21300052: fight_head_level_bg
+    21300054: fight_head_level_blood1
+    21300056: fight_head_level_blood2
+    21300058: fight_head_level_blood3
+    21300060: fight_head_level_blood4
+    21300062: fight_head_level_bloodlight
+    21300064: fight_head_level_bloodbg
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 0
+    aniso: 16
+    mipBias: -1
+    wrapMode: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 1024
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 512
+    textureFormat: 54
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+  - buildTarget: Android
+    maxTextureSize: 1024
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: fight_head_buff
+      rect:
+        serializedVersion: 2
+        x: 377
+        y: 406
+        width: 134
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_buff_bg
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 392
+        width: 138
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_bg
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 478
+        width: 180
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_bg1.PNG
+      rect:
+        serializedVersion: 2
+        x: 452
+        y: 361
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_bg2.PNG
+      rect:
+        serializedVersion: 2
+        x: 377
+        y: 354
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_bg3.PNG
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 316
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_blood
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 502
+        width: 118
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_blood1
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 435
+        width: 138
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 6, y: 0, z: 6, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_blood2
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 418
+        width: 138
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 6, y: 0, z: 5, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_blood3
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 401
+        width: 138
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 0, z: 4, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_blood4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 399
+        width: 138
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 0, z: 4, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_bloodbg
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 459
+        width: 140
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_bloodlight
+      rect:
+        serializedVersion: 2
+        x: 489
+        y: 485
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_exp
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 452
+        width: 140
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_level_sliderbg
+      rect:
+        serializedVersion: 2
+        x: 489
+        y: 472
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 5, z: 5, w: 5}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: fight_head_tieyin
+      rect:
+        serializedVersion: 2
+        x: 377
+        y: 399
+        width: 74
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_hud_crit
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 411
+        width: 96
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_hud_exp
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 416
+        width: 210
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_0.PNG
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 451
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_1
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 424
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_10
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 397
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_11
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 372
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_12
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 345
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_13
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 389
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_14
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 389
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_2.PNG
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 365
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_3.PNG
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 365
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_4
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 365
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_5
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 365
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_6
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 365
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_7
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 374
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_8
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 362
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: img_level_9
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 362
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    outline: []
+  spritePackingTag: atlas_head
+  userData: 
+  assetBundleName: ui/static/atlas_pic/atlas/fight/atlas_head
+  assetBundleVariant: 

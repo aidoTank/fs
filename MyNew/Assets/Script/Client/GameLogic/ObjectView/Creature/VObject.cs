@@ -25,7 +25,8 @@ namespace Roma
 
         public bool m_bMaster;
         public CmdFspEnum m_state;
-        
+        public CThingHead m_head;
+
         public VObject()
         {
 
@@ -37,6 +38,8 @@ namespace Roma
         /// </summary>
         public virtual void Create(sVOjectBaseInfo baseInfo)
         {
+            m_head = new CThingHead("1111");
+
             EntityBaseInfo info = new EntityBaseInfo();
             info.m_resID = baseInfo.m_resId;
             info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
@@ -48,6 +51,7 @@ namespace Roma
                 {
                     CameraMgr.Inst.InitCamera(this);
                 }
+                PushCommand(new CmdFspStopMove());
             });
             m_ent = (BoneEntity)EntityManager.Inst.GetEnity(m_hid);
         }
@@ -98,12 +102,49 @@ namespace Roma
                 animaInfo.eMode = WrapMode.Loop;
                 m_ent.Play(animaInfo);
             }
+            else if(cmd.GetCmdType() == CmdFspEnum.eUIHead)
+            {
+                CmdUIHead head = cmd as CmdUIHead;
+                switch(head.type)
+                {
+                    case 1:
+                    m_head.SetName(head.name);
+                    break;
+                    case 2:
+                    m_head.SetLevel(head.lv);
+                    break;
+                    case 3:
+                    m_head.SetHp(head.curHp, head.maxHp);
+                    break;
+                }
+            }
+            else if(cmd.GetCmdType() == CmdFspEnum.eLife)
+            {
+                CmdLife head = cmd as CmdLife;
+                if(head.state)
+                {
+
+                }
+                else
+                {
+                    AnimationAction animaInfo = new AnimationAction();
+                    animaInfo.crossTime = AnimationInfo.m_crossTime;
+                    animaInfo.playSpeed = 1;
+                    animaInfo.strFull = "die_1";
+                    animaInfo.eMode = WrapMode.Once;
+                    m_ent.Play(animaInfo);
+                }
+            }
         }
 
         public virtual void Update(float time, float fdTime)
         {
             if(m_ent == null || !m_ent.IsInited())
                 return;
+            if(m_head != null)
+            {
+                m_head.UpdatePos(m_ent.GetPos() + Vector3.up * 4f);
+            }
             if(m_bMoveing) 
             {
                 Entity ent = m_ent as Entity;
@@ -122,7 +163,6 @@ namespace Roma
         }
 
 
-    
         public Vector3 _UpdateMove(float fTime, float fdTime, ref Entity ent, MtBaseMoveInfo moveInfo)
         {
             // 表现层每帧增加距离

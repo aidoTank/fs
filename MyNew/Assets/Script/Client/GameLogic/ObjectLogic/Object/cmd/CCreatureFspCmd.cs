@@ -18,6 +18,10 @@ namespace Roma
 
         eSkillCreate,
         eSkillHit,
+
+
+        eUIHead,
+        eLife,
     }
     public class IFspCmdType
     {
@@ -116,6 +120,54 @@ namespace Roma
         public CmdSkillHit()
         {
             cmdenum = CmdFspEnum.eSkillHit;
+        }
+    }
+
+
+        /// <summary>
+    /// 设置表现层，只用于设置一次的时候
+    /// </summary>
+    public class CmdUIHead : IFspCmdType
+    {
+        // 1.名字 2等级 3血量 4跳字 5隐藏 6经验 7BUFF信息 8阵营 9复活点CD 10战斗表情 11玩家特效 12等级经验提示效果
+        public int type;
+
+        public string name;
+        public int lv;
+
+        public int curHp;
+        public int maxHp;
+
+        public eHUDType hudType;
+        public string hudText;
+
+        public bool bShow;
+
+        public int curExp;
+        public int maxExp;
+
+        public int buffId;
+        public int buffIcon;
+        public int buffTime;
+
+        public bool bTeam;
+
+        public int effectId;
+        public int effectBindPos;
+
+        public CmdUIHead()
+        {
+            cmdenum = CmdFspEnum.eUIHead;
+        }
+    }
+
+    public class CmdLife : IFspCmdType
+    {
+        public bool state;         // true为复活，false为死亡
+
+        public CmdLife()
+        {
+            cmdenum = CmdFspEnum.eLife;
         }
     }
 

@@ -155,10 +155,10 @@ namespace Roma
             //等级字
             for (int i = 0; i < 15; i++)
             {
-               // UIItem.SetActiveNew(item, "txt/" + i, false);
+                UIItem.SetActiveNew(item, "txt/" + i, false);
                 if (i == level - 1)
                 {
-               //     UIItem.SetActiveNew(item, "txt/" + i, true);
+                    UIItem.SetActiveNew(item, "txt/" + i, true);
                 }
 
             }

@@ -53,10 +53,6 @@ namespace Roma
             //CPlayerMgr.ExecuteFrame();
         }
 
-        public void Enter(CCreature obj, Vector2 pos, Vector2 dir)
-        {
-            obj.Create(pos, dir);
-        }
 
         // 圆形在当前地图位置是否能走
         public bool CanMove(Vector2 pos, float r)

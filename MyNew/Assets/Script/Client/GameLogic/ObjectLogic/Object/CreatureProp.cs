@@ -7,6 +7,7 @@ namespace Roma
     {
         Name,
 	    Occ,
+        Lv,
 
         // 一级属性
         Force,       // 力量
