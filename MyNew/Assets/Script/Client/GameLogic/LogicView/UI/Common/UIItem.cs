@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System;
-using Roma;
 using UnityEngine.UI;
 
 namespace Roma
@@ -143,47 +142,6 @@ namespace Roma
         {
 
         }
-        //public GoodsItem(UIAtlasID iconId, string icon, string count, string level, int type)
-        //{
-        //    this.iconId = iconId;
-        //    this.icon = icon;
-        //    this.level = level;
-        //    this.count = count;
-        //    this.type = type;
-        //}
-        ///* 没被调用我注释了 Qiao 2015.9.24
-        //public GoodsItem(UIIconID iconId, string icon, string count, string level, string rank)
-        //{
-        //    this.iconId = iconId;
-        //    this.icon = icon;
-        //    this.level = level;
-        //    this.count = count;
-        //    this.rank = rank;
-        //}*/
-        //public GoodsItem(UIAtlasID iconId, string icon, UInt64 gid, string count, string name, byte bind, byte type)
-        //{
-        //    this.iconId = iconId;
-        //    this.icon = icon;
-        //    this.gid = gid;
-        //    this.count = count;
-        //    this.name = name;
-        //    this.bBind = bind;
-        //    this.bType = type;
-        //}
-        //public GoodsItem(UIAtlasID iconId, string icon, string count, string level)
-        //{
-        //    this.iconId = iconId;
-        //    this.icon = icon;
-        //    this.level = level;
-        //    this.count = count;
-        //}
-        //public GoodsItem(UIAtlasID iconId, string icon, string count)
-        //{
-        //    this.iconId = iconId;
-        //    this.icon = icon;
-        //    this.count = count;
-        //}
-
     }
     /// <summary>
     /// UIItem：编写UI接口的辅助类。
@@ -223,14 +181,6 @@ namespace Roma
             {
                 return null;
             }
-            //if (itemVal.isLock)
-            //{
-            //    // 设置锁图标
-            //    GameObject lockObject = UIItem.SetImage(item, UIItemTitle.imgIcon, itemVal.iconId, CEquipment.EQUIPMENT_STONE_SLOT_LOCK_ICON.ToString());
-            //    UIItem.SetText(item, UIItemTitle.txtLevel, "");
-            //    UIItem.SetText(item, UIItemTitle.txtCount, "");
-            //    return lockObject;
-            //}
             UIItem.SetText(item, UIItemTitle.txtName, itemVal.name);
             
             //物品描述
@@ -241,15 +191,15 @@ namespace Roma
             GameObject iconObject = UIItem.GetChild(item, UIItemTitle.imgIcon).gameObject;
             if(String.IsNullOrEmpty(itemVal.icon))
             {
-                iconObject.SetActive(false);
+                iconObject.SetActiveNew(false);
             }
             else
             {
-                //UnityEngine.Profiling.Profiler.BeginSample("LoadImage");
+                UnityEngine.Profiling.Profiler.BeginSample("LoadImage");
                 UIItem.SetImage(item, UIItemTitle.imgIcon, int.Parse(itemVal.icon));
-                if(!iconObject.activeSelf)
-                    iconObject.SetActive(true);
-                //UnityEngine.Profiling.Profiler.EndSample();
+                if(!iconObject.ActiveSelfNew())
+                    iconObject.SetActiveNew(true);
+                UnityEngine.Profiling.Profiler.EndSample();
                 //UIButton.Get(iconObject);
             }
             // 强化等级
@@ -258,8 +208,8 @@ namespace Roma
                 GameObject tmpBgLevel = UIItem.GetBtn(item, "bg_level");
             if(tmpBgLevel!=null)
             {
-                if (itemVal.rate == null) tmpBgLevel.SetActive(false);
-                else tmpBgLevel.SetActive(true);
+                if (itemVal.rate == null) tmpBgLevel.SetActiveNew(false);
+                else tmpBgLevel.SetActiveNew(true);
             }
             //else
             //    UIItem.SetText(item, UIItemTitle.txtLevel, "");
@@ -280,7 +230,7 @@ namespace Roma
 
             // 宝石孔
             UIItem.SetText(item, "gem_count", itemVal.gemHoleNum + "/6");
-            int iconName=0;
+    
             if(itemVal.currency>0)
             {
 
@@ -290,25 +240,21 @@ namespace Roma
         }
 
         /// <summary>
-        /// 设置变灰，可用可选(变灰还能接受事件)
+        /// 设置按钮变灰 及可点击
         /// </summary>
-        public static void SetGray(GameObject obj, bool isActive, bool isGray)
+        /// <param name="obj"></param>
+        /// <param name="isGray">true变灰</param>
+        /// <param name="isActive">true 可点击</param>
+        public static void SetGray(GameObject obj, bool isGray, bool isActive=false)
         {
             if (isActive)
             {
-                //UIEffectGray.Get(obj).SetGrayButActive(isGray);
+                UIGray.Get(obj).SetGrayButActive(isGray);
             }
             else
             {
-               // UIEffectGray.Get(obj).SetGray(isGray);
+                UIGray.Get(obj).SetGray(isGray,isActive);
             }
-        }
-        /// <summary>
-        /// 设置变灰
-        /// </summary>
-        public static void SetGray(GameObject obj, bool isGray)
-        {
-            //UIEffectGray.Get(obj).SetGray(isGray);
         }
 
         /// <summary>
@@ -319,42 +265,117 @@ namespace Roma
             GameObject iconObject = item.FindChild(iconTitle).gameObject;
             if (iconId == 0)
             {
-                iconObject.SetActive(false);
+                iconObject.SetActiveNew(false);
                 return iconObject;
             }
             else
             {
-                iconObject.SetActive(true);
+                iconObject.SetActiveNew(true);
+            }
+            return iconObject;
+        }
+
+        public static GameObject SetImage(GameObject item, int iconId)
+        {
+            Image image = item.GetComponent<Image>();
+            if(image != null)
+            {
+                SetImage(image, iconId);
+            }
+            return item;
+        }
+
+        public static GameObject SetImage(Transform item, string iconTitle, string iconName)
+        {
+            GameObject iconObject = item.FindChild(iconTitle).gameObject;
+            int iconId;
+            if (int.TryParse(iconName, out iconId))
+            {
+                if (iconId == 0)
+                {
+                    iconObject.SetActiveNew(false);
+                    return iconObject;
+                }
+                else iconObject.SetActiveNew(true);
             }
             //UILoadImage comIcon = UILoadImage.Get(iconObject);
             //comIcon.Load(iconId);
             return iconObject;
         }
 
-              public static void SetRawImage(Transform item, string imageTitle, int resId, UIBase refUI = null)
+        /// <summary>
+        /// 设置动态下载的图片，直接通过IconCsv加载
+        /// </summary>
+        public static void SetImage(Image image, string iconName)
         {
-            if (item == null)
-                return;
-            Transform image = item.FindChild(imageTitle);
-            SetRawImage(image, resId, refUI);
+            int iconId;
+            if(int.TryParse(iconName, out iconId))
+            {
+                if (iconId == 0)
+                {
+                    image.gameObject.SetActiveNew(false);
+                    return;
+                }
+                else image.gameObject.SetActiveNew(true);
+                //UILoadImage comIcon = UILoadImage.Get(image.gameObject);
+                //comIcon.Load(iconId);
+            }
         }
 
-        public static void SetRawImage(Transform item, int resId, UIBase refUI = null)
+        /// <summary>
+        /// 设置动态下载的图片，直接通过IconCsv加载
+        /// </summary>
+        public static void SetImage(Image image, int iconId)
         {
-            if (item == null)
-                return;
-            RawImage label = item.GetComponent<RawImage>();
-            if (label == null)
-                Debug.LogError("rawImage is null : " + item);
-
-            if (resId == -1)
+            if (iconId == 0)
             {
-                label.enabled = false;
+                image.gameObject.SetActiveNew(false);
                 return;
             }
-
-            TextureManager.SetImage(resId, label);
+            else image.gameObject.SetActiveNew(true);
+            //UILoadImage comIcon = UILoadImage.Get(image.gameObject);
+            //comIcon.Load(iconId);
         }
+
+        /// <summary>
+        /// 设置动态下载的图片,图集通过资源配置UIIconID加载
+        /// </summary>
+        //public static GameObject SetImage(Transform item, string iconTitle, UIAtlasID iconID, string val, bool isHandle)
+        //{
+        //    if (val.Equals(""))
+        //    {
+        //        item.FindChild(iconTitle).gameObject.SetActiveNew(false);
+        //        return null;
+        //    }
+        //    GameObject iconObject = item.FindChild(iconTitle).gameObject;
+        //    iconObject.SetActiveNew(true);
+        //    UILoadImage comIcon = UILoadImage.Get(iconObject);
+        //    comIcon.Load((uint)iconID, val);
+        //    return iconObject;
+        //}
+
+        /// <summary>
+        /// 指定图集的，设置动态下载的图片
+        /// </summary>
+        //public static GameObject SetImage(Transform item, string iconTitle, UIAtlasID iconID, string val, bool nativeSize = false)
+        //{
+        //    GameObject iconObject = item.FindChild(iconTitle).gameObject;
+        //    iconObject.SetActiveNew(true);
+        //    UILoadImage comIcon = UILoadImage.Get(iconObject);
+        //    comIcon.m_nativeSize = nativeSize;
+        //    comIcon.Load((uint)iconID, val);
+        //    return iconObject;
+        //}
+        /// <summary>
+        /// 设置动态下载的图片
+        /// </summary>
+        //public static GameObject SetImage(Transform item, string iconTitle, UIAtlasID iconID, string val)
+        //{
+        //    GameObject iconObject = item.FindChild(iconTitle).gameObject;
+        //    UILoadImage comIcon = UILoadImage.Get(iconObject);
+        //    comIcon.Load((uint)iconID, val);
+        //    return iconObject;
+        //}
 
         /// <summary>
         /// 设置子对象CD
@@ -383,6 +404,65 @@ namespace Roma
             return SetText(item.transform, textTitle, val);
         }
 
+        public static void SetRawImage(Transform item, string imageTitle, int resId, UIBase refUI = null)
+        {
+            if (item == null)
+                return;
+            Transform image = item.FindChild(imageTitle);
+            SetRawImage(image, resId, refUI);
+        }
+
+        public static void SetRawImage(Transform item, int resId, UIBase refUI = null)
+        {
+            if (item == null)
+                return;
+            RawImage label = item.GetComponent<RawImage>();
+            if (label == null)
+                Debug.LogError("rawImage is null : " + item);
+
+            if (resId == -1)
+            {
+                label.enabled = false;
+                return;
+            }
+
+            TextureManager.SetImage(resId, label);
+            
+        }
+
+        /// <summary>
+        /// 设置图标为动态
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="resId"></param>
+        public static void SetUIMatAnimation(Transform item, int resId, bool enableAnim = true)
+        {
+            // UIMatAnimation matAnim = UIMatAnimation.Get(item);
+            // if (null == matAnim) return;
+
+            // ResInfo resInfo = ResInfosResource.GetResInfo(resId);
+            // if (null != resInfo)
+            //     matAnim.SetAnimTexture(resInfo.strName);
+
+            // matAnim.EnableAnim(enableAnim);
+        }
+
+        public static InputField SetInput(Transform item, string textTitle, string val)
+        {
+            if (item == null)
+                return null;
+            Transform iconTrans = item.FindChild(textTitle);
+            if (null == iconTrans)
+            {
+                //Debug.Log(item.name + " 下不存在:" + textTitle);
+                return null;
+            }
+            iconTrans.gameObject.SetActiveNew(true);
+            InputField label = iconTrans.GetComponent<InputField>();
+            label.text = val;
+            return label;
+        }
+
         /// <summary>
         /// 设置子对象文本
         /// </summary>
@@ -393,25 +473,38 @@ namespace Roma
             Transform iconTrans = item.FindChild(textTitle);
             if (null == iconTrans)
             {
-                //Debug.Log(item.name + " 下不存在:" + textTitle);
                 return null;
             }
-            iconTrans.gameObject.SetActive(true);
+            iconTrans.gameObject.SetActiveNew(true);
             Text label = iconTrans.GetComponent<Text>();
             if (null == label)
             {
-                //Debug.LogError(iconTrans.name + " 不存在UILabel组件");
                 return null;
             }
-            //Outline oLine = label.GetComponent<Outline>();
-            //if (oLine == null)
-            //{
-            //    label.gameObject.AddComponent<Outline>();
-            //}
-            // 比较道具的显示数量 大于1才显示的逻辑在这里处理
             label.text = val;
             return label.gameObject;
         }
+
+        public static GameObject SetRichText(Transform item, string textTitle, string val)
+        {
+            if (item == null)
+                return null;
+            Transform iconTrans = item.FindChild(textTitle);
+            if (null == iconTrans)
+            {
+                return null;
+            }
+            iconTrans.gameObject.SetActiveNew(true);
+            // UIRichText label = iconTrans.GetComponent<UIRichText>();
+            // if (null == label)
+            // {
+            //     return null;
+            // }
+            // label.text = val;
+            //return label.gameObject;
+            return null;
+        }
+
         public static void SetTxtLength(Transform item, string title,string txt,float width_margin)
         {
             Transform txt_trans = item.FindChild(title);
@@ -424,7 +517,7 @@ namespace Roma
             {
                 return ;
             }
-            text.gameObject.SetActive(true);
+            text.gameObject.SetActiveNew(true);
             text.text = txt;
             RectTransform rt_item_bg = GetChild(item, "bg") as RectTransform;
             if (null != rt_item_bg)
@@ -433,6 +526,34 @@ namespace Roma
             }
         }
 
+        public static void SetTxtColor(Transform item, string title, string txt, Color color)
+        {
+            Transform txt_trans = item.FindChild(title);
+            if (null == txt_trans)
+            {
+                return;
+            }
+            Text text = txt_trans.GetComponent<Text>();
+            if (null == text)
+            {
+                return;
+            }
+            text.gameObject.SetActiveNew(true);
+            text.text = txt;
+            text.color = color;
+        }
+        public static void SetTxtColor(Transform item,string txt, Color color)
+        {
+            
+            Text text = item.FindChild(txt).GetComponent<Text>();
+            if (null == text)
+            {
+                return;
+            }
+            text.gameObject.SetActiveNew(true);
+            text.color = color;
+        }
+        
         /// <summary>
         /// 设置星级
         /// </summary>
@@ -468,16 +589,16 @@ namespace Roma
         public static GameObject m_choice;
         public static void SetItemChoice(Transform parent)
         {
-            if (m_choice != null) m_choice.SetActive(false);
+            if (m_choice != null) m_choice.SetActiveNew(false);
             m_choice = UIItem.GetBtn(parent, "choice");
-            m_choice.SetActive(true);
+            m_choice.SetActiveNew(true);
         }
 
         public static void SetItemChoice(Transform parent,bool bShow)
         {
-            if (m_choice != null) m_choice.SetActive(bShow);
+            if (m_choice != null) m_choice.SetActiveNew(bShow);
             m_choice = UIItem.GetBtn(parent, "choice");
-            m_choice.SetActive(bShow);
+            m_choice.SetActiveNew(bShow);
         }
 
         /// <summary>
@@ -510,7 +631,7 @@ namespace Roma
                 //Debug.Log(item.name + " 下不存在:" + markTitle);
                 return;
             }
-            iconTrans.gameObject.SetActive(isShow);
+            iconTrans.gameObject.SetActiveNew(isShow);
         }
         public static GameObject GetBtn(Transform item, int index)
         {
@@ -523,7 +644,7 @@ namespace Roma
             {
                 return null;
             }
-            //btnTrans.gameObject.SetActive(true);
+            //btnTrans.gameObject.SetActiveNew(true);
             return btnTrans.gameObject;
         }
         public static GameObject GetList(Transform item, string listTitle)
@@ -547,11 +668,12 @@ namespace Roma
         /// <param name="obj"></param>
         public static void SetItemIsGray(bool bTrue, GameObject obj)
         {
-            //UIGray gray3 = obj.GetComponent<UIGray>();
-            //if (gray3 == null)
-            //    gray3 = obj.AddComponent<UIGray>();
-            //gray3.SetActive(bTrue);
+            UIGray gray3 = obj.GetComponent<UIGray>();
+            if (gray3 == null)
+                gray3 = obj.AddComponent<UIGray>();
+            gray3.SetActiveNew(bTrue);
         }
+
         public static void SetItemIsGray(Transform item, string name, bool isGray)
         {
             Transform trans = item.FindChild(name);
@@ -638,7 +760,7 @@ namespace Roma
             }
             item.localScale = Vector2.one;
         
-            item.gameObject.SetActive(true);
+            item.gameObject.SetActiveNew(true);
             return item;
         }
 
@@ -653,7 +775,7 @@ namespace Roma
             }
             //item.localPosition = Vector2.zero;
             item.localScale = Vector2.one;
-            item.gameObject.SetActive(true);
+            item.gameObject.SetActiveNew(true);
             return item;
         }
 
@@ -661,19 +783,31 @@ namespace Roma
         {
             for (int i = 0; i < parent.childCount; i++)
             {
-                parent.GetChild(i).gameObject.SetActive(false);
+                parent.GetChild(i).gameObject.SetActiveNew(false);
             }
         }
         public static void ClearList(Transform parent)
         {
-            if (parent == null) return;
+            if (parent == null)
+                return;
         
             for (int i = 0; i < parent.childCount; i++)
             {
-                //GameObject.Destroy(
-                parent.GetChild(i).gameObject.SetActive(false);
+                parent.GetChild(i).gameObject.SetActiveNew(false);
             }
         }
+
+        public static void DestoryList(Transform parent)
+        {
+            if (parent == null)
+                return;
+
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                GameObject.Destroy(parent.GetChild(i).gameObject);
+            }
+        }
+
         ///// <summary>
         ///// 获取item，用于静态列表
         ///// </summary>
@@ -684,7 +818,7 @@ namespace Roma
             {
                 return null;
             }
-            //item.gameObject.SetActive(true);
+            //item.gameObject.SetActiveNew(true);
             return item;
         }
 
@@ -724,25 +858,25 @@ namespace Roma
                     isShow = false;
                 GameObject item = GetBtn(star, i);
                 if(item != null)
-                    item.SetActive(isShow);
+                    item.SetActiveNew(isShow);
             }
         }
         public static void SetItemUnlocking(Transform parent, bool isShow)
         {
-            GetBtn(parent, "unlocking").SetActive(isShow);
+            GetBtn(parent, "unlocking").SetActiveNew(isShow);
         }
         public static void SetItemUnlocked(Transform parent, bool isShow)
         {
-            GetBtn(parent, "unlocked").SetActive(isShow);
+            GetBtn(parent, "unlocked").SetActiveNew(isShow);
         }
 
         public static void SetItemLock(Transform parent, bool isShow)
         {
-            GetBtn(parent, "lock").SetActive(isShow);
+            GetBtn(parent, "lock").SetActiveNew(isShow);
         }
         public static void SetRedPoint(Transform parent, bool isRed)
         {
-            UIItem.GetBtn(parent, "red").SetActive(isRed);
+            UIItem.GetBtn(parent, "red").SetActiveNew(isRed);
         }
         public static void SetSiblingIndex(Transform parent, string name, int index)
         {
@@ -752,20 +886,22 @@ namespace Roma
                 child.GetComponent<RectTransform>().SetSiblingIndex(index);
             }
         }
-        public static void SetActive(Transform parent, string name, bool active)
+        public static void SetActiveNew(Transform parent, string name, bool active)
         {
             Transform child = parent.FindChild(name);
             if (child != null)
-                child.gameObject.SetActive(active);
+                child.gameObject.SetActiveNew(active);
         }
-        public static void SetSliderValue(Transform parent, float slider_value)
+
+        public static void SetSliderValue(Transform parent,string name,  float slider_value)
         {
-            Slider slider = UIItem.GetChild(parent, "slider").GetComponent<Slider>();
+            Image slider = UIItem.GetChild(parent, name).GetComponent<Image>();
             if (slider != null)
             {
-                slider.value = slider_value;
+                slider.fillAmount = slider_value;
             }
         }
+        
         public static void ShowArrow(GameObject parent, bool show)
         {
             //ArrowEffect.Get(parent).Show(show);
@@ -779,10 +915,10 @@ namespace Roma
         {
             Transform item = UIItem.GetChild(parent, "fg_mask");
             if (txt == null)
-                item.gameObject.SetActive(false);
+                item.gameObject.SetActiveNew(false);
             else
             {
-                item.gameObject.SetActive(true);
+                item.gameObject.SetActiveNew(true);
                 UIItem.SetText(item, "txt", txt);
             }
         }
@@ -819,8 +955,265 @@ namespace Roma
     
         public static void SetItemIsOpen(Transform parent,bool open)
         {
-            UIItem.GetBtn(parent, SSwitchBtn.s_open).SetActive(open);
-            UIItem.GetBtn(parent, SSwitchBtn.s_close).SetActive(!open);
+            UIItem.GetBtn(parent, SSwitchBtn.s_open).SetActiveNew(open);
+            UIItem.GetBtn(parent, SSwitchBtn.s_close).SetActiveNew(!open);
+        }
+
+        //-------------------------------------------------------------------------------
+        /// <summary>
+        /// 获取子节点GameObject
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="childPath"></param>
+        /// <returns></returns>
+        public static GameObject GetChildObj(Transform parent, string childPath)
+        {
+            if(null == parent)
+            {
+                Debug.LogWarning("GetChildObj parent is null !");
+                return null;
+            }
+            Transform childTrans = parent.FindChild(childPath);
+            if (null == childTrans)
+                return null;
+            else
+                return childTrans.gameObject;
+        }
+        /// <summary>
+        /// 获取子节点上的组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parent"></param>
+        /// <param name="childPath"></param>
+        /// <returns></returns>
+        public static T GetChildComp<T>(Transform parent, string childPath) where T : Component
+        {
+            if (null == parent)
+            {
+                Debug.LogWarning("GetChildComp parent is null !");
+                return null;
+            }
+            Transform childTrans = parent.FindChild(childPath);
+            if (null == childTrans)
+                return null;
+            else
+                return childTrans.GetComponent<T>();
+        }
+        /// <summary>
+        /// 从父级节点上寻找组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="trans"></param>
+        /// <returns></returns>
+        public static T GetParentComp<T>(Transform trans) where T : Component
+        {
+            if (null == trans || null == trans.parent)
+                return null;
+
+            Transform parent = trans.parent;
+            T comp = null;
+
+            while (null != parent)
+            {
+                comp = parent.GetComponent<T>();
+                if (null != comp)
+                    return comp;
+                else
+                    parent = parent.parent;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获得该节点所在的UI
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static UIBase GetParentUI(Transform item)
+        {
+            if (null == item || null == item.parent)
+                return null;
+
+            Transform parent = item.parent;
+            UIBase uiComp = null;
+
+            while(null != parent)
+            {
+                uiComp = parent.GetComponent<UIBase>();
+                if (null != uiComp)
+                    return uiComp;
+                else
+                    parent = item.parent;
+            }
+            return null;
+        }
+
+        public enum eItemAlignType
+        {
+            Left,
+            Center,
+            Top,
+            VCenter
+        }
+
+        /// <summary>
+        /// 因为不再使用active, 用于代替系统的GridLayoutGroup组建居中,注意itemParent的X坐标为0
+        /// </summary>
+        public static void SetItemAlign(eItemAlignType type, Transform itemParent)
+        {
+            float width = 0;
+            float height = 0;
+            int index = 0;
+            if (type == eItemAlignType.VCenter || type == eItemAlignType.Top)
+            {
+                for (int i = 0; i < itemParent.childCount; i++)
+                {
+                    RectTransform item = (RectTransform)itemParent.FindChild(i.ToString());
+                    if (item == null)
+                        continue;
+                    if (item.localScale == Vector3.zero)
+                        continue;
+                    item.localPosition = new Vector3(item.localPosition.x, -index * item.sizeDelta.y, 0);
+
+                    height = item.sizeDelta.y * 0.5f * index;
+                    index++;
+                    //itemParent.localPosition = new Vector3(itemParent.localPosition.x, height, 0);
+                }
+                if (type == eItemAlignType.VCenter)
+                {
+                    itemParent.localPosition = new Vector3(itemParent.localPosition.x,  height, 0);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < itemParent.childCount; i++)
+                {
+                    RectTransform item = (RectTransform)itemParent.FindChild(i.ToString());
+                    if (item == null)
+                        continue;
+                    if (item.localScale == Vector3.zero)
+                        continue;
+                    item.localPosition = new Vector3(index * item.sizeDelta.x, 0, 0);
+
+                    width = item.sizeDelta.x * 0.5f * index;
+                    index++;
+                }
+                if (type == eItemAlignType.Center)
+                {
+                    itemParent.localPosition = new Vector3(-1 * width, itemParent.localPosition.y, 0);
+                }
+            }
+           
+        }
+
+        /// <summary>
+        /// 获取或创建Component
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="trans"></param>
+        /// <returns></returns>
+        public static T GetOrCreateComp<T>(Transform trans) where T : Component
+        {
+            if(null == trans)
+            {
+                Debug.LogWarning("GetOrCreate trans is null !");
+                return null;
+            }
+
+            T comp = trans.GetComponent<T>();
+            if (null == comp)
+                comp = trans.gameObject.AddComponent<T>();
+
+            return comp;
+        }
+        public static T GetOrCreateComp<T>(Transform trans, string childPath) where T : Component
+        {
+            if (null == trans)
+            {
+                Debug.LogWarning("GetOrCreate trans is null !");
+                return null;
+            }
+            return GetOrCreateComp<T>(trans.FindChild(childPath));
+        }
+
+        /// <summary>
+        /// 获取Component
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="trans"></param>
+        /// <returns></returns>
+        public static T GetComponent<T>(Transform trans) where T : Component
+        {
+            if (null == trans)
+            {
+                Debug.LogWarning("GetComponent trans is null !");
+                return null;
+            }
+            return trans.GetComponent<T>();
+        }
+        public static T GetComponent<T>(Transform trans, string childPath) where T : Component
+        {
+            if (null == trans)
+            {
+                Debug.LogWarning("GetComponent trans is null !");
+                return null;
+            }
+            return GetComponent<T>(trans.FindChild(childPath));
+        }
+
+        /// <summary>
+        /// 获取或实例化子节点
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="childPath"></param>
+        /// <param name="sampleObj"></param>
+        /// <returns></returns>
+        public static Transform GetOrInstantChild(Transform parent, string childPath, GameObject sampleObj)
+        {
+            if (null == parent)
+                return null;
+
+            Transform childTrans = parent.FindChild(childPath);
+            if(null == childTrans)
+            {
+                if (null == sampleObj)
+                    return null;
+                else
+                {
+                    GameObject go = GameObject.Instantiate(sampleObj);
+                    childTrans = go.transform;
+                    childTrans.SetParent(parent);
+                    childTrans.localRotation = Quaternion.identity;
+                    childTrans.localScale = Vector3.one;
+                    go.SetActiveNew(true);
+                }
+            }
+            return childTrans;
+        }
+
+        /// <summary>
+        /// 获得节点路径
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="depth"></param>
+        /// <returns></returns>
+        public static string GetHierarchyPath(Transform item, int depth = 0)
+        {
+            if (null == item)
+                return "../";
+
+            if (depth <= 0)
+                depth = int.MaxValue;
+
+            string path = item.name;
+            Transform parent = item.parent;
+            while(null != parent && depth-- > 0)
+            {
+                path = parent.name + "/" + path;
+                parent = parent.parent;
+            }
+
+            return path;
         }
     }
     public struct SSwitchBtn

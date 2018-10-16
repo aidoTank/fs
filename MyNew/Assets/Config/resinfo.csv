@@ -17,7 +17,8 @@ uint,string,string,string
 10005,panel_loading,ui/prefab/panel_loading,面板
 10006,panel_joy_stick,ui/prefab/panel_joy_stick,面板
 10007,panel_battle,ui/prefab/panel_battle,面板
-10008,panel_bag,ui/prefab/panel_bag,面板
+10008,panel_head,ui/prefab/panel_bag,面板
+10009,panel_bag,,
 11000,图标段11000+,,
 11001,icon_player_1,ui/dynamic/icon/player/icon_player_1,图标
 11002,icon_player_2,ui/dynamic/icon/player/icon_player_2,图标

@@ -271,6 +271,31 @@ namespace Roma
         {
             return new Vector2(vec.x, vec.z);
         }
+
+        public static void SetActiveNew(this Component component, bool bShow)
+        {
+            if (null != component)
+                component.gameObject.SetActiveNew(bShow);
+        }
+
+        public static void AppQuit()
+        {
+            if(Application.isEditor)
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            }
+            else if(Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                //IOSInfo.OnExitApp();
+            }
+            else if (Application.platform == RuntimePlatform.Android || 
+                Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                Application.Quit();
+            }
+        }
     }
 
 }
