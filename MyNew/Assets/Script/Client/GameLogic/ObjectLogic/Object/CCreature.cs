@@ -35,6 +35,7 @@ namespace Roma
             info.m_resId = m_csv.ModelResId;
             info.m_pos = pos.ToVector3();
             info.m_dir = dir.ToVector3();
+            info.m_headHeight = m_csv.headHeight;
             m_vCreature.Create(info);
 
             UpdateHeadName(name);
@@ -72,7 +73,18 @@ namespace Roma
                 CmdLife life = new CmdLife();
                 life.state = false;
                 m_vCreature.PushCommand(life);
+
+                CFrameTimeMgr.Inst.RegisterEvent(m_csv.dieDelay, ()=>{
+                    VObjectMgr.Remove(m_vCreature.m_id, true);
+                });
             }
+        }
+
+        public bool IsDie()
+        {
+            if(GetPropNum(eCreatureProp.CurHp) <= 0)
+                return true;
+            return false;
         }
 
     
@@ -160,13 +172,6 @@ namespace Roma
                 //TickSkill(frameId);
             }
         }
-
-
-        public virtual void SetName(string name)
-        {
-           
-        }
-
        
         public override void Destory()
         {

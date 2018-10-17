@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 
 
-public class CFrameEvent
+public class CTimeEvent
 {
     public float curTime;
     public float maxTime;
@@ -11,7 +11,7 @@ public class CFrameEvent
 
 public class TimeMgr :  Singleton
 {
-    private Dictionary<int, CFrameEvent> m_timeEvent = new Dictionary<int, CFrameEvent>();
+    private Dictionary<int, CTimeEvent> m_timeEvent = new Dictionary<int, CTimeEvent>();
     private int m_startId;
     private List<int> m_delList = new List<int>();
 
@@ -26,7 +26,7 @@ public class TimeMgr :  Singleton
     public int RegisterEvent(float maxTime, Action func)
     {
         m_startId++;
-        CFrameEvent ev = new CFrameEvent();
+        CTimeEvent ev = new CTimeEvent();
         ev.curTime = 0;
         ev.maxTime = maxTime;
         ev.endEvent = func;
@@ -36,10 +36,10 @@ public class TimeMgr :  Singleton
 
     public override void Update(float time, float fdTime)
     {
-        Dictionary<int, CFrameEvent>.Enumerator map = m_timeEvent.GetEnumerator();
+        Dictionary<int, CTimeEvent>.Enumerator map = m_timeEvent.GetEnumerator();
         while (map.MoveNext())
         {
-            CFrameEvent ev = map.Current.Value;
+            CTimeEvent ev = map.Current.Value;
             ev.curTime += fdTime;
             if(ev.curTime >= ev.maxTime)
             {

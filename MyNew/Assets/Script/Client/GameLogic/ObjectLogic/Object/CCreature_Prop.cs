@@ -16,6 +16,7 @@ namespace Roma
 
         public virtual void SetPublicPropList()
         {
+            SetPropNum(eCreatureProp.Lv, 1);
             SetPropNum(eCreatureProp.Force, m_csv.force);
             SetPropNum(eCreatureProp.Agility, m_csv.agility);
             SetPropNum(eCreatureProp.Brain, m_csv.brain);

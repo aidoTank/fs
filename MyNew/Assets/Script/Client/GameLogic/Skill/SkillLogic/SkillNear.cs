@@ -32,22 +32,10 @@ namespace Roma
                 {
                     Debug.Log("检测:" + item.Value.GetUid());
                     OnHit(item.Value);
-
-                    OnHarm(item.Value);
                 }
             }
         }
 
-        private void OnHarm(CCreature hitObj)
-        {
-            // 获取伤害值，作用于目标
-            int val = m_skillInfo.distance;
-            hitObj.AddPropNum(eCreatureProp.CurHp, - 100 * 1000);
-            hitObj.UpdateHeadHp();
-            Debug.Log("=="+hitObj.GetPropNum(eCreatureProp.CurHp));
-
-            OnHitHUD(GetCaster(), hitObj, -100);
-        }
 
         public override void Destory()
         {

@@ -18,6 +18,8 @@ namespace Roma
 		launchTime,
 		hitTime,
 		flySpeed,
+		ad,
+		pd,
 	}
 
     // 指示器类型 1.自己 2.目标 3.方向 4.位置
@@ -100,6 +102,8 @@ namespace Roma
 		// 暂时无用，近战 AOE都用launchTime作为hit时间
 		public int  hitTime;
 		public int flySpeed;
+		public int ad;
+		public int pd;
 	}
 
 	public class SkillCsv : CsvExWrapper
@@ -127,6 +131,8 @@ namespace Roma
 				data.launchTime = m_csv.GetIntData(i, (int)eSkillCsv.launchTime);
 				data.hitTime = m_csv.GetIntData(i, (int)eSkillCsv.hitTime);
 				data.flySpeed = m_csv.GetIntData(i, (int)eSkillCsv.flySpeed);
+				data.ad = m_csv.GetIntData(i, (int)eSkillCsv.ad);
+				data.pd = m_csv.GetIntData(i, (int)eSkillCsv.pd);
 				m_dicData.Add(data.id, data);
 			}
 		}

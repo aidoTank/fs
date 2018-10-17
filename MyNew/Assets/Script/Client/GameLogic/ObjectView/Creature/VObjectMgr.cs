@@ -30,7 +30,7 @@ namespace Roma
 
         private static int m_uid;
 
-        public static VObject Create(eVOjectType type)
+        public static VObject  Create(eVOjectType type)
         {
             VObject obj = null;
             switch (type)
@@ -51,7 +51,8 @@ namespace Roma
                     obj = new VSkillBase();
                 break;
             }
-            Add(m_uid ++, obj);
+            obj.m_id = m_uid ++;
+            Add(obj.m_id, obj);
             return obj;
         }
 

@@ -8,6 +8,7 @@ namespace Roma
 		Name,
 		icon,
 		ModelResId,
+		headHeight,
 
 		force,
 		agility,
@@ -15,7 +16,7 @@ namespace Roma
 		atk,
 		armor,
 		moveSpeed,
-		skill0,
+		dieDelay,
 	}
 
 	public class PlayerCsvData
@@ -39,7 +40,7 @@ namespace Roma
 		/// 模型资源id
 		/// </summary>
 		public int ModelResId;
-
+		public int headHeight;
 
 		/// <summary>
 		/// 力量
@@ -68,10 +69,8 @@ namespace Roma
 		/// </summary>
 		public int moveSpeed;
 
-		/// <summary>
-		/// 普攻技能
-		/// </summary>
-		public int skill0;
+	
+		public int dieDelay;
 
 	}
 
@@ -91,13 +90,15 @@ namespace Roma
 				data.Name = m_csv.GetData(i, (int)ePlayerCsv.Name);
 				data.icon = m_csv.GetIntData(i, (int)ePlayerCsv.icon);
 				data.ModelResId = m_csv.GetIntData(i, (int)ePlayerCsv.ModelResId);
+				data.headHeight = m_csv.GetIntData(i, (int)ePlayerCsv.headHeight);
+
 				data.force = m_csv.GetIntData(i, (int)ePlayerCsv.force);
 				data.agility = m_csv.GetIntData(i, (int)ePlayerCsv.agility);
 				data.brain = m_csv.GetIntData(i, (int)ePlayerCsv.brain);
 				data.atk = m_csv.GetIntData(i, (int)ePlayerCsv.atk);
 				data.armor = m_csv.GetIntData(i, (int)ePlayerCsv.armor);
 				data.moveSpeed = m_csv.GetIntData(i, (int)ePlayerCsv.moveSpeed);
-				data.skill0 = m_csv.GetIntData(i, (int)ePlayerCsv.skill0);
+				data.dieDelay = m_csv.GetIntData(i, (int)ePlayerCsv.dieDelay);
 				m_dicData.Add(data.Id, data);
 			}
 		}

@@ -53,7 +53,7 @@ namespace Roma
                         // 播放特效
                         int effectId = m_hitData.effectId;
                         string bindPoint = m_hitData.bindPoint;
-                        CEffectMgr.Create(effectId, player.m_vCreature.m_hid, bindPoint);
+                        CEffectMgr.Create(effectId, player.m_vCreature.GetEnt().m_hid, bindPoint);
                     }
                     else // 子弹自爆
                     {

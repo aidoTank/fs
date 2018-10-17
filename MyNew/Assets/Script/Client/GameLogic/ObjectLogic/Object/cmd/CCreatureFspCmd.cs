@@ -13,8 +13,8 @@ namespace Roma
         eFspStopMove,       // 停止移动
         eFspRotation,       // 转向
         eFspSendSkill,      // 技能 逻辑，表现层公用
-        eFspCancelSkill,    //取消技能
-
+        eFspCancelSkill,    // 取消技能
+        
 
         eSkillCreate,
         eSkillHit,

@@ -34,6 +34,9 @@ namespace Roma
             FspNetRunTime.Inst = new FspNetRunTime();
             FspNetRunTime.Inst.Init();
 
+            CFrameTimeMgr.Inst = new CFrameTimeMgr();
+
+
             CreatureProp.Init();
         }
         /// <summary>

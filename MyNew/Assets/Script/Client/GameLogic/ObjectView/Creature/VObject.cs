@@ -12,17 +12,19 @@ namespace Roma
         public int m_resId;
         public Vector3 m_pos;
         public Vector3 m_dir;  // 方向向量
+        public int m_headHeight;
     }
 
     public partial class VObject
     {
         // 人物和技能 共用实体对象创建，移动同步，销毁
-        public int m_hid;
+        public int m_id;
         private BoneEntity m_ent;
         private MtBaseMoveInfo m_moveInfo = new MtBaseMoveInfo();
         public bool m_bMoveing;
 
 
+        private sVOjectBaseInfo m_baseInfo;
         public bool m_bMaster;
         public CmdFspEnum m_state;
         public CThingHead m_head;
@@ -40,12 +42,13 @@ namespace Roma
         {
             m_head = new CThingHead("1111");
 
+            m_baseInfo = baseInfo;
             EntityBaseInfo info = new EntityBaseInfo();
             info.m_resID = baseInfo.m_resId;
             info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
             info.m_vPos = baseInfo.m_pos;
             info.m_vRotate = Quaternion.LookRotation(baseInfo.m_dir).eulerAngles;
-            m_hid = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, info, (ent)=> 
+            int hid = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, info, (ent)=> 
             {
                 if(m_bMaster)
                 {
@@ -53,7 +56,7 @@ namespace Roma
                 }
                 PushCommand(new CmdFspStopMove());
             });
-            m_ent = (BoneEntity)EntityManager.Inst.GetEnity(m_hid);
+            m_ent = (BoneEntity)EntityManager.Inst.GetEnity(hid);
         }
 
         public BoneEntity GetEnt()
@@ -146,9 +149,9 @@ namespace Roma
                 return;
             if(m_head != null)
             {
-                m_head.UpdatePos(m_ent.GetPos() + Vector3.up * 4f);
+                m_head.UpdatePos(m_ent.GetPos() + Vector3.up * m_baseInfo.m_headHeight * 0.001f);
             }
-            if(m_bMoveing) 
+            if(m_bMoveing)
             {
                 Entity ent = m_ent as Entity;
                 _UpdateMove(time, fdTime, ref ent, m_moveInfo);
@@ -158,6 +161,11 @@ namespace Roma
 
         public virtual void Destory()
         {
+            if(m_head != null)
+            {
+                m_head.RemoveHead();
+                m_head = null;
+            }
             if(m_ent != null)
             {
                 EntityManager.Inst.RemoveEntity(m_ent.m_hid, true);

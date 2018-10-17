@@ -50,6 +50,11 @@ namespace Roma
             }
         }
 
+        public CCreature GetCaster()
+        {
+            return CPlayerMgr.Get(m_curSkillCmd.m_casterUid);
+        }
+
         /// <summary>
         /// 弹道起飞,近战，AOE受击
         /// </summary>
@@ -60,10 +65,19 @@ namespace Roma
 
         public void OnHit(CCreature creature)
         {
-            CmdSkillHit cmd = new CmdSkillHit();
-            cmd.bPlayer = true;
-            cmd.uid = (int)creature.GetUid();
-            m_vSkill.PushCommand(cmd);
+            int val = (m_skillInfo.ad + m_skillInfo.pd);
+            creature.AddPropNum(eCreatureProp.CurHp, - val);
+            creature.UpdateHeadHp();
+            OnHitHUD(GetCaster(), creature, - (int)(val * 0.001f));
+
+            // 没挂才播放受击动作
+            if(creature.GetPropNum(eCreatureProp.CurHp) > 0)
+            {
+                CmdSkillHit cmd = new CmdSkillHit();
+                cmd.bPlayer = true;
+                cmd.uid = (int)creature.GetUid();
+                m_vSkill.PushCommand(cmd);
+            }
         }
 
         public void OnHit(Vector2 pos)
@@ -74,10 +88,7 @@ namespace Roma
             m_vSkill.PushCommand(cmd);
         }
 
-        public CCreature GetCaster()
-        {
-            return CPlayerMgr.Get(m_curSkillCmd.m_casterUid);
-        }
+   
 
         public void OnHitHUD(CCreature caster, CCreature target, int hitVal)
         {

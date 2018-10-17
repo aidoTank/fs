@@ -39,13 +39,13 @@ namespace Roma
             {
                 if(m_curFrameIndex < m_clientNewFrameIndex)
                 {
-                        m_curFrameIndex++;
-                        //Debug.LogWarning("当前帧率：" + m_curFrameIndex + " max:" + m_clientNewFrameIndex);
-                        FspFrame frameMsg;
-                        if(m_dicFrame.TryGetValue(m_curFrameIndex, out frameMsg))
-                        {
-                            ExecuteFrame(m_curFrameIndex, frameMsg);
-                        }
+                    m_curFrameIndex++;
+                    //Debug.LogWarning("当前帧率：" + m_curFrameIndex + " max:" + m_clientNewFrameIndex);
+                    FspFrame frameMsg;
+                    if(m_dicFrame.TryGetValue(m_curFrameIndex, out frameMsg))
+                    {
+                        ExecuteFrame(m_curFrameIndex, frameMsg);
+                    }
                 }
                 speed--;
             }
@@ -113,6 +113,7 @@ namespace Roma
                 }
             }
             
+            CFrameTimeMgr.Inst.FixedUpdate();
             CPlayerMgr.ExecuteFrame(frameId);            // 场景帧心跳等
             CSkillMgr.ExecuteFrame(frameId);
         }
