@@ -76,6 +76,7 @@ namespace Roma
 
                 CFrameTimeMgr.Inst.RegisterEvent(m_csv.dieDelay, ()=>{
                     VObjectMgr.Remove(m_vCreature.m_id, true);
+                    CPlayerMgr.Remove(m_uId, true);
                 });
             }
         }

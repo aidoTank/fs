@@ -65,6 +65,10 @@ namespace Roma
 
         public void OnHit(CCreature creature)
         {
+            if(creature.IsDie())
+            {
+                return;
+            }
             int val = (m_skillInfo.ad + m_skillInfo.pd);
             creature.AddPropNum(eCreatureProp.CurHp, - val);
             creature.UpdateHeadHp();
