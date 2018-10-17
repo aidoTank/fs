@@ -116,6 +116,9 @@ namespace Roma
                     case 3:
                     m_head.SetHp(head.curHp, head.maxHp);
                     break;
+                    case 4:
+                    m_head.SetHud(head.hudText, head.hudType);
+                    break;
                 }
             }
             else if(cmd.GetCmdType() == CmdFspEnum.eLife)

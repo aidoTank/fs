@@ -45,6 +45,8 @@ namespace Roma
             hitObj.AddPropNum(eCreatureProp.CurHp, - 100 * 1000);
             hitObj.UpdateHeadHp();
             Debug.Log("=="+hitObj.GetPropNum(eCreatureProp.CurHp));
+
+            OnHitHUD(GetCaster(), hitObj, -100);
         }
 
         public override void Destory()

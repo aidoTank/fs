@@ -79,6 +79,26 @@ namespace Roma
             return CPlayerMgr.Get(m_curSkillCmd.m_casterUid);
         }
 
+        public void OnHitHUD(CCreature caster, CCreature target, int hitVal)
+        {
+            eHUDType type = eHUDType.NONE;
+
+            if(hitVal < 0)
+            {
+                type = eHUDType.FIGHT_HARM;
+            }
+            else
+            {
+                type = eHUDType.FIGHT_ADDBLOOD;
+            }
+
+            CmdUIHead cmd = new CmdUIHead();
+            cmd.type = 4;
+            cmd.hudType = type;
+            cmd.hudText = hitVal.ToString();
+            target.m_vCreature.PushCommand(cmd);
+        }
+
         public override void Destory()
         {
             if(m_vSkill != null)
