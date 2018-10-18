@@ -71,11 +71,5 @@ namespace Roma
             m_bJump = false;
         }
 
-        public override void Destory()
-        {
-
-        }
-
-
     }
 }

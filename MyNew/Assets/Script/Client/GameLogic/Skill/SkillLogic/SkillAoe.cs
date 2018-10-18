@@ -66,12 +66,5 @@ namespace Roma
             }
         }
 
-    
-        public override void Destory()
-        {
-
-        }
-
-
     }
 }

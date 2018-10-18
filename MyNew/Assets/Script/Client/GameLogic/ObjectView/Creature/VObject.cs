@@ -22,7 +22,7 @@ namespace Roma
         private BoneEntity m_ent;
         private MtBaseMoveInfo m_moveInfo = new MtBaseMoveInfo();
         public bool m_bMoveing;
-
+        public bool m_destroy;
 
         private sVOjectBaseInfo m_baseInfo;
         public bool m_bMaster;
@@ -161,6 +161,7 @@ namespace Roma
 
         public virtual void Destory()
         {
+            m_destroy = true;
             if(m_head != null)
             {
                 m_head.RemoveHead();

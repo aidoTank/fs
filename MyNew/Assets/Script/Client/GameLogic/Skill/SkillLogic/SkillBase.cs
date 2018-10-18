@@ -4,7 +4,8 @@ using System.Collections.Generic;
 namespace Roma
 {
     /// <summary>
-    /// 技能的逻辑层
+    /// 技能的创建由管理器创建
+    /// 销毁由自身死亡状态时，自己调用管理器销毁
     /// </summary>
     public partial class SkillBase : CCreature
     {
@@ -33,6 +34,11 @@ namespace Roma
                     m_bLaunch = true;
                     // 同步施法者方向
                     GetCaster().SetDir(m_curSkillCmd.m_dir);
+
+                    // 注册最长生命周期
+                    CFrameTimeMgr.Inst.RegisterEvent(m_skillInfo.lifeTime, ()=>{
+                        Destory();
+                    });
                     break;
             }
         }        
@@ -92,8 +98,6 @@ namespace Roma
             m_vSkill.PushCommand(cmd);
         }
 
-   
-
         public void OnHitHUD(CCreature caster, CCreature target, int hitVal)
         {
             eHUDType type = eHUDType.NONE;
@@ -116,13 +120,12 @@ namespace Roma
 
         public override void Destory()
         {
+            m_destroy = true;
+            // 销毁表现层
             if(m_vSkill != null)
             {
                 m_vSkill.Destory();
-                m_vSkill = null;
             }
- 
         }
-
     }
 }

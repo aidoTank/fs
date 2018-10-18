@@ -71,14 +71,10 @@ namespace Roma
             m_dicPlayer[uid] = creature;
         }
 
-        public static void Remove(int uid, bool destroy)
+        public static void Remove(int uid)
         {
             if (m_dicPlayer.ContainsKey(uid))
             {
-                if (destroy)
-                {
-                    m_dicPlayer[uid].Destory();
-                }
                 m_dicPlayer.Remove(uid);
             }
         }
@@ -88,9 +84,20 @@ namespace Roma
             foreach(KeyValuePair<int, VObject> item in m_dicPlayer)
             {
                 item.Value.Update(time, fdTime);
+                if(item.Value.m_destroy)
+                {
+                    m_listDestroy.Add(item.Key);
+                }
             }
+            for(int i = 0; i < m_listDestroy.Count; i ++)
+            {
+                Remove(m_listDestroy[i]);
+            }
+            m_listDestroy.Clear();
+            Debug.Log("voject mgr:" + m_dicPlayer.Count);
         }
 
         public static Dictionary<int, VObject> m_dicPlayer = new Dictionary<int, VObject>();
+        public static List<int> m_listDestroy = new List<int>();
     }
 }

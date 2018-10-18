@@ -20,6 +20,7 @@ namespace Roma
 		flySpeed,
 		ad,
 		pd,
+		lifeTime,
 	}
 
     // 指示器类型 1.自己 2.目标 3.方向 4.位置
@@ -104,6 +105,7 @@ namespace Roma
 		public int flySpeed;
 		public int ad;
 		public int pd;
+		public int lifeTime;
 	}
 
 	public class SkillCsv : CsvExWrapper
@@ -133,6 +135,7 @@ namespace Roma
 				data.flySpeed = m_csv.GetIntData(i, (int)eSkillCsv.flySpeed);
 				data.ad = m_csv.GetIntData(i, (int)eSkillCsv.ad);
 				data.pd = m_csv.GetIntData(i, (int)eSkillCsv.pd);
+				data.lifeTime = m_csv.GetIntData(i, (int)eSkillCsv.lifeTime);
 				m_dicData.Add(data.id, data);
 			}
 		}

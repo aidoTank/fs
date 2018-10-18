@@ -17,7 +17,8 @@ namespace Roma
     {
         protected long m_uId;
         protected EThingType m_type;
-
+        // 所有逻辑对象的销毁标识，用于下一帧销毁
+        public bool m_destroy;
         public CThing(long id)
         {
             m_uId = id;

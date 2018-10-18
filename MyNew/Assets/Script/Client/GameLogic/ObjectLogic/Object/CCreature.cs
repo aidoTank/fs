@@ -7,7 +7,10 @@ using UnityEngine;
 
 namespace Roma
 {
-   
+    /// <summary>
+    /// 角色的创建由管理器创建
+    /// 销毁由自身死亡状态时，自己调用管理器销毁
+    /// </summary>
     public partial class CCreature : CThing
     {
         public CCreature(long id)
@@ -75,8 +78,7 @@ namespace Roma
                 m_vCreature.PushCommand(life);
 
                 CFrameTimeMgr.Inst.RegisterEvent(m_csv.dieDelay, ()=>{
-                    VObjectMgr.Remove(m_vCreature.m_id, true);
-                    CPlayerMgr.Remove(m_uId, true);
+                    Destory();
                 });
             }
         }
@@ -176,6 +178,7 @@ namespace Roma
        
         public override void Destory()
         {
+            m_destroy = true;
             if(m_vCreature != null)
             {
                 m_vCreature.Destory();
