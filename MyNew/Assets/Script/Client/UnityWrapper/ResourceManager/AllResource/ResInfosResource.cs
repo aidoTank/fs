@@ -65,7 +65,7 @@ namespace Roma
             }
             else
             {
-                Debug.LogError("无法获取资源:" + nResID);
+                Debug.LogError("resinfo无法获取资源:" + nResID);
                 return null;
             }
         }

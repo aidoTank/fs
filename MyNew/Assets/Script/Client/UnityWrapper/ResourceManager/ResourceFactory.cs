@@ -35,7 +35,7 @@ namespace Roma
             ResInfo resInfo = ResInfosResource.GetResInfo(resID);
             if(null == resInfo || string.IsNullOrEmpty(resInfo.strUrl))
             {
-                Debug.LogError("无法获取资源:" + resID);
+                //Debug.LogError("无法获取资源:" + resID);
                 load(null);
                 return null;
             }

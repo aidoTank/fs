@@ -201,8 +201,6 @@ namespace Roma
             if (cur == max)
             {
                 OnLoadingEnd();
-                //ResourceFactory.Inst.LoadResource(20, (res)=> { });
-                ResourceFactory.Inst.LoadResource(21000, (res) => { });
             }
         }
 
