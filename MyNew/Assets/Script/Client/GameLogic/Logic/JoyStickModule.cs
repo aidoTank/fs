@@ -88,7 +88,7 @@ namespace Roma
 
         public override void UpdateUI(float time, float fdTime)
         {
-            if(m_master != null && m_skillChose != null)
+            if(m_master != null && m_skillChose != null && m_master.m_vCreature != null)
             {
                 m_skillChose.position = m_master.m_vCreature.GetEnt().GetPos() + Vector3.up * 0.01f;
             }

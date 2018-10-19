@@ -31,9 +31,13 @@ namespace Roma
             {
                 Debug.Log("开始连接服务器");
                 m_netState = NetState.Connecting;
+
+                IPAddress[]  address = Dns.GetHostAddresses(GlobleConfig.s_gameServerIP);
+
+
                 int port = 0;
-                int.TryParse("2234", out port);
-                IPEndPoint serverIP = new IPEndPoint(IPAddress.Parse(GlobleConfig.s_gameServerIP), port);
+                int.TryParse("47635", out port);
+                IPEndPoint serverIP = new IPEndPoint(address[0], port);
                 m_socket.BeginConnect(serverIP, ConnSucc, null);
                 dgeconnet = onconnect;
                 lastTickTime = Time.time;

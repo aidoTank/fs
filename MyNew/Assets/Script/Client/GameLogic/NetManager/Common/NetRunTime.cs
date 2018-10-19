@@ -35,9 +35,12 @@ namespace Roma
                 m_recv = new NetAsynRecv(m_socket);
                 m_send.Start();
 
+
+                IPAddress[]  address = Dns.GetHostAddresses(GlobleConfig.s_gameServerIP);
+
                 int port = 0;
                 int.TryParse(GlobleConfig.s_gameServerPort, out port);
-                IPEndPoint serverIP = new IPEndPoint(IPAddress.Parse(GlobleConfig.s_gameServerIP), port);
+                IPEndPoint serverIP = new IPEndPoint(address[0], port);
                 m_socket.BeginConnect(serverIP, ConnSucc, null);
 
                 dgeconnet = onconnect;
@@ -50,15 +53,24 @@ namespace Roma
         /// </summary>
         private void ConnSucc(IAsyncResult ar)
         {
-            Debug.Log("客户端本地：连接成功");
-            m_socket.EndConnect(ar);
-            m_netState = NetState.Connected;
-            if (dgeconnet != null)
+   
+            try
             {
-                dgeconnet();
-                dgeconnet = null;
+                m_socket.EndConnect(ar);
+                m_netState = NetState.Connected;
+                if (dgeconnet != null)
+                {
+                    dgeconnet();
+                    dgeconnet = null;
+                }
+                m_recv.Start();
             }
-            m_recv.Start();
+            catch(Exception e)
+            {
+                Debug.Log("e:"+e);
+return;
+            }
+         Debug.Log("客户端本地：连接成功");
         }
 
         /// <summary>
