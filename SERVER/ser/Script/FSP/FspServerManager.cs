@@ -124,7 +124,12 @@ namespace Roma
 
         public FspRoom GetRoom(int id)
         {
-            return m_listRoom[id];
+            FspRoom room;
+            if(m_listRoom.TryGetValue(id, out room))
+            {
+                return room;
+            }
+            return null;
         }
 
         public void RemoveRoom(int id)
