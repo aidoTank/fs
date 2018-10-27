@@ -39,7 +39,10 @@ namespace Roma
         public static eDownLoadType m_downLoadType = eDownLoadType.WWW;
 
         public static string s_gameServerIP = "";
-        public static string s_gameServerPort = "";
+        public static int s_gameServerPort;
+
+        public static string s_frameServerIP = "";
+        public static int s_frameServerPort = 6001;
 
         public static string s_fileServerIP = "";
         public static string s_fileServerPort = "";   //获取资源的端口

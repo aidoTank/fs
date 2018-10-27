@@ -46,7 +46,7 @@ namespace Roma
         public static Client m_client;
 
         public string s_gameServerIP;
-        public string s_gameServerPort;
+        public int s_gameServerPort;
 
         public string s_fileServerIP;
         public string s_fileServerPort;

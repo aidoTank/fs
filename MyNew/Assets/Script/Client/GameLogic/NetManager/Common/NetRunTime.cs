@@ -1,161 +1,210 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
+using System;
 
 namespace Roma
 {
     public class NetRunTime : Singleton
     {
-        public delegate void OnConnect();
-        public OnConnect dgeconnet; 
         public NetRunTime():base(true)
         {
 
         }
-
-        public override void Init()
+        
+        public void Conn(string ip, int port, Action coonCb)
         {
+            Debug.Log("new start Connect");
+            Stop();
+            m_netState = NetState.Connecting;
+            m_recvHeartBeatTime = 0;
 
-        }
+            m_ip = ip;
+            m_port = port;
+            m_connectedCb = coonCb;
 
-        public void ConServer(OnConnect onconnect)
-        {
-            if (m_netState == NetState.Disconnected)
+            IPAddress ipAddres = null;
+            if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
             {
-                Stop();
-                Debug.Log("开始连接服务器");
-                m_netState = NetState.Connecting;
+                Debug.Log("Connect wifi");
+                IPAddress[] address = null;
+                try
+                {
+                    address = Dns.GetHostAddresses(m_ip);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Dns解析异常, ip:" + m_ip + " port:" + m_port + " " + e);
+                    m_netState = NetState.ConnFail;
+                    return;
+                }
 
-                m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                m_send = new NetAsynSend(m_socket);
-                m_recv = new NetAsynRecv(m_socket);
-                m_send.Start();
-
-
-                IPAddress[]  address = Dns.GetHostAddresses(GlobleConfig.s_gameServerIP);
-
-                int port = 0;
-                int.TryParse(GlobleConfig.s_gameServerPort, out port);
-                IPEndPoint serverIP = new IPEndPoint(address[0], port);
-                m_socket.BeginConnect(serverIP, ConnSucc, null);
-
-                dgeconnet = onconnect;
-                lastTickTime = Time.time;
+                if (address[0].AddressFamily == AddressFamily.InterNetworkV6)
+                {
+                    Debug.Log("Connect InterNetworkV6");
+                    m_socketClient = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+                }
+                else
+                {
+                    Debug.Log("Connect InterNetworkV4");
+                    m_socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                }
+                ipAddres = address[0];
             }
+            else
+            {
+                Debug.Log("Connect 4g, 源 ip:" + m_ip);
+                if (m_ip.Contains(".com"))
+                {
+                    DnsCsv csv = CsvManager.Inst.GetCsv<DnsCsv>((int)eAllCSV.eAC_Dns);
+                    DnsCsvData data = csv.GetData(m_ip);
+                    m_ip = data.ip;
+                    Debug.Log("Connect 4g, 最终 ip：" + m_ip);
+                }
+
+                m_socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPAddress.TryParse(m_ip, out ipAddres);
+            }
+
+            if (ipAddres == null)
+            {
+                Debug.Log("ipAddres is null, ip:" + m_ip + " port:" + m_port);
+                m_netState = NetState.ConnFail;
+                return;
+            }
+
+            m_nSend = new NetAsynSend(m_socketClient);
+            m_nRecv = new NetAsynRecv(m_socketClient);
+            m_nSend.Start();
+            m_nRecv.Start();
+
+            IPEndPoint serverIP = new IPEndPoint(ipAddres, m_port);
+            m_socketClient.BeginConnect(serverIP, ConnSucc, null);
         }
 
-        /// <summary>
-        /// 连接成功
-        /// </summary>
         private void ConnSucc(IAsyncResult ar)
         {
-   
+            Debug.Log("大厅网络-连接回调: ip: " + m_ip + " port: " + m_port);
             try
             {
-                m_socket.EndConnect(ar);
-                m_netState = NetState.Connected;
-                if (dgeconnet != null)
-                {
-                    dgeconnet();
-                    dgeconnet = null;
-                }
-                m_recv.Start();
+                m_socketClient.EndConnect(ar);
+                m_netState = NetState.ConnSucc;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Debug.Log("e:"+e);
-return;
+                Debug.Log("大厅网络-客户端本地，连接异常, ip:" + m_ip + " port:" + m_port + " " + e);
+                m_netState = NetState.ConnFail;
+                return;
             }
-         Debug.Log("客户端本地：连接成功");
+            Debug.Log("大厅网络-连接成功: ip: " + m_ip + " port: " + m_port);
         }
 
-        /// <summary>
-        /// 连接失败,并弹出重连对话框
-        /// </summary>
-        public void ConFail()
-        {
-            // 断开网络会走这里。
-            //Debug.Log("连接失败！！！！！！！！！！！！！！！！！！" + GlobleConfig.m_gameState);
-            m_netState = NetState.Disconnected;
-
-        }
-
-        public override void Destroy()
-        {
-            Stop();
-        }
-
-        /// <summary>
-        /// 断开连接
-        /// </summary>
         public void Stop()
         {
-            if (m_socket != null)
+            if (m_nSend != null)
             {
-                m_send.Stop();
-                m_recv.Stop();
-                m_socket.Close();
-                m_socket = null;
+                m_nSend.Stop();
+                m_nSend = null;
             }
-            m_netState = NetState.Disconnected;
+            if (m_nRecv != null)
+            {
+                m_nRecv.Stop();
+                m_nRecv = null;
+            }
+            if (m_socketClient != null)
+            {
+                m_socketClient.Close();
+                m_socketClient = null;
+            }
+        }
+
+        public void FixedUpdate()
+        {
+            if (m_netState == NetState.Connecting || m_netState == NetState.ConnSucc)
+            {
+                _UpdateCheckHeartBeat();
+            }
+            if (m_netState == NetState.ConnSucc)
+            {
+                if (m_connectedCb != null)
+                {
+                    m_connectedCb();
+                    m_connectedCb = null;
+                }
+                _UpdateReceive();
+                _UpdateSend();
+                _SendHeartBeat();
+                _UpdateOffline();
+            }
+            if(m_netState == NetState.ConnFail)
+            {
+                //Stop();
+                // 连接失败弹出对话框
+                // LoginModule login = (LoginModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelLogin);
+                // if (!login.AutoConnect())
+                // {
+                //     login.OpenReConnDialog();
+                // }
+            }
+        }
+
+        public  NetworkReachability m_netType;
+		
+		public bool IsConnected()
+        {
+            return m_netState == NetState.ConnSucc;
+        }
+		
+        public void Lua_SendMessage(int luaId, int len, LusuoStream stream)
+        {
+            // LuaNetMessage_Send msg = LuaNetMessage_Send.Create(luaId, len, stream);
+            // SendMessage(msg);
         }
 
         public void SendMessage(NetMessage msg)
         {
-            // 如果没连接不处理
-            if (m_netState != NetState.Connected)
+            if (!IsConnected())
             {
-                Debug.Log("网络没连接，发送失败。ID:" + msg.msgID);
                 return;
             }
-            m_send.SendMessage(msg);
+            m_nSend.SendMessage(msg);
         }
 
-        //public void SendMessage(LusuoStream stream)
-        //{
-        //    // 如果没连接不处理
-        //    if (m_netState != NetState.Connected)
-        //    {
-        //        Debug.Log("网络没连接，发送失败:" + stream);
-        //        return;
-        //    }
-        //    m_send.SendMessage(stream);
-        //}
-
-        public override void Update(float fTime, float fDTime)
+        private void _UpdateSend()
         {
-            UpdateState();
-            if(m_send != null)
-            {
-                m_send.Update();
-            }
-            if(m_recv != null)
-            {
-                m_recv.Update();
-            }
-            _HeartBeat();
+            m_nSend.Update();
         }
 
-        // 状态改变
-        public void UpdateState()
+        private void _UpdateReceive() 
+		{
+            m_nRecv.Update();
+		}
+
+        private void _SendHeartBeat()
         {
-         
+
         }
 
-        public void _HeartBeat()
+        public void RecvHeartBeatTime()
         {
-            //心跳
-            if (GetState() == NetState.Connected)
+            m_recvHeartBeatTime = 0;
+        }
+
+        public void _UpdateCheckHeartBeat()
+        {
+
+        }
+
+        private void _UpdateOffline()
+        {
+            m_offlineCurTime += FSPParam.clientFrameMsTime;
+            if (m_offlineCurTime > m_offlineMaxTime)
             {
-                if (Time.time - lastTickTime > heartBeatTime)
+                m_offlineCurTime = 0;
+                if (m_socketClient==null || !m_socketClient.Connected)
                 {
-                    MsgHeartBeat hb = (MsgHeartBeat)NetManager.Inst.GetMessage(eNetMessageID.MsgHeartBeat);
-                    //SendMessage(hb);
-                    lastTickTime = Time.time;
+                    Debug.Log("大厅网络-本地通过m_socketClient.Connected检测离线，转为ConnFail");
+                    m_netState = NetState.ConnFail;
                 }
             }
         }
@@ -166,24 +215,35 @@ return;
             return m_netState;
         }
 
-        static new public NetRunTime Inst = null;
+        public void SetState(NetState state)
+        {
+              m_netState = state;
+        }
 
+        public static NetRunTime Inst;
+
+        private string m_ip;
+        private int m_port;
+        private Socket m_socketClient;
+        private NetAsynSend m_nSend;
+        private NetAsynRecv m_nRecv;
+        private Action m_connectedCb;
         public enum NetState
         {
-            Disconnected,
+            Disconnected,   // 未连接，只表示游戏开始没启动连接的状态
             Connecting,
-            Connected,
+            ConnSucc,
+            ConnFail,
             Queue,
         }
-        // 当前网络状态 //
-        protected NetState m_netState = NetState.Disconnected;
+        private NetState m_netState = NetState.Disconnected;
 
-        protected Socket m_socket = null;
+        private float m_hbCurTime;
+        private float m_hbMaxTime = 2000;
 
-        private NetAsynSend m_send = null;
-        private NetAsynRecv m_recv = null;
-
-        private float lastTickTime;
-        private float heartBeatTime = 8f;
+        //private CLGS_CorrectTime m_clgsHeartBeatMsg;
+        private float m_offlineCurTime;
+        private float m_offlineMaxTime = 1000;
+        private int m_recvHeartBeatTime = 0;
     }
 }

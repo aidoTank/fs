@@ -38,7 +38,7 @@ namespace Roma
         {
             if(NetRunTime.Inst.GetState() == NetRunTime.NetState.Disconnected)
             {
-                NetRunTime.Inst.ConServer(() =>
+                NetRunTime.Inst.Conn(GlobleConfig.s_gameServerIP, GlobleConfig.s_gameServerPort, () =>
                 {
                     OnSendLoginMsg();
                 });

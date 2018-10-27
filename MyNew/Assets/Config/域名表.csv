@@ -1,0 +1,6 @@
+域名,ip地址,备注
+www,ip,bz
+string,string,string
+s1-xzsw.ukergames.com,134.175.34.138,正式服 登陆服
+r1-xzsw.ukergames.com,134.175.35.78,正式服 战斗服
+test-xzsw.ukergames.com,193.112.181.61,提审服

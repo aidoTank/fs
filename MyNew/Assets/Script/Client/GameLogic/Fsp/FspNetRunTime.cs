@@ -22,7 +22,6 @@ namespace Roma
             m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             m_send = new NetAsynSend(m_socket);
             m_recv = new NetAsynRecv(m_socket);
-            m_send.Start();
         }
 
         public void ConServer(OnConnect onconnect)
@@ -57,6 +56,7 @@ namespace Roma
                 dgeconnet();
                 dgeconnet = null;
             }
+            m_send.Start();
             m_recv.Start();
         }
 
