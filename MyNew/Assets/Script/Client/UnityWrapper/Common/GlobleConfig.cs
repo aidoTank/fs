@@ -42,7 +42,7 @@ namespace Roma
         public static int s_gameServerPort;
 
         public static string s_frameServerIP = "";
-        public static int s_frameServerPort = 6001;
+        public static int s_frameServerPort = 2234;
 
         public static string s_fileServerIP = "";
         public static string s_fileServerPort = "";   //获取资源的端口

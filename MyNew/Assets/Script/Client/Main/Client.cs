@@ -48,6 +48,9 @@ namespace Roma
         public string s_gameServerIP;
         public int s_gameServerPort;
 
+        public string s_frameServerIp;
+        public int s_frameServerPort;
+
         public string s_fileServerIP;
         public string s_fileServerPort;
 
@@ -139,6 +142,9 @@ namespace Roma
         {
             GlobleConfig.s_gameServerIP = s_gameServerIP;
             GlobleConfig.s_gameServerPort = s_gameServerPort;
+            GlobleConfig.s_frameServerIP = s_frameServerIp;
+            GlobleConfig.s_frameServerPort = s_frameServerPort;
+
             GlobleConfig.s_fileServerIP = s_fileServerIP;
             GlobleConfig.s_fileServerPort = s_fileServerPort;
             GlobleConfig.s_serverListIP = s_serverListIP;

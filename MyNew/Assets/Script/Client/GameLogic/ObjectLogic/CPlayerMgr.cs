@@ -77,7 +77,7 @@ namespace Roma
                 Remove(m_listDestroy[i]);
             }
             m_listDestroy.Clear();
-            Debug.Log("player mgr:" + m_dicPlayer.Count);
+            //Debug.Log("player mgr:" + m_dicPlayer.Count);
         }
 
         public static Dictionary<long, CPlayer> m_dicPlayer = new Dictionary<long, CPlayer>();

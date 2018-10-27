@@ -90,7 +90,7 @@ namespace Roma
                 Remove(m_listDestroy[i]);
             }
             m_listDestroy.Clear();
-            Debug.Log("skill mgr:" + m_dicPlayer.Count);
+            //Debug.Log("skill mgr:" + m_dicPlayer.Count);
         }
 
         public static Dictionary<long, SkillBase> m_dicPlayer = new Dictionary<long, SkillBase>();

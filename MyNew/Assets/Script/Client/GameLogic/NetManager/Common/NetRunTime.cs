@@ -11,7 +11,7 @@ namespace Roma
         {
 
         }
-        
+
         public void Conn(string ip, int port, Action coonCb)
         {
             Debug.Log("new start Connect");
@@ -118,7 +118,7 @@ namespace Roma
             }
         }
 
-        public void FixedUpdate()
+        public override void Update(float fTime, float fDTime)
         {
             if (m_netState == NetState.Connecting || m_netState == NetState.ConnSucc)
             {

@@ -27,7 +27,7 @@ namespace Roma
 
             FspNetRunTime.Inst = new FspNetRunTime();
             FspNetRunTime.Inst.Init();
-            FspNetRunTime.Inst.ConServer(() =>
+            FspNetRunTime.Inst.Conn(GlobleConfig.s_frameServerIP, GlobleConfig.s_frameServerPort, () =>
             {
                 Debug.Log("连接帧服务器成功，发送创建房间");
             });

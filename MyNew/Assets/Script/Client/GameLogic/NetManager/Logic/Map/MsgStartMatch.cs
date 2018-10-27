@@ -34,7 +34,7 @@ public class MsgStartMatch : NetMessage
             Debug.Log("连接帧服务器:" + data.serverPort);
             FspNetRunTime.Inst = new FspNetRunTime();
             FspNetRunTime.Inst.Init();
-            FspNetRunTime.Inst.ConServer(() => {
+            FspNetRunTime.Inst.Conn(GlobleConfig.s_gameServerIP, GlobleConfig.s_gameServerPort, () => {
                 Debug.Log("连接帧服务器成功，发送加入房间");
                 FspMsgJoinRoom joinRoom = (FspMsgJoinRoom)NetManager.Inst.GetMessage(eNetMessageID.FspMsgJoinRoom);
                 //joinRoom.m_roomId = int.Parse(EGame.m_openid);

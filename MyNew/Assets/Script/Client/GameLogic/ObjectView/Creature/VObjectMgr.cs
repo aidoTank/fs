@@ -94,7 +94,7 @@ namespace Roma
                 Remove(m_listDestroy[i]);
             }
             m_listDestroy.Clear();
-            Debug.Log("voject mgr:" + m_dicPlayer.Count);
+            //Debug.Log("voject mgr:" + m_dicPlayer.Count);
         }
 
         public static Dictionary<int, VObject> m_dicPlayer = new Dictionary<int, VObject>();

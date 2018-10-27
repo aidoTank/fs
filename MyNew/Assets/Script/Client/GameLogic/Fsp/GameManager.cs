@@ -32,7 +32,6 @@ namespace Roma
         public override void Init()
         {
             FspNetRunTime.Inst = new FspNetRunTime();
-            FspNetRunTime.Inst.Init();
 
             CFrameTimeMgr.Inst = new CFrameTimeMgr();
 
