@@ -42,11 +42,13 @@ namespace Roma
                 if(Vector2.Distance(m_startPos, m_tempPos) >= m_skillInfo.distance)
                 {
                     OnEndJump();
+                    return;
                 }
 
                 GetCaster().SetPos(m_tempPos);
                 GetCaster().m_vCreature.SetPos(m_tempPos.ToVector3());
                 GetCaster().m_vCreature.SetDir(moveDir.ToVector3());
+                GetCaster().m_vCreature.SetSpeed(20000 * 0.001f);
                 GetCaster().m_vCreature.m_bMoveing = true;
             }
         }
@@ -68,6 +70,7 @@ namespace Roma
         private void OnEndJump()
         {
             GetCaster().m_vCreature.PushCommand(new CmdFspStopMove());
+            GetCaster().m_vCreature.m_bMoveing = false;
             m_bJump = false;
         }
 

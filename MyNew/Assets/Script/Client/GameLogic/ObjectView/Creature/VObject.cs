@@ -72,8 +72,13 @@ namespace Roma
         public virtual void SetDir(Vector3 dir)
         {
             m_moveInfo.m_dir = dir;
+            StartRotate(dir, 0.1f); // 写法待优化
         }
-        
+
+        public virtual void SetSpeed(float speed)
+        {
+            m_moveInfo.m_speed = speed;
+        }
 
         public virtual void PushCommand(IFspCmdType cmd)
         {
@@ -155,7 +160,8 @@ namespace Roma
             {
                 Entity ent = m_ent as Entity;
                 _UpdateMove(time, fdTime, ref ent, m_moveInfo);
-                GetEnt().SetRot(Quaternion.LookRotation(m_moveInfo.m_dir));
+                _UpdateRotate(time, fdTime);
+                //GetEnt().SetRot(Quaternion.LookRotation(m_moveInfo.m_dir));
             }
         }
 
@@ -174,7 +180,17 @@ namespace Roma
             }
         }
 
-
+        /// <summary>
+        /// 1.距离差值 小于 逻辑每帧偏移量，最终位置为 表现层位置（也理解为，当按照表现层去平滑移动时，如果前后的误差偏移足够小，就继续按照表现层计算）
+        /// 2.距离差值 小于 3倍的每帧偏移量，
+        /// 3.距离差值 大于 3倍的每帧偏移量，直接取逻辑位置
+        /// （比如在切后台，按暂停键，再切回游戏时，因为逻辑层的加速播放导致每帧逻辑位置增加非常快，如果逻辑位置和表现位置差值大，此时直接让玩家跳到逻辑位置即可）
+        /// </summary>
+        /// <param name="fTime"></param>
+        /// <param name="fdTime"></param>
+        /// <param name="ent"></param>
+        /// <param name="moveInfo"></param>
+        /// <returns></returns>
         public Vector3 _UpdateMove(float fTime, float fdTime, ref Entity ent, MtBaseMoveInfo moveInfo)
         {
             // 表现层每帧增加距离
@@ -183,38 +199,39 @@ namespace Roma
             Vector3 logicPos = moveInfo.m_pos;
             Vector3 curPos = ent.GetPos();
             // 表现层模拟的新位置
-            Vector3 newPos = curPos + dir * dist;
+            Vector3 viewPos = curPos + dir * dist;
 
             Vector3 result = logicPos;
-            // 逻辑位置和表现层位置差值，距离
-            Vector3 offsetMove = newPos - logicPos;
-            float tempDis = offsetMove.magnitude;
+            // 逻辑位置和表现层位置差值向量
+            Vector3 offsetVec = viewPos - logicPos;
+            // 偏移向量的长度
+            float offsetVecLen = offsetVec.magnitude;
             // 最大偏移量， 这个应该是不对的
             float minOffset = moveInfo.m_speed * FSPParam.clientFrameScTime;
             float maxOffset = minOffset * 3;
-            if (tempDis < moveInfo.RepairFramesMin * minOffset)  // （每帧表现-逻辑）小于最小的每帧偏移量时，取渲染位置，这样才能保证每一帧移动的流畅
+            if (offsetVecLen < moveInfo.RepairFramesMin * minOffset)  // （每帧表现-逻辑）小于最小的每帧偏移量时，取渲染位置，这样才能保证每一帧移动的流畅
             {
-                result = newPos;
+                result = viewPos;
                 moveInfo.RepairFramesMin = 1;
                 moveInfo.FrameBlockIndex = GameManager.Inst.GetFspManager().GetCurFrameIndex();
                 //Debug.Log("1.渲染位置和逻辑位置差值小于最小帧偏移， 直接取渲染位置");
             }
-            else if (tempDis < maxOffset)   // （每帧表现-逻辑）大于每帧偏移量时，也需要平滑处理
+            else if (offsetVecLen < maxOffset)   // （每帧表现-逻辑）大于每帧偏移量时，也需要平滑处理
             {
                 //Debug.Log("2.渲染位置和逻辑位置差值小于最大帧偏移，进行插值逼近");
-                float adjustRatio = Mathf.Clamp(tempDis / maxOffset, 0.05f, 0.3f);
-                float dotValue = Vector3.Dot(offsetMove, dir);
+                float adjustRatio = Mathf.Clamp(offsetVecLen / maxOffset, 0.05f, 0.3f);
+                float dotValue = Vector3.Dot(offsetVec, dir);        // 计算方向是否相反
                 Vector3 estimPos = logicPos + dir * maxOffset;       // 逻辑估计的目标位置
                 Vector3 estimDir = (estimPos - curPos).normalized;   // 逻辑估计的方向
 
                 //Debug.Log("dotValue:" + dotValue);
                 //正1/4圆周区间，超前了，减速运动
-                if (dotValue > tempDis * 0.707f)
+                if (dotValue > offsetVecLen * 0.707f)    // 表现层超前
                 {
                     result = curPos + estimDir * dist * (1.0f - adjustRatio);
                 }
                 //负1/4圆周区间，调后了，加速运动
-                else if (dotValue < tempDis * (-0.707f))
+                else if (dotValue < offsetVecLen * (-0.707f))
                 {
                     result = curPos + estimDir * dist * (1.0f + adjustRatio);
                 }
@@ -231,7 +248,7 @@ namespace Roma
                 //卡住了暂时保持原位
                 if (GameManager.Inst.GetFspManager().GetCurFrameIndex()== moveInfo.FrameBlockIndex)
                 {
-                    //Debug.Log("4.差值非常大时，帧率不变时，取实体本身的位置");
+                    Debug.Log("4.差值非常大时，帧率不变时，取实体本身的位置");
                     result = curPos;
                 }
                 else

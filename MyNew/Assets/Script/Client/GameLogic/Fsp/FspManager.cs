@@ -19,6 +19,7 @@ namespace Roma
         /// </summary>
         private int m_clientNewFrameIndex;
 
+        public bool m_bStartCtl;
         public void Init()
         {
             Time.fixedDeltaTime = FSPParam.clientFrameScTime;
@@ -34,7 +35,11 @@ namespace Roma
 
         public void FixedUpdate()
         {
+            if(!m_bStartCtl)
+                return;
+                
             int speed = m_frameCtrl.GetFrameSpeed(m_curFrameIndex);
+            //Debug.Log("speed:"+speed);
             while(speed > 0)
             {
                 if(m_curFrameIndex < m_clientNewFrameIndex)

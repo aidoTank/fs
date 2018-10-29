@@ -110,7 +110,7 @@ namespace Roma
                 {
                     Debug.logger.logEnabled = m_client.m_bDebug;
                     Application.runInBackground = true;
-                    QualitySettings.vSyncCount = 0;
+                    QualitySettings.vSyncCount = 1;
                     Application.targetFrameRate = 120;
                 }
                 else if (Application.platform == RuntimePlatform.Android)

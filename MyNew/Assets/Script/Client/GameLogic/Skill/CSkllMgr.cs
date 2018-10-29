@@ -15,19 +15,6 @@ namespace Roma
 
     public class CSkillMgr
     {
-        // public static SkillBase Create(long uid, int skillId)
-        // {
-        //     if (m_dicPlayer.ContainsKey(uid))
-        //     {
-        //         return m_dicPlayer[uid];
-        //     }
-
-        //     SkillBase player = new SkillBase(uid, skillId);
-        //     Add(uid, player);
-
-        //     return player;
-        // }
-
         private static int m_uid;
 
         public static SkillBase Create(eCSkillType type, VSkillBase vSkill)

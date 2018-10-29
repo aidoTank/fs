@@ -20,6 +20,7 @@ namespace Roma
     public class FSPParam
     {
         public const int clientFrameInterval = 30;        //客户端帧率
+        
         public const float clientFrameScTime = 0.032f;        //客户端帧率时间(秒)
         //public const long clientFrameScLongTime = (long)((double)clientFrameScTime * FixedMath.One);        //客户端帧率时间(秒)
         public const int clientFrameMsTime = 32;        //客户端帧率时间(毫秒)
@@ -29,6 +30,7 @@ namespace Roma
         public const int defaultSpeed = 1;  //默认的数量
         public const int frameBufferSize = 0; //需要缓存的帧数
         public const bool enableAutoBuffer = true;
+
         public const int maxFrameId = 1800; //最大的帧率数
         public const bool useLocal = false;  //是否使用本地数据
     }

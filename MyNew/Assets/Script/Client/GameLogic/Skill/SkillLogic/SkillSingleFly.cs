@@ -24,6 +24,7 @@ namespace Roma
                 Vector3 pos = new Vector3(m_curPos.x, 1, m_curPos.y);
                 m_vSkill.SetPos(pos);
                 m_vSkill.SetDir(m_curSkillCmd.m_dir.ToVector3());
+                m_vSkill.SetSpeed(m_skillInfo.flySpeed * 0.001f);
                 m_vSkill.m_bMoveing = true;
 
                 // 动态检测

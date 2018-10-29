@@ -27,6 +27,7 @@ public class FspMsgStartControl : NetMessage
         if (eno == 0)
         {
             Debug.Log("接受开始控制");
+            GameManager.Inst.GetFspManager().m_bStartCtl = true;
         }
     }
 }
