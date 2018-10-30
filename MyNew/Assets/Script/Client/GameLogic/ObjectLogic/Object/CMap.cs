@@ -24,28 +24,28 @@ namespace Roma
             // 地图
             SceneManager.Inst.LoadScene(m_mapId, null);
             // 障碍数据
-            // SceneBarrierCsv csv = CsvManager.Inst.GetCsv<SceneBarrierCsv>((int)eAllCSV.eAC_SceneBarrier);
-            // List<SceneBarrierCsvData> list = new List<SceneBarrierCsvData>();
-            // csv.GetData(ref list, m_mapId);
-            // Debug.Log("障碍数量：" + list.Count);
-            // for(int i = 0; i < list.Count; i ++)
-            // {
-            //     SceneBarrierCsvData data = list[i];
-            //     if(data.shapeType == 1)
-            //     {
-            //         float dir = data.vDir.y;
-            //         Vector2 scale = new Vector2(data.vScale.x, data.vScale.z);
-            //         OBB obb = new OBB(data.vPos.ToVector2(), scale, dir);
-            //         m_listBarrier.Add(obb);
-            //     }
-            //     else if(data.shapeType == 2)
-            //     {
-            //         Sphere obb = new Sphere();
-            //         obb.c = data.vPos.ToVector2();
-            //         obb.r = data.vScale.x * 0.5f;
-            //         m_listBarrier.Add(obb);
-            //     }
-            // }
+            SceneBarrierCsv csv = CsvManager.Inst.GetCsv<SceneBarrierCsv>((int)eAllCSV.eAC_SceneBarrier);
+            List<SceneBarrierCsvData> list = new List<SceneBarrierCsvData>();
+            csv.GetData(ref list, m_mapId);
+            Debug.Log("障碍数量：" + list.Count);
+            for(int i = 0; i < list.Count; i ++)
+            {
+                SceneBarrierCsvData data = list[i];
+                if(data.shapeType == 1)
+                {
+                    float dir = data.vDir.y;
+                    Vector2 scale = new Vector2(data.vScale.x, data.vScale.z);
+                    OBB obb = new OBB(data.vPos.ToVector2(), scale, dir);
+                    m_listBarrier.Add(obb);
+                }
+                else if(data.shapeType == 2)
+                {
+                    Sphere obb = new Sphere();
+                    obb.c = data.vPos.ToVector2();
+                    obb.r = data.vScale.x * 0.5f;
+                    m_listBarrier.Add(obb);
+                }
+            }
         }
 
         public void ExecuteFrame()

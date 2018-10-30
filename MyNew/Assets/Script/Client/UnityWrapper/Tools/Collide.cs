@@ -151,6 +151,39 @@ namespace Roma
             Vector3 vertical3 = Vector3.Cross(Vector3.up, new Vector3(n.x, 0, n.y)).normalized;
             return new Vector2(vertical3.x, vertical3.z);
         }
+
+        //134
+        public static bool IntersectRaySphere(Vector2 p, Vector2 d, Sphere s, ref float t, ref Vector2 q)
+        {
+            Vector2 m = p - s.c;
+            float b = Vector2.Dot(m, d);
+            float c = Vector2.Dot(m, m) - s.r * s.r;
+            if(c > 0f && b > 0)
+                return false;
+
+            float discr = b * b - c;
+            if(discr < 0f)
+                return false;
+
+            t = -b - (float)Math.Sqrt((double)discr);
+            if(t < 0f)
+                t = 0f;
+            q = p + t * d;
+            return true;
+        }
+
+        public static bool TestMoveSS(Sphere s0, Sphere s1, Vector2 v0, Vector2 v1, ref float t)
+        {
+            s1.r += s0.r;
+            Vector2 v = v0 - v1;
+            Vector2 q = Vector2.zero;
+            float vLen = v.magnitude;
+            if(IntersectRaySphere(s0.c, v / vLen, s1, ref t, ref q))
+            {
+                return t <= vLen;
+            }
+            return true;
+        }
     }
 
 }
