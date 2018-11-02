@@ -89,6 +89,9 @@ namespace Roma
             anim.strFull = m_casterData.animaName;
             anim.eMode = WrapMode.Once;
             anim.endEvent = (a)=> {
+                Debug.Log("player.m_vCreature.m_bMoveing:" + player.m_vCreature.m_bMoveing);
+                if(player.m_vCreature.m_bMoveing)
+                    return;
                 CmdFspStopMove stop = new CmdFspStopMove();
                 player.m_vCreature.PushCommand(stop);
             };
@@ -97,7 +100,7 @@ namespace Roma
             TimeMgr.Inst.RegisterEvent(m_casterData.startTime * 0.001f, ()=>
             {
                 // 播放施法特效
-                Debug.Log("播放施法特效" + m_casterData.effectId);
+                //Debug.Log("播放施法特效" + m_casterData.effectId);
                 CEffectMgr.Create(m_casterData.effectId, ent.GetPos(),ent.GetRotate());
             });
         }

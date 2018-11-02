@@ -34,11 +34,12 @@ namespace Roma
                     m_bLaunch = true;
                     // 同步施法者方向
                     GetCaster().SetDir(m_curSkillCmd.m_dir);
-
                     // 注册最长生命周期
                     CFrameTimeMgr.Inst.RegisterEvent(m_skillInfo.lifeTime, ()=>{
                         Destory();
                     });
+                    // 释放技能，逻辑不可用
+                    SetLogicEnable(false);
                     break;
             }
         }        
@@ -52,6 +53,8 @@ namespace Roma
                 {
                     m_bLaunch = false;
                     Launch();
+                    // 一般的技能，在释放完成时，逻辑就可以，但是跳跃除外
+                    SetLogicEnable(true);
                 }
             }
         }
@@ -116,6 +119,21 @@ namespace Roma
             cmd.hudType = type;
             cmd.hudText = hitVal.ToString();
             target.m_vCreature.PushCommand(cmd);
+        }
+
+        /// <summary>
+        /// 技能的动作施法时，逻辑是不可用的
+        /// </summary>
+        public void SetLogicEnable(bool bTrue)
+        {
+            GetCaster().SetLogicEnabled(bTrue);
+            if(true)
+            {
+                if(GetCaster() is CMasterPlayer)
+                {
+                    (GetCaster() as CMasterPlayer).ResetJoyStick(true);
+                }
+            }
         }
 
         public override void Destory()

@@ -104,9 +104,9 @@ namespace Roma
                 m_bSendLoaded = true;
                 m_sendProgressTime = 1;
 
-                FspMsgLoadProgress msgPro = (FspMsgLoadProgress)NetManager.Inst.GetMessage(eNetMessageID.FspMsgLoadProgress);
-                msgPro.m_progress = 1.0f;
-                FspNetRunTime.Inst.SendMessage(msgPro);
+                // FspMsgLoadProgress msgPro = (FspMsgLoadProgress)NetManager.Inst.GetMessage(eNetMessageID.FspMsgLoadProgress);
+                // msgPro.m_progress = 1.0f;
+                // FspNetRunTime.Inst.SendMessage(msgPro);
 
                 FspMsgStartControl msg = (FspMsgStartControl)NetManager.Inst.GetMessage(eNetMessageID.FspMsgStartControl);
                 FspNetRunTime.Inst.SendMessage(msg);

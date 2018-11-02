@@ -13,6 +13,7 @@ namespace Roma
         private SkillCsvData m_skillInfo;
         private int m_vSkillHid;
         private int m_skillUid;
+        private bool m_skillState;
 
         public void EnterSkill()
         {

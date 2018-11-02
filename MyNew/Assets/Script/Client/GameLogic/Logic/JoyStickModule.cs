@@ -136,6 +136,7 @@ namespace Roma
                 if (m_master != null)
                 {
                     m_master.SendFspCmd(new CmdFspStopMove());
+                    Debug.Log("停止移动。。。。。。。。。。。。。。。。。。。。。");
                 }
             }
             else
@@ -153,10 +154,15 @@ namespace Roma
             }
             else
             {
-                float angle = Vector3.Angle(m_preMoveDir, dir);
-                if (angle > 15)
+                m_curSendMoveTime += Time.deltaTime;
+                if(m_curSendMoveTime > m_sendMoveTimeInterval)
                 {
-                    PushMoveCommand(dir);
+                    float angle = Vector3.Angle(m_preMoveDir, dir);
+                    if (angle > 10)
+                    {
+                        PushMoveCommand(dir);
+                    }
+                    m_curSendMoveTime = 0;
                 }
             }
         }
@@ -173,7 +179,8 @@ namespace Roma
             {
                 CmdFspMove cmd = new CmdFspMove(ref dir);
                 m_master.SendFspCmd(cmd);
-
+                                Debug.Log("发送移动。。。。。。。。。。。。。。。。。。。。。");
+                                
                 m_preMoveDir = dir;
                 m_isFirstJoyStick = false;
             }
@@ -268,7 +275,7 @@ namespace Roma
                 if (!m_bSkillCancel)
                 {
                     m_bSkillCancel = true;
-                    Debug.Log("发送技能：" + skillInfo.id  + "dir:" + m_curSkillDir + " pos:" + m_curSkilPos);
+                    //Debug.Log("发送技能：" + skillInfo.id  + "dir:" + m_curSkillDir + " pos:" + m_curSkilPos);
                     CmdFspSendSkill cmd = new CmdFspSendSkill();
                     cmd.m_casterUid = (int)m_master.GetUid();
                     cmd.m_skillId = skillInfo.id;
@@ -328,7 +335,10 @@ namespace Roma
 
         //摇杆控制参数
         public bool m_isFirstJoyStick = true;
-        private Vector3 m_preMoveDir;
+        private Vector2 m_preMoveDir;
+        private float m_curSendMoveTime;
+        private float m_sendMoveTimeInterval = 0.1f;
+
   
 
         public UIPanelJoyStick m_ui;

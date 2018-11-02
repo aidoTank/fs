@@ -136,32 +136,69 @@ namespace Roma
             FspNetRunTime.Inst.SendMessage(msg);
         }
 
+        public void SetLogicState(CmdFspEnum state)
+        {
+            m_logicState = state;
+        }
+
+        public CmdFspEnum GetLogicState()
+        {
+            return m_logicState;
+        }
+
+        public void SetLogicEnabled(bool enabled)
+        {
+            m_logicCmdEnabled = enabled;
+        }
+
+        public bool GetLogicEnabled()
+        {
+            return m_logicCmdEnabled;
+        }
+
+
+
         /// <summary>
-        /// 执行本地指令
+        /// 执行本地指令,push的指令，要更加当前情况，才能去设置玩家状态
         /// </summary>
         public virtual void PushCommand(IFspCmdType cmd)
-        {
-            m_logicState = cmd.GetCmdType();
+        {            
+            if(!GetLogicEnabled())
+            {
+                return;
+            }
+
+            Debug.Log("==============" + cmd.GetCmdType());
             if(cmd.GetCmdType() == CmdFspEnum.eFspStopMove)
             {
                 EnterStopMove();
+                m_vCreature.PushCommand(cmd);
             }
             else if(cmd.GetCmdType() == CmdFspEnum.eFspMove)
             {
                 m_cmdFspMove = cmd as CmdFspMove;
                 EnterMove();
+                m_vCreature.PushCommand(cmd);
             }
             else if(cmd.GetCmdType() == CmdFspEnum.eFspSendSkill)
             {
+                PushCommand(new CmdFspStopMove()); // 中止移动
+
                 m_cmdFspSendSkill = cmd as CmdFspSendSkill;
                 //Debug.Log("切换技能状态：");
                 EnterSkill();
+                m_vCreature.PushCommand(cmd);
             }
-            m_vCreature.PushCommand(cmd);
+            SetLogicState(cmd.GetCmdType());
         }
 
         public virtual void ExecuteFrame(int frameId)
         {
+            if(!GetLogicEnabled())
+            {
+                return;
+            }
+
             if(m_logicState == CmdFspEnum.eFspMove)
             {
                 TickMove();
@@ -189,6 +226,9 @@ namespace Roma
 
         // 逻辑状态数据
         public CmdFspEnum m_logicState;
+        // 逻辑命令是否可用，比如游戏开始前，技能释放动作时，逻辑都是不可以的
+        public bool m_logicCmdEnabled = true;
+
         public CmdFspMove m_cmdFspMove;
         public CmdFspSendSkill m_cmdFspSendSkill;
 
