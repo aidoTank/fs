@@ -190,7 +190,7 @@ namespace Roma
         /// <summary>
         /// 摇杆的场景指示器也只能主角自己有，并且是操作完成才发送指令
         /// </summary>
-        private void OnSkillEvent(int index, eJoyStickEvent jsEvent, SkillJoyStick joyStick, bool bCancel)
+        private void OnSkillEvent(int index, eJoyStickEvent jsEvent, Vector2 m_delta , bool bCancel)
         {
             m_curSkillIndex = index;
             m_curSkillJoyStick = jsEvent;
@@ -198,7 +198,7 @@ namespace Roma
 
             if(jsEvent == eJoyStickEvent.Drag)
             {
-                m_curSkillDir = new Vector3(joyStick.m_delta.x, 0 , joyStick.m_delta.y);
+                m_curSkillDir = new Vector3(m_delta.x, 0 , m_delta.y);
                 m_curSkillDir.Normalize();
             }
 
@@ -263,7 +263,7 @@ namespace Roma
                 }
                 else if(jsEvent == eJoyStickEvent.Drag)
                 {
-                    Vector3 atkOffset = m_curSkillDir * joyStick.m_delta.magnitude * skillInfo.distance;
+                    Vector3 atkOffset = m_curSkillDir * m_delta.magnitude * skillInfo.distance;
                     m_curSkilPos = m_master.m_vCreature.GetEnt().GetPos() + atkOffset;
                     m_skillPos.position = m_curSkilPos;
                 }

@@ -36,15 +36,14 @@ namespace Roma
 
         public void OnStartLogin()
         {
-            if(NetRunTime.Inst.GetState() == NetRunTime.NetState.Disconnected)
-            {
+            
                 NetRunTime.Inst.Conn(GlobleConfig.s_gameServerIP, GlobleConfig.s_gameServerPort, () =>
                 {
                     OnSendLoginMsg();
                 });
                 m_bStartConn = true;
                 m_connCurTime = 0;
-            }
+            
         }
 
         private void OnSendLoginMsg()

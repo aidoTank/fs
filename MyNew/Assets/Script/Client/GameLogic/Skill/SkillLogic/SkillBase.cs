@@ -53,8 +53,6 @@ namespace Roma
                 {
                     m_bLaunch = false;
                     Launch();
-                    // 一般的技能，在释放完成时，逻辑就可以，但是跳跃除外
-                    SetLogicEnable(true);
                 }
             }
         }
@@ -69,7 +67,8 @@ namespace Roma
         /// </summary>
         public virtual void Launch()
         {
-
+            // 一般的技能，在释放完成时，逻辑就可以，但是跳跃除外
+            SetLogicEnable(true);
         }
 
         public void OnHit(CCreature creature)

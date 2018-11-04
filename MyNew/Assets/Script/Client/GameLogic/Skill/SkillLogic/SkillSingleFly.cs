@@ -84,6 +84,7 @@ namespace Roma
 
         public override void Launch()
         {
+            base.Launch();
             //Debug.Log("发射技能");
             m_curPos = CPlayerMgr.Get(m_curSkillCmd.m_casterUid).GetPos() + m_curSkillCmd.m_dir.normalized;
             m_startPos = m_curPos;

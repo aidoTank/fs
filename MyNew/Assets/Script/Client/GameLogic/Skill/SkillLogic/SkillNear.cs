@@ -20,6 +20,7 @@ namespace Roma
 
         public override void Launch()
         {
+            base.Launch();
             Debug.Log("近战击中，计算伤害");
             // 检测，播放受击动作
             Vector2 pos = CPlayerMgr.Get(m_curSkillCmd.m_casterUid).GetPos();

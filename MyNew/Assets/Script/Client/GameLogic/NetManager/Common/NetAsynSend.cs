@@ -69,7 +69,7 @@ namespace Roma
             m_bSending = false;
             m_stream.Reset();
             ar = null;
-            //Debug.Log("发送成功！");
+            Debug.Log("发送成功！");
         }
 
         public override void Stop()

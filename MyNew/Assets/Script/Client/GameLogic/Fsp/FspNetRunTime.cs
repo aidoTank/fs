@@ -75,8 +75,6 @@ namespace Roma
 
             m_nSend = new NetAsynSend(m_socketClient);
             m_nRecv = new NetAsynRecv(m_socketClient);
-            m_nSend.Start();
-            m_nRecv.Start();
 
             IPEndPoint serverIP = new IPEndPoint(ipAddres, m_port);
             m_socketClient.BeginConnect(serverIP, ConnSucc, null);
@@ -96,6 +94,8 @@ namespace Roma
                 m_netState = NetState.ConnFail;
                 return;
             }
+            m_nSend.Start();
+            m_nRecv.Start();
             Debug.Log("大厅网络-连接成功: ip: " + m_ip + " port: " + m_port);
         }
 

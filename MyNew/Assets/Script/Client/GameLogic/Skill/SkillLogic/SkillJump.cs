@@ -50,9 +50,6 @@ namespace Roma
 
         public override void Launch()
         {
-            // 起跳时，逻辑不可用
-            SetLogicEnable(false);
-
             m_startPos = GetCaster().GetPos();
             // 如果终点能跳就直接跳
             Vector2 end = m_startPos + m_curSkillCmd.m_dir.normalized * m_skillInfo.distance;

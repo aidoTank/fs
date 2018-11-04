@@ -30,6 +30,7 @@ namespace Roma
         // AOE和近战的区别是，AOE有区域特效
         public override void Launch()
         {
+            base.Launch();
             // 逻辑创建特效
             CmdSkillCreate cmd = new CmdSkillCreate();
             m_vSkill.PushCommand(cmd);
