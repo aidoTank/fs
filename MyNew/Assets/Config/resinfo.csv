@@ -3,7 +3,7 @@ ID,文件,网络路径,类型（比如 模型 纹理 骨骼 特效 地图配置 光照图 材质）
 uint,string,string,string
 0,allresinfo,config/allresinfo,resinfo
 1,allcsvinfo,config/allcsvinfo,csv
-2,alllua,,
+2,alllua,config/alllua,lua
 3,mo_skill_tips,ui/other/mo_skill_tips,模型
 4,panel_dialog,ui/prefab/panel_dialog,面板
 5,sd_main_1,scene/main/data/sd_main_1,地图动态数据

@@ -54,7 +54,7 @@ namespace Roma
             SkillCsvData skill1 = skillInfo.GetData(1);
             SkillCsvData skill2 = skillInfo.GetData(2);
             SkillCsvData skill3 = skillInfo.GetData(3);
-            SkillCsvData skill4 = skillInfo.GetData(4);
+            SkillCsvData skill4 = skillInfo.GetData(5);
 
             m_ui.SetIcon(0, skill0.icon, false);
             m_ui.SetIcon(1, skill1.icon, false);
@@ -207,7 +207,9 @@ namespace Roma
                 m_bSkillCancel = false;
                 m_ui.m_cancelBtn.SetActiveNew(true);
                 m_ui.SetColor(index, SKLL_BLUE);
-
+                
+                if(index ==4)
+                    index = 5;
                 skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(index);
 
                 m_skillChose.gameObject.SetActiveNew(true);

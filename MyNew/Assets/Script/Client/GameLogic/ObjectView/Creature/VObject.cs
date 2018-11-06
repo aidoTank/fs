@@ -19,7 +19,7 @@ namespace Roma
     {
         // 人物和技能 共用实体对象创建，移动同步，销毁
         public int m_id;
-        private BoneEntity m_ent;
+        public Entity m_ent;
         private MtBaseMoveInfo m_moveInfo = new MtBaseMoveInfo();
         public bool m_bMoveing;
         public bool m_destroy;
@@ -59,7 +59,7 @@ namespace Roma
             m_ent = (BoneEntity)EntityManager.Inst.GetEnity(hid);
         }
 
-        public BoneEntity GetEnt()
+        public Entity GetEnt()
         {
             return m_ent;
         }
@@ -97,7 +97,7 @@ namespace Roma
                 animaInfo.playSpeed = 1;
                 animaInfo.strFull = "stand";
                 animaInfo.eMode = WrapMode.Loop;
-                m_ent.Play(animaInfo);
+                ((BoneEntity)m_ent).Play(animaInfo);
             }
             else if(cmd.GetCmdType() == CmdFspEnum.eFspMove)
             {
@@ -108,7 +108,7 @@ namespace Roma
                 animaInfo.playSpeed = 1;
                 animaInfo.strFull = "run";
                 animaInfo.eMode = WrapMode.Loop;
-                m_ent.Play(animaInfo);
+                ((BoneEntity)m_ent).Play(animaInfo);
             }
             else if(cmd.GetCmdType() == CmdFspEnum.eUIHead)
             {
@@ -143,7 +143,7 @@ namespace Roma
                     animaInfo.playSpeed = 1;
                     animaInfo.strFull = "die_1";
                     animaInfo.eMode = WrapMode.Once;
-                    m_ent.Play(animaInfo);
+                    ((BoneEntity)m_ent).Play(animaInfo);
                 }
             }
         }
@@ -181,9 +181,17 @@ namespace Roma
         }
 
         /// <summary>
-        /// 1.距离差值 小于 逻辑每帧偏移量，最终位置为 表现层位置（也理解为，当按照表现层去平滑移动时，如果前后的误差偏移足够小，就继续按照表现层计算）
-        /// 2.距离差值 小于 3倍的每帧偏移量，
-        /// 3.距离差值 大于 3倍的每帧偏移量，直接取逻辑位置
+        /// 1.距离差值 小于 逻辑每帧偏移量，最终位置为 表现层位置（也理解为，当按照表现层去平滑移动时，如果达不到逻辑位置，就继续按照表现层计算）
+        /// 2.距离差值 小于 3倍的每帧偏移量，大于 逻辑每帧偏移量（就是要把表现层拉一点回去）
+        ///     1.调节比例 = 距离差值 / 最大偏移距离
+        ///     2.距离差值的方向 与 当前移动方向 做点乘
+        ///     3.根据逻辑信息 计算 评估位置
+        ///     4.根据 最大移动的位置 计算 评估方向
+        ///     5.根据点乘值 与 距离差值 做判断
+        ///         1.如果同方向表现层过快，就拉回来一点点
+        ///         2.如果方向相反，就增加一点点
+        ///         3.其他情况同2
+        /// 3.距离差值 大于 3倍的每帧偏移量，帧率在变化的时候，就是网络正常时，直接取逻辑位置 | 网络卡主了，实体位置不变
         /// （比如在切后台，按暂停键，再切回游戏时，因为逻辑层的加速播放导致每帧逻辑位置增加非常快，如果逻辑位置和表现位置差值大，此时直接让玩家跳到逻辑位置即可）
         /// </summary>
         /// <param name="fTime"></param>
@@ -220,18 +228,18 @@ namespace Roma
             {
                 //Debug.Log("2.渲染位置和逻辑位置差值小于最大帧偏移，进行插值逼近");
                 float adjustRatio = Mathf.Clamp(offsetVecLen / maxOffset, 0.05f, 0.3f);
-                float dotValue = Vector3.Dot(offsetVec, dir);        // 计算方向是否相反
+                float dotValue = Vector3.Dot(offsetVec, dir);        // 计算方向是否相反，逻辑可能改变方向，但是表现层还在保持之前的
                 Vector3 estimPos = logicPos + dir * maxOffset;       // 逻辑估计的目标位置
                 Vector3 estimDir = (estimPos - curPos).normalized;   // 逻辑估计的方向
 
                 //Debug.Log("dotValue:" + dotValue);
-                //正1/4圆周区间，超前了，减速运动
-                if (dotValue > offsetVecLen * 0.707f)    // 表现层超前
+
+                if (dotValue > offsetVecLen * 0.707f)           // 方向一致时，减少一点点
                 {
                     result = curPos + estimDir * dist * (1.0f - adjustRatio);
                 }
-                //负1/4圆周区间，调后了，加速运动
-                else if (dotValue < offsetVecLen * (-0.707f))
+
+                else if (dotValue < offsetVecLen * (-0.707f))  // 方向相反时（逻辑层改变了方向），根据最新的方向，增加一点点
                 {
                     result = curPos + estimDir * dist * (1.0f + adjustRatio);
                 }
@@ -244,7 +252,7 @@ namespace Roma
             }
             else
             {
-                //Debug.Log("3.差值非常大时");
+                Debug.Log("3.差值非常大时");
                 //卡住了暂时保持原位
                 if (GameManager.Inst.GetFspManager().GetCurFrameIndex()== moveInfo.FrameBlockIndex)
                 {

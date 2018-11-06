@@ -54,6 +54,13 @@ namespace Roma
                     SkillJump jump = (SkillJump)CSkillMgr.Create(eCSkillType.SkillJump, vjump);
                     jump.PushCommand(m_cmdFspSendSkill);
                 break;
+                case (int)eSkillType.Curve:
+                    VSkillCurve vCurve = (VSkillCurve)VObjectMgr.Create(eVOjectType.SkillCurve);
+                    vCurve.PushCommand(m_cmdFspSendSkill);
+
+                    SkillCurve curve = (SkillCurve)CSkillMgr.Create(eCSkillType.SkillCurve, vCurve);
+                    curve.PushCommand(m_cmdFspSendSkill);
+                break;
             }  
         }
     }

@@ -33,14 +33,15 @@ namespace Roma
        Pos,               
     }
 
-	// 技能类型  1.近战 2.子弹 3.远程区域 4.陷阱
+	// 技能类型  1.近战 2.单弹道 3.区域 4.跳跃 5.抛物线
     public enum eSkillType
     {
        None = 0,         
        Near,                 
        Fly,     
 	   Aoe,
-	   Jump,           
+	   Jump,       
+	   Curve,    
     }
 
 	public enum eCheckTargetType

@@ -11,6 +11,7 @@ namespace Roma
         SkillSingleFly,
         SkillAoe,
         SkillJump,
+        SkillCurve,
     }
 
     public class CSkillMgr
@@ -33,6 +34,9 @@ namespace Roma
                 break;
                 case eCSkillType.SkillJump:
                     obj = new SkillJump(m_uid, vSkill);
+                break;
+                case eCSkillType.SkillCurve:
+                    obj = new SkillCurve(m_uid, vSkill);
                 break;
             }
             Add(m_uid++, obj);

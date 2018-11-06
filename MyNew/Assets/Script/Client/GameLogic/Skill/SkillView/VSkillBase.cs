@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace Roma
 {
@@ -24,12 +25,11 @@ namespace Roma
                     Start();
                 break;
                 case CmdFspEnum.eSkillCreate:
-                    sVOjectBaseInfo info = new sVOjectBaseInfo();
                     if(m_flyData == null || m_flyData.Count == 0)
                         return;
-                    info.m_resId = m_flyData[0].effectId;
-                    Create(info);
-                    m_state = CmdFspEnum.eFspMove;  // 技能都是移动状态
+                    CreateEffectEnt(0, null);
+
+                    m_state = CmdFspEnum.eFspMove;           // 技能都是移动状态
                 break;
                 case CmdFspEnum.eSkillHit:
                     CmdSkillHit hit = cmd as CmdSkillHit;
@@ -48,7 +48,7 @@ namespace Roma
                             CmdFspStopMove stop = new CmdFspStopMove();
                             player.m_vCreature.PushCommand(stop);
                         };
-                        player.m_vCreature.GetEnt().Play(anim);
+                        ((BoneEntity)player.m_vCreature.GetEnt()).Play(anim);
 
                         // 播放特效
                         int effectId = m_hitData.effectId;
@@ -78,9 +78,7 @@ namespace Roma
             CPlayer player =  CPlayerMgr.Get(m_curSkillCmd.m_casterUid);
             //Debug.Log("播放施法动作" + m_casterData.animaName);
 
-            BoneEntity ent = player.m_vCreature.GetEnt();
-        
-
+            BoneEntity ent = player.m_vCreature.GetEnt() as BoneEntity;
             ent.SetRot(Quaternion.LookRotation(m_curSkillCmd.m_dir.ToVector3()));
 
             // 获取施法动作
@@ -104,6 +102,25 @@ namespace Roma
                 CEffectMgr.Create(m_casterData.effectId, ent.GetPos(),ent.GetRotate());
             });
         }
- 
+
+        /// <summary>
+        /// 1.固定的单子弹，由表现层创建
+        /// 2.多弹道由逻辑层通过指令创建
+        /// </summary>
+        public virtual void CreateEffectEnt(int index, Action<Entity> loaded = null)
+        {
+            if (m_flyData == null)
+                return;
+
+            SkillStepCsvData csvData = m_flyData[index];
+            if (csvData.effectId == 0)
+                return;
+
+            Vector3 startPos = m_curSkillCmd.m_startPos;
+            Vector3 dir = Quaternion.LookRotation(m_curSkillCmd.m_dir).eulerAngles;
+            int handle = CEffectMgr.Create(csvData.effectId, startPos, dir, loaded);
+            CEffect effect = CEffectMgr.GetEffect(handle);
+            m_ent = effect.GetEntity();
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace Roma
         SkllNear,
         SkillSingleFly,
         SkillAoe,
+        SkillCurve,
     }
 
     public class VObjectMgr
@@ -49,6 +50,9 @@ namespace Roma
                 break;
                 case eVOjectType.SkillAoe:
                     obj = new VSkillBase();
+                break;
+                case eVOjectType.SkillCurve:
+                    obj = new VSkillCurve();
                 break;
             }
             obj.m_id = m_uid ++;
