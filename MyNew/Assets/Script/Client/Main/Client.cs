@@ -36,8 +36,6 @@ namespace Roma
 #endif
         public eDownLoadType editorResPath = eDownLoadType.None;
 
-
-
         public bool isCheckAppVersion;
         public bool isUpdate;
         public bool isLua;

@@ -174,6 +174,8 @@ namespace Roma
         WWW,
         StreamingAssetsPath,
         PersistentDataPath,
+
+        LocalResource,
     }
 
     public enum LusuoLayer

@@ -134,7 +134,31 @@ namespace Roma
             m_res = res;
             m_bStart = true;
             Clear();
-            StartCoroutine(DownloadAssetBundle(res, loaded));
+
+            if(GlobleConfig.m_downLoadType == eDownLoadType.LocalResource)
+            {
+                StartCoroutine(DownloadEditorResource(res, loaded));
+            }
+            else
+            {
+                StartCoroutine(DownloadAssetBundle(res, loaded));
+            }
+        }
+
+        public IEnumerator DownloadEditorResource(Resource res, 
+             Action<Resource> loaded)
+        {
+            UnityEngine.Object eRes = UnityEditor.AssetDatabase.LoadAssetAtPath(res.m_fullUrl, typeof(UnityEngine.Object));
+
+            yield return new WaitForSeconds(0.2f);  
+
+            res.SetEditorResource(eRes);
+            res.SetState(eResourceState.eRS_Loaded);  // 这里只是表示资源加载完成，并没有执行资源内部的下载后的逻辑
+            res.SetDownLoadProcess(1.0f);
+            if(loaded != null)
+                loaded(res);
+
+            m_bStart = false;
         }
 
         /// <summary>

@@ -14,7 +14,17 @@ namespace Roma
 
         public override bool OnLoadedLogic()
         {
-            m_byte = (m_assertBundle.LoadAsset<TextAsset>(m_resInfo.strName)).bytes;
+            TextAsset textAsset;
+            if(GlobleConfig.m_downLoadType == eDownLoadType.LocalResource)
+            {
+                textAsset = m_editorRes as TextAsset;
+            }
+            else
+            {
+                textAsset = m_assertBundle.LoadAsset<TextAsset>(m_resInfo.strName);  
+            }
+
+            m_byte = textAsset.bytes;
           
             return true;
         }

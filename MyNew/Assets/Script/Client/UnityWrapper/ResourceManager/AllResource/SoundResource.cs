@@ -23,11 +23,16 @@ namespace Roma
 
         public override bool OnLoadedLogic()
         {
-            object sndObj = m_assertBundle.LoadAsset(m_resInfo.strName);
-            if (sndObj != null)
+            AudioClip m_audioClip;
+            if(GlobleConfig.m_downLoadType == eDownLoadType.LocalResource)
             {
-                m_audioClip = (AudioClip)sndObj;
+                m_audioClip = m_editorRes as AudioClip;
             }
+            else
+            {
+                m_audioClip = m_assertBundle.LoadAsset<AudioClip>(m_resInfo.strName);
+            }
+
             return null != m_audioClip;
         }
        

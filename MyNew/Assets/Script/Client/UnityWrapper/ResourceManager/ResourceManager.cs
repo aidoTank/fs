@@ -168,8 +168,8 @@ namespace Roma
                 if(res.GetState() == eResourceState.eRS_None)
                 {
                     // 去下载
-                    m_downLoadHelper.InitNewDownLoad(res, OnDownLoadend);
                     res.SetState(eResourceState.eRS_Loading);
+                    m_downLoadHelper.InitNewDownLoad(res, OnDownLoadend);
                 }
                 else if(res.GetState() == eResourceState.eRS_Loaded)
                 {

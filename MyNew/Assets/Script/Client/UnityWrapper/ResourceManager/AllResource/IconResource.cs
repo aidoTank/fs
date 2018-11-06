@@ -17,7 +17,14 @@ namespace Roma
 
         public override bool OnLoadedLogic()
         {
-            m_tex = m_assertBundle.LoadAsset<Texture2D>(m_resInfo.strName);
+            if(GlobleConfig.m_downLoadType == eDownLoadType.LocalResource)
+            {
+                m_tex = m_editorRes as Texture2D;
+            }
+            else
+            {
+                m_tex = m_assertBundle.LoadAsset<Texture2D>(m_resInfo.strName);
+            }
             return true;
         }
 

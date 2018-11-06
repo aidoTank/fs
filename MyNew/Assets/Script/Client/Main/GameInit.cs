@@ -89,12 +89,23 @@ namespace Roma
                 GlobleConfig.m_downLoadType = eDownLoadType.None;
             }
 
-            ResInfo rInfo = new ResInfo();
-            rInfo.m_bDepend = false;
-            rInfo.strName = ExportDefine.m_prefix;
-            rInfo.strUrl = ExportDefine.m_prefix;
-            rInfo.iType = ResType.ManifestResource;
-            ResourceFactory.Inst.LoadResource(rInfo, OnManifestLoaded);
+            if(GlobleConfig.m_downLoadType  == eDownLoadType.LocalResource)
+            {
+                ResInfo rInfo = new ResInfo();
+                rInfo.m_bDepend = false;
+                rInfo.strName = "allresinfo";
+                rInfo.strUrl = "config/allresinfo";
+                rInfo.iType = ResType.ResInfosResource;
+                ResourceFactory.Inst.LoadResource(rInfo, OnResInfoLoaded);
+                return;
+            }
+            
+            ResInfo pInfo = new ResInfo();
+            pInfo.m_bDepend = false;
+            pInfo.strName = ExportDefine.m_prefix;
+            pInfo.strUrl = ExportDefine.m_prefix;
+            pInfo.iType = ResType.ManifestResource;
+            ResourceFactory.Inst.LoadResource(pInfo, OnManifestLoaded);
 
             LogicSystem.Inst.GetMapLoadProcess().strCurInfo = "正在加载主配置：";
             LogicSystem.Inst.GetMapLoadProcess().fPercent = 0.1f;

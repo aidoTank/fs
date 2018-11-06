@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e4fefeff67aa12a478837f8f0de4545a
-timeCreated: 1539430434
+guid: 07be8a7bb464afb4b97238d835f3e61c
+timeCreated: 1541510888
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName: {}
@@ -64,5 +64,5 @@ TextureImporter:
     outline: []
   spritePackingTag: 
   userData: 
-  assetBundleName: ui/dynamic/icon/player/icon_player_2
+  assetBundleName: 
   assetBundleVariant: 

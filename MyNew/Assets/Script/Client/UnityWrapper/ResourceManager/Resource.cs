@@ -24,6 +24,7 @@ namespace Roma
         public eResourceState m_state;
         public Action<Resource> m_loadedEvent;
 
+        public UnityEngine.Object m_editorRes;
         public AssetBundle m_assertBundle;
         public string[] m_dpResource;  // 依赖资源 
 
@@ -65,6 +66,19 @@ namespace Roma
                     m_fullUrl = GlobleConfig.GetStreamingPath() + m_resInfo.strUrl;
                 }
             }
+            else if(GlobleConfig.m_downLoadType == eDownLoadType.LocalResource)
+            {
+                string suffix = ".prefab";
+                if(resInfo.iType == ResType.CsvListResource || resInfo.iType == ResType.ResInfosResource || resInfo.iType == ResType.SceneDataResource)
+                {
+                    suffix = ".bytes";
+                }
+                else if(resInfo.iType == ResType.IconResource)
+                {
+                    suffix = ".png";
+                }
+                m_fullUrl = "Assets/Resource/" + m_resInfo.strUrl + suffix;
+            }
         }
 
         public void SetDPResource(string[] dp)
@@ -88,6 +102,11 @@ namespace Roma
                 return true;
             }
             return false;
+        }
+
+        public virtual void SetEditorResource(UnityEngine.Object res)
+        {
+            m_editorRes = res;
         }
 
         public eResourceState SetState(eResourceState state)
@@ -136,11 +155,18 @@ namespace Roma
 
         public virtual GameObject InstantiateGameObject()
         {
-            if (null == this.m_assertBundle)
+            GameObject obj;
+            if(GlobleConfig.m_downLoadType == eDownLoadType.LocalResource)
             {
-                return null;
+                obj = m_editorRes as GameObject;
             }
-            GameObject obj = m_assertBundle.LoadAsset<GameObject>(m_resInfo.strName);
+            else
+            {
+                if (null == this.m_assertBundle)
+                    return null;
+                
+                obj = m_assertBundle.LoadAsset<GameObject>(m_resInfo.strName);
+            }
             if (obj == null)
             {
                 Debug.LogWarning("实例化失败：" + m_resInfo.strName);
