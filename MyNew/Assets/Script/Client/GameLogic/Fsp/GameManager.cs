@@ -60,7 +60,7 @@ namespace Roma
             head.SetVisible(true);
 
             
-            CMap map = CMapMgr.Create(1);
+            CMap map = CMapMgr.Create(2);
             map.Create();
 
 

@@ -69,7 +69,7 @@ namespace Roma
         {
             EntityBaseInfo info = new EntityBaseInfo();
             info.m_resID = (int)m_sceneInfo.resId;
-            info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
+            info.m_ilayer = (int)LusuoLayer.eEL_Static;
             int handleId = EntityManager.Inst.CreateEntity(eEntityType.eSceneEntity, info, OnLoadStaticData);
             m_ent = EntityManager.Inst.GetEnity(handleId);
         }
@@ -132,6 +132,8 @@ namespace Roma
         private byte[] m_staticData;        
         private void InitStaticData()
         {
+            if(m_staticDynamic == null)
+                return;
             byte[] data = m_staticDynamic.GetData();
             LusuoStream ls = new LusuoStream(data);
             int w = ls.ReadInt();

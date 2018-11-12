@@ -148,8 +148,10 @@ namespace Roma
         public IEnumerator DownloadEditorResource(Resource res, 
              Action<Resource> loaded)
         {
-            UnityEngine.Object eRes = UnityEditor.AssetDatabase.LoadAssetAtPath(res.m_fullUrl, typeof(UnityEngine.Object));
-
+            UnityEngine.Object eRes = null;
+                  #if UNITY_EDITOR
+            eRes = UnityEditor.AssetDatabase.LoadAssetAtPath(res.m_fullUrl, typeof(UnityEngine.Object));
+                 #endif
             yield return new WaitForSeconds(0.2f);  
 
             res.SetEditorResource(eRes);
@@ -159,6 +161,7 @@ namespace Roma
                 loaded(res);
 
             m_bStart = false;
+   
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ public class Csv2ScriptWindow : EditorWindow
         int iSceneId = int.Parse(sceneNamePre);
         
 
-        string scriptFile = Application.dataPath + "/Config/地图障碍表.csv";
+        string scriptFile = Application.dataPath + "/Config/地图障碍表1.csv";
         FileStream file = new FileStream(scriptFile, FileMode.OpenOrCreate);
         StreamWriter sr = new StreamWriter(file, Encoding.Default);
 

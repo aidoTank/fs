@@ -31,7 +31,7 @@ namespace Roma
             m_camTransform = m_cam.transform;
             m_audioListener = m_camTransform.FindChild("audio");
 
-            m_cam.cullingMask = (int)LusuoLayerMask.eEL_Dynamic;
+            m_cam.cullingMask = (int)LusuoLayerMask.eEL_Dynamic | (int)LusuoLayerMask.eEL_Static;
             m_cam.renderingPath = RenderingPath.Forward;
             m_cam.nearClipPlane = 6f;
             m_cam.farClipPlane = 160f;
