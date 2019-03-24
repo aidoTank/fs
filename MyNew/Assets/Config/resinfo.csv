@@ -6,10 +6,12 @@ uint,string,string,string
 2,alllua,config/alllua,lua
 3,mo_skill_tips,ui/other/mo_skill_tips,模型
 4,panel_dialog,ui/prefab/panel_dialog,面板
-5,sd_main_1,scene/main/data/sd_main_1,地图动态数据
+5,sd_main_1,,
 100,场景段100-1000,,
 101,mo_1,scene/1/prefab/mo_1,模型
 102,sd_1_0,scene/1/data/sd_1_0,地图动态数据
+201,mo_2,scene/2/prefab/mo_2,模型
+202,sd_2_0,,
 10000,面板段10000-11000,,
 10001,panel_login,ui/prefab/panel_login,面板
 10002,panel_create_role,ui/prefab/panel_create_role,面板
