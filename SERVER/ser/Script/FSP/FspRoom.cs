@@ -125,6 +125,7 @@ namespace Roma
         {
             cmd.playerId = (uint)player.id;
             m_lockedFrame.vkeys.Add(cmd);
+            Console.WriteLine("添加帧消息中");
         }
 
         public void EnterFrame()
@@ -142,7 +143,7 @@ namespace Roma
                     Player player = m_listPlayer[i];
                     if(m_lockedFrame.vkeys.Count > 0 && m_lockedFrame.vkeys[0].args!= null && m_lockedFrame.vkeys[0].args.Length > 0)
                     {
-                        Console.WriteLine("发送指令：" + m_lockedFrame.vkeys[0].ToString());
+                        Console.WriteLine("发送指令.数量：" + m_lockedFrame.vkeys.Count);
                     }
                     player.Send(m_lockedFrame);
                 }

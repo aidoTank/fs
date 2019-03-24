@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 public class GlobalConfig
 {
-    public const string SERVER_IP = "192.168.1.103";
+    public const string SERVER_IP = "127.0.0.1";
     public const int SERVER_PORT = 1234;
 
-    public const string FSP_SERVER_IP = "192.168.1.103";
+    public const string FSP_SERVER_IP = "127.0.0.1";
     public const int FSP_SERVER_PORT = 2234;
 
     public const string DB_IP = "127.0.0.1";

@@ -152,6 +152,8 @@ namespace Roma
             int contentLen = stream.ReadInt();
             ushort msgId = stream.ReadUShort();
             NetMessage msg = NetManager.Inst.GetMessage(msgId);
+            if (msg == null)
+                return;
             if (msgId != (int)eNetMessageID.MsgHeartBeat)
             {
                 Console.WriteLine(m_serverType + ":接受消息：" + (eNetMessageID)msgId);
