@@ -16,7 +16,6 @@ end
 
 
 function PetCsv:Init()
-    print("GUIManager:--------------petCsv")
 	local csvData = Roma.CsvManager.Inst:GetOrCreateGetCsv(self.id).m_csv
     for i = 0, csvData:GetRows() - 1 do
         data = {}
@@ -24,10 +23,6 @@ function PetCsv:Init()
         data.name = csvData:GetData(i, 1)
         data.icon = csvData:GetIntData(i, 2)
         self.m_dicItemData[data.id] = data
-
-
-
-    print("GUIManager:--------------petCsv",  data.name )
     end
 end
 

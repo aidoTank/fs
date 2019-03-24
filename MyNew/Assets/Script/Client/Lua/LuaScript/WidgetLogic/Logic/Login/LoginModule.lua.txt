@@ -23,14 +23,20 @@ end
 
 function LoginModule:Init ()
     this = self
+    -- 测试按钮事件回调
     UIEventListener.Get (self.m_ui.m_btnOk).onClick = self.OnClickBtn
 end
 
 
 function LoginModule:InitData()
-    --ItemName =  CsvManager.Inst.allCsv["ItemCsv"]:GetItem(2)
-    --PetName =  CsvManager.Inst.allCsv["PetCsv"]:GetItem(1).name
+    -- 测试表格读取
+    ItemName =  CsvManager.Inst.allCsv["ItemCsv"]:GetItem(2).name
+    print("ItemName:" , ItemName)
+    PetName =  CsvManager.Inst.allCsv["PetCsv"]:GetItem(1).name
+    print("PetName:" , PetName)
 
+    ItemName =  CsvManager.Inst.allCsv["ItemCsv"]:GetItem(1).name
+    print("ItemName1:" , ItemName)
 end
 
 -- 非匿名回调方法，只能table.xx方法，并且this要单独传入
