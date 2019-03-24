@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 283e2f901917ca248b3c9ca729b26be2
+guid: f56cef91e81975843ae5e3d014982c52
 timeCreated: 1543851984
 licenseType: Pro
 TextureImporter:
@@ -64,5 +64,5 @@ TextureImporter:
     outline: []
   spritePackingTag: 
   userData: 
-  assetBundleName: scene/1/1/lightmap-0_comp_light
+  assetBundleName: scene/1/1/lightmap-1_comp_light
   assetBundleVariant: 
