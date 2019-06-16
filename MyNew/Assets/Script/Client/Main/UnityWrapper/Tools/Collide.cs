@@ -44,10 +44,14 @@ namespace Roma
     public static class Collide
     {
 
-        public static Vector2 GetVector(float angle)
+        public static Vector2 GetVector(int angle)
         {
-            float rad = angle * Mathf.Deg2Rad;
-            return new Vector2(Mathf.Sin(rad), Mathf.Cos(rad));
+            //float rad = angle * Mathf.Deg2Rad;
+            //float x = Mathf.Sin(rad);
+            //float y = Mathf.Cos(rad);
+            float x = CustomMath.Sin(angle).value;
+            float y = CustomMath.Cos(angle).value;
+            return new Vector2(x, y);
         } 
 
         /// <summary>
