@@ -74,7 +74,7 @@ namespace Roma
                 {
                     Debug.Log("客户端主角:" + EGame.m_openid);
                     CPlayer master = CPlayerMgr.CreateMaster(playerData[i]);
-                    master.Create(playerData[i].ToString(), new Vector2(8, 8), Collide.GetVector(60));
+                    master.Create(playerData[i].ToString(), new Vector2(8, 8), Collide.GetVector(-220));
                     master.UpdateUI();
                 }
                 else
