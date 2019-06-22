@@ -10,6 +10,10 @@ namespace Roma
         private const int SHIFT_AMOUNT = 8;
         private const long One = 1 << SHIFT_AMOUNT;
 
+        public static FixedPointF Pi = new FixedPointF(3.14159265f);
+        public static FixedPointF TwoPi = Pi * 2;
+        public static FixedPointF HalfPi = Pi / 2;
+
         public static FixedPointF zero = new FixedPointF(0);
         public static FixedPointF one = new FixedPointF(1);
 
@@ -72,22 +76,10 @@ namespace Roma
             return temp;
         }
 
-        public static FixedPointF operator *(FixedPointF t1, int t2)
-        {
-            FixedPointF temp = t1 * new FixedPointF(t2);
-            return temp;
-        }
-
         public static FixedPointF operator /(FixedPointF t1, FixedPointF t2)
         {
             FixedPointF temp;
             temp.m_value = (t1.m_value << SHIFT_AMOUNT) / t2.m_value;
-            return temp;
-        }
-
-        public static FixedPointF operator /(FixedPointF t1, int t2)
-        {
-            FixedPointF temp = t1 / new FixedPointF(t2);
             return temp;
         }
 
@@ -99,16 +91,6 @@ namespace Roma
         public static bool operator !=(FixedPointF t1, FixedPointF t2)
         {
             return t1.m_value != t2.m_value;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if(obj is FixedPointF)
-            {
-                FixedPointF f = (FixedPointF)obj;
-                return m_value == f.m_value;
-            }
-            return false;
         }
 
         public static bool operator >(FixedPointF t1, FixedPointF t2)
@@ -131,6 +113,89 @@ namespace Roma
             return t1.m_value <= t2.m_value;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is FixedPointF)
+            {
+                FixedPointF f = (FixedPointF)obj;
+                return m_value == f.m_value;
+            }
+            return false;
+        }
+
+        public static FixedPointF operator +(FixedPointF t1, float t2)
+        {
+            FixedPointF temp;
+            temp.m_value = (t1.m_value + (new FixedPointF(t2).m_value));
+            return temp;
+        }
+
+        public static FixedPointF operator -(FixedPointF t1, float t2)
+        {
+            FixedPointF temp;
+            temp.m_value = t1.m_value - (new FixedPointF(t2)).m_value;
+            return temp;
+        }
+
+        public static FixedPointF operator -(float t1, FixedPointF t2)
+        {
+            FixedPointF temp;
+            temp.m_value =(new FixedPointF(t1)).m_value - t2.m_value;
+            return temp;
+        }
+
+        public static FixedPointF operator *(FixedPointF t1, int t2)
+        {
+            FixedPointF temp = t1 * new FixedPointF(t2);
+            return temp;
+        }
+
+        public static FixedPointF operator /(FixedPointF t1, int t2)
+        {
+            FixedPointF temp = t1 / new FixedPointF(t2);
+            return temp;
+        }
+
+        public static FixedPointF operator /(int t1, FixedPointF t2)
+        {
+            FixedPointF temp = new FixedPointF(t1) / t2;
+            return temp;
+        }
+
+        public static bool operator >(FixedPointF t1, int t2)
+        {
+            return t1.value > t2;
+        }
+
+        public static bool operator <(FixedPointF t1, int t2)
+        {
+            return t1.value < t2;
+        }
+
+        public static bool operator >=(FixedPointF t1, int t2)
+        {
+            return t1 >= new FixedPointF(t2);
+        }
+
+        public static bool operator <=(FixedPointF t1, int t2)
+        {
+            return t1 <= new FixedPointF(t2);
+        }
+
+        public static explicit operator int(FixedPointF v)
+        {
+            return (int)v.value;
+        }
+
+        public static explicit operator float(FixedPointF v)
+        {
+            return v.value;
+        }
+
+        public static explicit operator FixedPointF(float v)
+        {
+            return new FixedPointF(v);
+        }
 
         /// <summary>
         /// 求平方根
@@ -161,6 +226,7 @@ namespace Roma
             t.m_value = t.m_value < 0 ? -t.m_value : t.m_value;
             return t;
         }
+
 
         public override string ToString()
         {

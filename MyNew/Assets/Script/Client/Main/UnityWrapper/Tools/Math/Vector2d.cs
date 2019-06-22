@@ -112,6 +112,21 @@ namespace Roma
             return FixedPointF.Sqrt(Distance2(v1, v2));
         }
 
+        public static Vector2d Lerp(Vector2d a, Vector2d b, FixedPointF t)
+        {
+            if(t >= FixedPointF.one)
+            {
+                return b;
+            }
+            else if(t <= FixedPointF.zero)
+            {
+                return a;
+            }
+            FixedPointF x = b.x * t + a.x * (FixedPointF.one - t);
+            FixedPointF y = b.y * t + a.y * (FixedPointF.one - t);
+            return new Vector2d(x, y);
+        }
+
         public static FixedPointF Dot(Vector2d v1, Vector2d v2)
         {
             return v1.x * v2.x + v1.y * v2.y;
@@ -178,12 +193,12 @@ namespace Roma
 
         public override int GetHashCode()
         {
-            return this.GetStateHash();
+            return x.GetHashCode() ^ y.GetHashCode();
         }
 
         public override string ToString()
         {
-            return x.value + "," + y.value;
+            return "(" + x.value + ", " + y.value + ")";
         }
 
         //public static Vector3d Cross(Vector3d a, Vector3d b)

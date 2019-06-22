@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Roma
 {
@@ -304,6 +305,94 @@ namespace Roma
                     tAngle += 360;
             }
             return tAngle;
+        }
+
+
+        private const int LUT_NUM = 100;
+        private const float PRICISION = 0.02f;
+        private static float[] g_atan_tab = new float[LUT_NUM]
+        {
+            0f,0.01010067f,0.02019927f,0.03029376f,0.04038208f,0.05046217f,0.06053202f,0.07058959f,0.08063287f,0.09065989f,
+            0.1006687f,0.1106572f,0.1206237f,0.1305661f,0.1404826f,0.1503714f,0.1602307f,0.1700586f, 0.1798535f,0.1896136f,
+            0.1993373f,0.209023f,0.218669f,0.2282738f,0.2378359f,0.2473539f,0.2568265f,0.2662521f, 0.2756294f,0.2849573f,
+            0.2942346f,0.3034599f,0.3126323f,0.3217506f,0.3308137f,0.3398209f,0.348771f,0.3576632f,0.3664968f,0.3752708f,
+            0.3839846f,0.3926375f,0.4012288f,0.4097579f,0.4182243f,0.4266275f,0.434967f,0.4432423f, 0.4514531f,0.459599f,
+            0.4676798f,0.4756952f,0.4836449f,0.4915288f,0.4993467f,0.5070985f,0.5147841f,0.5224034f, 0.5299565f,0.5374433f,
+            0.5448639f,0.5522184f,0.5595067f,0.5667292f,0.5738859f,0.580977f,0.5880026f,0.594963f, 0.6018585f,0.6086893f,
+            0.6154557f,0.6221579f,0.6287963f,0.6353712f,0.641883f,0.648332f,0.6547186f,0.6610432f, 0.6673061f,0.6735079f,
+            0.6796489f,0.6857295f,0.6917502f,0.6977115f,0.7036138f,0.7094575f,0.7152432f,0.7209713f, 0.7266424f,0.7322568f,
+            0.7378151f,0.7433177f,0.7487653f,0.7541583f,0.7594972f,0.7647825f,0.7700148f,0.7751944f,0.7803221f,0.7853982f
+        };
+
+        // 返回弧度 [-π/2, π/2]  [-90, 90]
+        //public static void InitATanTab()
+        //{
+        //    // (0,1) 返回（0-45）度的弧度值
+        //    string val = "";
+        //    for (int i = 0; i < LUT_NUM; i++)
+        //    {
+        //        float rad = (float)i / (LUT_NUM - 1);
+        //        Debug.Log(rad);
+        //        float info = Mathf.Atan(rad);
+        //        val += info + "f,";
+        //    }
+        //    Debug.Log(val);
+        //}
+
+        public static float Atan2(int y, int x)
+        {
+            FixedPointF Y_X, Y_X_temp;
+            FixedPointF result = FixedPointF.zero;
+            Y_X = (x == 0) ? 
+                new FixedPointF(x ,y) :
+                new FixedPointF(y, x);
+            Y_X_temp = Y_X;
+
+            if (y == 0)
+            {
+                if (x >= 0)
+                    return FixedPointF.zero.value;    // 在正x轴上为0
+                else
+                    return FixedPointF.Pi.value; // 在负x轴上为π，180度
+            }
+            else if (x > 0 && y > 0)
+            {
+                //第一象限
+                Y_X = (Y_X <= 1) ? Y_X : 1 / Y_X;
+                result = (Y_X_temp > 1) ? FixedPointF.HalfPi - g_atan_tab[(int)(Y_X * (LUT_NUM - 1))] : 
+                                            (FixedPointF)g_atan_tab[(int)(Y_X * (LUT_NUM - 1))];
+            }
+            else if (x < 0 && y > 0)
+            {
+                //第二象限
+                Y_X = (Y_X < -1) ? Y_X = -1 / Y_X : -Y_X;
+                result = (Y_X_temp >= -1) ? FixedPointF.Pi - g_atan_tab[(int)(Y_X * (LUT_NUM - 1))] : //小于45°
+                                        FixedPointF.HalfPi + g_atan_tab[(int)(Y_X * (LUT_NUM - 1))];
+            }
+            else if (x < 0 && y < 0)
+            {
+                //第三象限
+                Y_X = (Y_X <= 1) ? Y_X : 1 / Y_X;
+                result = (Y_X_temp <= 1) ? g_atan_tab[(int)(Y_X * (LUT_NUM - 1))] - FixedPointF.Pi : 
+                                            -FixedPointF.HalfPi - g_atan_tab[(int)(Y_X * (LUT_NUM - 1))];
+            }
+            else if (x > 0 && y < 0)
+            {
+                //第四象限
+                Y_X = (Y_X < -1) ? Y_X = -1 / Y_X : -Y_X;
+                result = (Y_X_temp >= -1) ? (FixedPointF)(-g_atan_tab[(int)(Y_X * (LUT_NUM - 1))]) : //小于45°
+                                        -(FixedPointF.HalfPi - g_atan_tab[(int)(Y_X * (LUT_NUM - 1))]);
+            }
+            else if (x == 0 && y > 0)
+            {
+                result = FixedPointF.HalfPi;
+            }
+            else
+            {
+                result = -FixedPointF.HalfPi;
+            }
+
+            return result.value;
         }
     }
 }
