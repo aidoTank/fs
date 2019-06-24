@@ -21,6 +21,6 @@ end
 
 function LoginPanel:Init()
     self.m_userName = self.m_root:FindChild ("panel/dynamic/input"):GetComponent("InputField")
-    self.m_passWord = self.m_root:FindChild ("panel/dynamic/password"):GetComponent("InputField")
+    self.m_passWord = self.m_root:FindChild ("panel/dynamic/password/input"):GetComponent("InputField")
     self.m_btnOk = self.m_root:FindChild ("panel/dynamic/sure").gameObject
 end

@@ -59,15 +59,15 @@ LoginModule.OnClickBtn = function(go)
 end
 
 function LoginModule:OnStartLogin()
-    if NetRunTime.Inst:GetNetState() == NetRunTime.NetState.Disconnected then
+    if NetRunTime.Inst:GetState() == NetRunTime.NetState.Disconnected then
 
-        NetRunTime.Inst:ConServer(function()
-            --连接成功，发送登录
-            local msgLogin = NetManager.Inst.allMsg[eNetMessageID.Login]
-            msgLogin.loginData.userName = Roma.EGame.m_openid
-            msgLogin.loginData.passWord = Roma.EGame.m_strPassword
-            NetManager.Inst:SendMessage(msgLogin)
-            print("send login")
+        NetRunTime.Inst:Conn(function()
+           --连接成功，发送登录
+           -- local msgLogin = NetManager.Inst.allMsg[eNetMessageID.Login]
+           -- msgLogin.loginData.userName = Roma.EGame.m_openid
+           -- msgLogin.loginData.passWord = Roma.EGame.m_strPassword
+           -- NetManager.Inst:SendMessage(msgLogin)
+           print("send login")
         end)
 
         self.m_bStartCon = true
@@ -80,7 +80,7 @@ function LoginModule:Update(fTime, fDTime)
         return
     end
     --连接中，如果超时
-    if NetRunTime.Inst:GetNetState() == NetRunTime.NetState.Connecting then 
+    if NetRunTime.Inst:GetState() == NetRunTime.NetState.Connecting then 
 
         self.m_connCurTime = self.m_connCurTime + fDTime
         if self.m_connCurTime > self.m_connMaxTime then

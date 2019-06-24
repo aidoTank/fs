@@ -8,8 +8,8 @@ namespace Roma
 { 
     public struct Vector2d
     {
-        public FixedPointF x;
-        public FixedPointF y;
+        public FixedPoint x;
+        public FixedPoint y;
 
         public static readonly Vector2d zero = new Vector2d(0, 0);
 
@@ -22,7 +22,7 @@ namespace Roma
         }
 
         #region 构造函数
-        public Vector2d(FixedPointF fx, FixedPointF fy)
+        public Vector2d(FixedPoint fx, FixedPoint fy)
         {
             x = fx;
             y = fy;
@@ -30,26 +30,26 @@ namespace Roma
 
         public Vector2d(int ix, int iy)
         {
-            x = new FixedPointF(ix);
-            y = new FixedPointF(iy);
+            x = new FixedPoint(ix);
+            y = new FixedPoint(iy);
         }
 
         public Vector2d(float fx, float fy)
         {
-            x = new FixedPointF(fx);
-            y = new FixedPointF(fy);
+            x = new FixedPoint(fx);
+            y = new FixedPoint(fy);
         }
 
         public Vector2d(Vector2 vec2)
         {
-            x = new FixedPointF(vec2.x);
-            y = new FixedPointF(vec2.y);
+            x = new FixedPoint(vec2.x);
+            y = new FixedPoint(vec2.y);
         }
 
         public Vector2d(Vector3 vec3)
         {
-            x = new FixedPointF(vec3.x);
-            y = new FixedPointF(vec3.z);
+            x = new FixedPoint(vec3.x);
+            y = new FixedPoint(vec3.z);
         }
         #endregion
 
@@ -57,12 +57,12 @@ namespace Roma
         /// <summary>
         /// 向量长度
         /// </summary>
-        public FixedPointF magnitude
+        public FixedPoint magnitude
         {
             get
             {
-                FixedPointF temp = x * x + y * y;
-                return FixedPointF.Sqrt(temp);
+                FixedPoint temp = x * x + y * y;
+                return FixedPoint.Sqrt(temp);
             }
         }
 
@@ -73,61 +73,61 @@ namespace Roma
         {
             get
             {
-                FixedPointF len = magnitude;
+                FixedPoint len = magnitude;
 
-                if (len == FixedPointF.zero)
+                if (len == FixedPoint.zero)
                     return Vector2d.zero;
 
-                if (len == FixedPointF.one)
+                if (len == FixedPoint.one)
                     return new Vector2d(x, y);
 
-                FixedPointF tempX = x / len;
-                FixedPointF tempY = y / len;
+                FixedPoint tempX = x / len;
+                FixedPoint tempY = y / len;
                 return new Vector2d(tempX, tempY);
             }
         }
 
         public void Normalize()
         {
-            FixedPointF len = magnitude;
-            if (len == FixedPointF.zero)
+            FixedPoint len = magnitude;
+            if (len == FixedPoint.zero)
                 return;
 
-            if (len == FixedPointF.one)
+            if (len == FixedPoint.one)
                 return;
 
             x = x / len;
             y = y / len;
         }
 
-        public static FixedPointF Distance2(Vector2d v1, Vector2d v2)
+        public static FixedPoint Distance2(Vector2d v1, Vector2d v2)
         {
-            FixedPointF x = v1.x - v2.x;
-            FixedPointF y = v1.y - v2.y;
+            FixedPoint x = v1.x - v2.x;
+            FixedPoint y = v1.y - v2.y;
             return x * x + y * y;
         }
 
-        public static FixedPointF Distance(Vector2d v1, Vector2d v2)
+        public static FixedPoint Distance(Vector2d v1, Vector2d v2)
         {
-            return FixedPointF.Sqrt(Distance2(v1, v2));
+            return FixedPoint.Sqrt(Distance2(v1, v2));
         }
 
-        public static Vector2d Lerp(Vector2d a, Vector2d b, FixedPointF t)
+        public static Vector2d Lerp(Vector2d a, Vector2d b, FixedPoint t)
         {
-            if(t >= FixedPointF.one)
+            if(t >= FixedPoint.one)
             {
                 return b;
             }
-            else if(t <= FixedPointF.zero)
+            else if(t <= FixedPoint.zero)
             {
                 return a;
             }
-            FixedPointF x = b.x * t + a.x * (FixedPointF.one - t);
-            FixedPointF y = b.y * t + a.y * (FixedPointF.one - t);
+            FixedPoint x = b.x * t + a.x * (FixedPoint.one - t);
+            FixedPoint y = b.y * t + a.y * (FixedPoint.one - t);
             return new Vector2d(x, y);
         }
 
-        public static FixedPointF Dot(Vector2d v1, Vector2d v2)
+        public static FixedPoint Dot(Vector2d v1, Vector2d v2)
         {
             return v1.x * v2.x + v1.y * v2.y;
         }
@@ -142,7 +142,7 @@ namespace Roma
             return new Vector2d(v1.x - v2.x, v1.y - v2.y);
         }
 
-        public static Vector2d operator *(Vector2d v1, FixedPointF mag)
+        public static Vector2d operator *(Vector2d v1, FixedPoint mag)
         {
             return new Vector2d(v1.x * mag, v1.y * mag);
         }
@@ -152,7 +152,7 @@ namespace Roma
             return new Vector2d(v1.x * mag, v1.y * mag);
         }
 
-        public static Vector2d operator /(Vector2d v1, FixedPointF mag)
+        public static Vector2d operator /(Vector2d v1, FixedPoint mag)
         {
             return new Vector2d(v1.x / mag, v1.y / mag);
         }
@@ -181,7 +181,7 @@ namespace Roma
             return false;
         }
 
-        public FixedPointF GetLongHashCode()
+        public FixedPoint GetLongHashCode()
         {
             return x * 31 + y * 7;
         }
