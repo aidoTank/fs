@@ -93,7 +93,7 @@ namespace Roma
         /// <summary>
         /// 点到OBB最近点
         /// </summary>
-        private static Vector2d ClosestPointOBB(Vector2d p, FPObb b)
+        public static Vector2d ClosestPointOBB(Vector2d p, FPObb b)
         {
             Vector2d d = p - b.pos;
             Vector2d q = b.pos;

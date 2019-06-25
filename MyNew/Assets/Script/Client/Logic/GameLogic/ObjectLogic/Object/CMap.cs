@@ -65,7 +65,7 @@ namespace Roma
                 s.c = pos;
                 s.r = r;
                 Vector2 point = Vector2.zero;
-                if(obj is OBB && Collide.bOBBInside(s, (OBB)obj, ref point))
+                if(obj is OBB && Collide.bSphereOBB(s, (OBB)obj, ref point))
                 {
                     return false;
                 }

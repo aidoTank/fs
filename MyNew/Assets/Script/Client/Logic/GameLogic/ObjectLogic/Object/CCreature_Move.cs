@@ -64,7 +64,7 @@ namespace Roma
                 s.c = nextPos;
                 s.r = GetR();
                 Vector2 point = Vector2.zero;
-                if(obj is OBB && Collide.bOBBInside(s, (OBB)obj, ref point))
+                if(obj is OBB && Collide.bSphereOBB(s, (OBB)obj, ref point))
                 {
                     if(depth >= 1)
                         return false;
@@ -89,7 +89,7 @@ namespace Roma
                         if(depth >= 1)
                         return false;
                         
-                    Vector2 n = (obj as Sphere).c - m_curPos;
+                    Vector2 n = ((Sphere)obj).c - m_curPos;
                     n.Normalize();
                     Vector2 vertical2 = Collide.GetVerticalVector(n);
                     float dot = Vector2.Dot(moveDir.normalized, vertical2.normalized);
