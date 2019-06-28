@@ -106,7 +106,7 @@ namespace Roma
             
             CFrameTimeMgr.Inst.FixedUpdate();
             CPlayerMgr.ExecuteFrame(frameId);            // 场景帧心跳等
-            CSkillMgr.ExecuteFrame(frameId);
+            //CSkillMgr.ExecuteFrame(frameId);
         }
 
         /// <summary>

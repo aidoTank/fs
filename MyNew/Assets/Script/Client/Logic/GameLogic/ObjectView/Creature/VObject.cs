@@ -7,287 +7,720 @@ using UnityEngine.UI;
 
 namespace Roma
 {
-    public struct sVOjectBaseInfo
+    public enum eVObjectState // 表现状态,控制shader等
     {
-        public int m_resId;
-        public Vector3 m_pos;
-        public Vector3 m_dir;  // 方向向量
-        public int m_headHeight;
+        None,
+        stun,
+        Silence,    // 被沉默
+        God,        // 天神下凡，无敌
+
+        unmove ,    // 禁锢 无法移动
+        sleep,     // 睡眠，被攻击时解除
+        SuperArmor,   // 霸体
+
+        // 仅仅控制表现层状态
+        Hit,         // 受击
+        AlphaToHalf, // 半透
+        AlphaToHide, // 全透
+        Nihility,    // 虚无状态
+        Show,
     }
 
-    public partial class VObject
+    public struct SMtCreatureAnima
     {
-        // 人物和技能 共用实体对象创建，移动同步，销毁
-        public int m_id;
-        public Entity m_ent;
-        private MtBaseMoveInfo m_moveInfo = new MtBaseMoveInfo();
-        public bool m_bMoveing;
-        public bool m_destroy;
+        public const int ANIMA_IDLE = 1;     // 近战待机
+        public const int ANIMA_IDLE2 = 2;    // 远程待机
+        public const int ANIMA_WAlk = 3;
+        public const int ANIMA_WAlk2 = 4;
+        public const int ANIMA_DIE = 6;
+        public const int ANIMA_RESET = 8;
+    }
 
-        private sVOjectBaseInfo m_baseInfo;
+    public struct SBindPont
+    {
+        public enum eBindType
+        {
+            Head = 0,
+            Chest = 1,
+            Origin = 2,
+            LRHand = 3,
+            CreaturePos = 4,
+            CreatureHeadPos = 5, // 角色头顶跟随
+            Muzzle, // 武器枪口
+            //RHand = 5,
+            //LHand = 6,
+        }
+
+        public const string HEAD = "over_head";
+        public const string CHEST = "hit";
+        public const string ORIGIN = "origin";
+        public const string R_HAND = "r_hand";
+        public const string L_HAND = "l_hand";
+
+        public static string GetBindPont(int type)
+        {
+            switch (type)
+            {
+                case 0:
+                    return HEAD;
+                case 1:
+                    return CHEST;
+                case 2:
+                    return ORIGIN;
+                case 6:
+                    return "qk";
+            }
+            return null;
+        }
+    }
+
+
+
+    public partial class VObject : VBase
+    {
         public bool m_bMaster;
         public CmdFspEnum m_state;
         public CThingHead m_head;
+
+        // key=特效id,val=特效hid 多个，支持左右手
+        private Dictionary<int, object> m_dicBuff;
+        // key=特效id,val=特效数量,用于特效引用计数
+        private Dictionary<int, int> m_dicBuffCount;
+
+        public int m_iShowState;   // 表现状态 0000
+        public bool m_bDead;
+        // 需要异步回调的数据
+        public CmdFspUpdateEquip m_cmdUpdateEquip;
+        public Vector3 m_curveEndPos;
+        private bool m_ride;
+
+        //private int m_masterHaloHid;
 
         public VObject()
         {
 
         }
 
-        
+        public override void Create(sVOjectBaseInfo baseInfo)
+        {
+            base.Create(baseInfo);
+
+            if (m_baseInfo.m_showHead)
+            {
+                m_head = new CThingHead("1111");
+            }
+        }
+
+        public override void CreateEnd(Entity ent)
+        {
+            base.CreateEnd(ent);
+            // 角色的处理
+            if(ent is BattleEntity)
+            {
+                ((BattleEntity)ent).SetPriority(0);
+                ResetState();
+                // 异步加载完成，换装
+                if (m_cmdUpdateEquip != null)
+                {
+                    UpdateEquip();
+                }
+                if(ent.GetObject() == null)
+                {
+                    Debug.Log("表现层对象为空：" + m_baseInfo.m_resId);
+                    return;
+                }
+                GameObjectHelper.Get(ent.GetObject()).SetUid(m_baseInfo.m_uid);
+            }
+            else
+            {
+                Debug.LogError("ent:" + ent);
+            }
+            //ShowFootHalo(m_footHaloEffect);
+            // 主角光圈
+            //ShowFootHalo_Master();
+        }
+
         /// <summary>
-        /// 创建模型
+        /// type=2  比如修改状态2
+        /// 1<<type = 0001<<2 = 0100  
+        /// m_iShowState = 0000 | 0100 = 0100 如果之前无状态，再设置2
+        /// m_iShowState = 0100 & 1011 = 0000 如果之前有状态2，再取消2
+        /// m_iShowState = 0110 & 1011 = 0010 如果之前有状态2和1，再取消2
         /// </summary>
-        public virtual void Create(sVOjectBaseInfo baseInfo)
+        public void SetShowState(eVObjectState type, bool bSet)
         {
-            m_head = new CThingHead("1111");
-
-            m_baseInfo = baseInfo;
-            EntityBaseInfo info = new EntityBaseInfo();
-            info.m_resID = baseInfo.m_resId;
-            info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
-            info.m_vPos = baseInfo.m_pos;
-            info.m_vRotate = Quaternion.LookRotation(baseInfo.m_dir).eulerAngles;
-            int hid = EntityManager.Inst.CreateEntity(eEntityType.eBoneEntity, info, (ent)=> 
+            int iType = (int)type;
+            if (bSet)
             {
-                if(m_bMaster)
-                {
-                    CameraMgr.Inst.InitCamera(this);
-                }
-                PushCommand(new CmdFspStopMove());
-            });
-            m_ent = (BoneEntity)EntityManager.Inst.GetEnity(hid);
+                m_iShowState = m_iShowState | (1 << iType);   // 一个为1都为1
+            }
+            else
+            {
+                m_iShowState = m_iShowState & ~(1 << iType);  // 两个都为1才是1
+            }
         }
 
-        public Entity GetEnt()
+        // tpye=2  0100>>2 = 0001 与 0001做&(位与)运算  为0001 > 0 为存在 
+        public bool CheckState(eVObjectState type)
         {
-            return m_ent;
+            int iType = (int)type;
+            return ((m_iShowState >> iType) & 1) > 0;
         }
 
-        public virtual void SetPos(Vector3 pos)
+        public void UpdateMaster(bool bMaster)
         {
-            m_moveInfo.m_pos = pos;
+            m_bMaster = bMaster;
+            if(bMaster)
+            {
+                CameraMgr.Inst.InitCamera(this);
+            }
         }
 
-        public virtual void SetDir(Vector3 dir)
-        {
-            m_moveInfo.m_dir = dir;
-            StartRotate(dir, 0.1f); // 写法待优化
-        }
 
-        public virtual void SetSpeed(float speed)
+        public override void PushCommand(IFspCmdType cmd)
         {
-            m_moveInfo.m_speed = speed;
-        }
-
-        public virtual void PushCommand(IFspCmdType cmd)
-        {
+            BattleEntity ent = GetEnt() as BattleEntity;
             //Debug.Log("切换：" + cmd.GetCmdType());
-            if(cmd.GetCmdType() == CmdFspEnum.eFspRotation)
+            switch (cmd.GetCmdType())
             {
-                CmdFspRotation rota = cmd as CmdFspRotation;
-                StartRotate(rota.m_rotation, 0.1f);
-            }
-            else if(cmd.GetCmdType() == CmdFspEnum.eFspStopMove)
-            {
-                m_state = cmd.GetCmdType();
-                m_bMoveing = false;
-                AnimationAction animaInfo = new AnimationAction();
-                animaInfo.crossTime = AnimationInfo.m_crossTime;
-                animaInfo.playSpeed = 1;
-                animaInfo.strFull = "stand";
-                animaInfo.eMode = WrapMode.Loop;
-                ((BoneEntity)m_ent).Play(animaInfo);
-            }
-            else if(cmd.GetCmdType() == CmdFspEnum.eFspMove)
-            {
-                m_state = cmd.GetCmdType();
-                m_bMoveing = true;
-                AnimationAction animaInfo = new AnimationAction();
-                animaInfo.crossTime = AnimationInfo.m_crossTime;
-                animaInfo.playSpeed = 1;
-                animaInfo.strFull = "run";
-                animaInfo.eMode = WrapMode.Loop;
-                ((BoneEntity)m_ent).Play(animaInfo);
-            }
-            else if(cmd.GetCmdType() == CmdFspEnum.eUIHead)
-            {
-                CmdUIHead head = cmd as CmdUIHead;
-                switch(head.type)
-                {
-                    case 1:
-                    m_head.SetName(head.name);
-                    break;
-                    case 2:
-                    m_head.SetLevel(head.lv);
-                    break;
-                    case 3:
-                    m_head.SetHp(head.curHp, head.maxHp);
-                    break;
-                    case 4:
-                    m_head.SetHud(head.hudText, head.hudType);
-                    break;
-                }
-            }
-            else if(cmd.GetCmdType() == CmdFspEnum.eLife)
-            {
-                CmdLife head = cmd as CmdLife;
-                if(head.state)
-                {
+                #region 常态
+                case CmdFspEnum.eFspStopMove:
 
-                }
-                else
-                {
-                    AnimationAction animaInfo = new AnimationAction();
-                    animaInfo.crossTime = AnimationInfo.m_crossTime;
-                    animaInfo.playSpeed = 1;
-                    animaInfo.strFull = "die_1";
-                    animaInfo.eMode = WrapMode.Once;
-                    ((BoneEntity)m_ent).Play(animaInfo);
-                }
+                    m_state = cmd.GetCmdType();
+                    m_bMoveing = false;
+                    ((BattleEntity)GetEnt()).SetPriority(0);
+                    ResetState();
+                    break;
+                case CmdFspEnum.eFspMove:
+                case CmdFspEnum.eFspAutoMove:
+                    m_state = cmd.GetCmdType();
+                    m_bMoveing = true;
+                    ResetState();
+                    break;
+                case CmdFspEnum.eUIHead:
+                    CmdUIHead head = cmd as CmdUIHead;
+                    switch (head.type)
+                    {
+                        case 1:
+                            if(m_head != null)
+                                m_head.SetName(head.name);
+                            break;
+                        case 2:
+                            if (m_head != null)
+                                m_head.SetLevel(head.lv);
+                            break;
+                        case 3:
+                            if (m_head != null)
+                                m_head.SetHp(head.curHp, head.maxHp);
+                            break;
+                        case 4:
+                            if (m_head != null)
+                                m_head.SetHud(head.hudText, head.hudType);
+                            break;
+                        case 5:
+                            if (m_head != null)
+                                m_head.SetHeadShow(head.bShow);
+                            break;
+                        case 8:
+                            if (m_head != null)
+                                m_head.SetTeam(head.bTeam);
+                            break;
+                        //case 9:
+                        //    if (m_head != null)
+                        //        m_head.ShowNameOnly(head.bShow);
+                        //    break;
+                        case 10:
+                            // The state of dizziness does not play the hit action
+                            if (CheckState(eVObjectState.stun))
+                                return;
+                            ent.PlayAnima(head.animaId, ()=> {
+                                ResetState();
+                            });
+                            break;
+                        case 11:
+                            if (head.effectBindPos == (int)SBindPont.eBindType.CreatureHeadPos)
+                            {
+                                CEffectMgr.CreateByCreaturePos(head.effectId, ent, 2);
+                            }
+                            else if(head.effectBindPos == (int)SBindPont.eBindType.Muzzle)  // 枪口
+                            {
+                                CEffectMgr.Create(head.effectId, ((BattleEntity)GetEnt()).
+                                    GetRightPoint());
+                            }
+                            else
+                            {
+                                CEffectMgr.Create(head.effectId, GetEnt(), SBindPont.GetBindPont(head.effectBindPos));
+                            }
+                            break;
+                        case 12:
+                            if(head.bRide)
+                            {
+                                m_ride = true;
+                                VObject obj = head.rideObject;
+                                GetEnt().SetParent(((BattleEntity)obj.GetEnt()).GetBone("ride"));
+                            }
+                            else
+                            {
+                                m_ride = false;
+                                GetEnt().ClearBind();
+                                Quaternion dest = Quaternion.LookRotation(m_moveInfo.m_dir);
+                                GetEnt().SetRot(dest);
+                                GetEnt().SetScale(Vector3.one * m_baseInfo.m_scale);
+                            }
+                            break;
+                        //case 13:
+                        //    if (m_head != null)
+                        //        m_head.SetTaskState(head.taskstate);
+                        //    break;
+                        case 14:
+                               ShowFootHalo(head.effectId);
+                            break;
+                    }
+                    break;
+                case CmdFspEnum.eLife:
+                    if (ent == null)
+                        return;
+                    CmdLife life = cmd as CmdLife;
+                    m_bDead = !life.state;
+
+                    if (life.state)
+                    {
+                        ent.SetPriority(0);
+                        ent.PlayAnima(SMtCreatureAnima.ANIMA_RESET, ()=>{
+                            ResetState();
+                            // 复活说话
+                            //PlaySpeak(eRoleSpeakCsv.revive);
+                        });
+                        // 播放复活特效
+                        if (m_bMaster)
+                        {
+                            CEffectMgr.Create(21002, GetEnt().GetPos(), GetEnt().GetRotate());
+                        }
+                    }
+                    else
+                    {
+                        m_bMoveing = false;
+                        ent.PlayAnima(SMtCreatureAnima.ANIMA_DIE);
+                        SoundManager.Inst.PlaySound(m_baseInfo.m_dieSound, ent.GetPos());
+                        CEffectMgr.Create(m_baseInfo.m_dieEffect, GetEnt(), SBindPont.ORIGIN);
+
+                        // 死亡说话
+                        //PlaySpeak(eRoleSpeakCsv.die);
+                    }
+                    break;
+                #endregion
+                case CmdFspEnum.eFspUpdateEquip:
+                    m_cmdUpdateEquip = cmd as CmdFspUpdateEquip;
+                    UpdateEquip();
+                    break;
+
+                #region BUFF特效
+                case CmdFspEnum.eBuff:                        // 特效挂点设置
+                    CmdFspBuff buff = cmd as CmdFspBuff;
+                    int effectId = buff.effectId;
+                    if (effectId == 0)
+                        return;
+
+                    //Debug.Log(buff.effectId + " add:" + buff.bAdd + "   " + buff.bindType);
+                    if (m_dicBuff == null)
+                        m_dicBuff = new Dictionary<int, object>();
+                    if (m_dicBuffCount == null)
+                        m_dicBuffCount = new Dictionary<int, int>();
+                    if (buff.bAdd)
+                    {
+                        if (!m_dicBuff.ContainsKey(effectId))
+                        {
+                            if (buff.bindType == (int)SBindPont.eBindType.LRHand)  // 左右手
+                            {
+                                List<int> hid = new List<int>();
+                                int l = CEffectMgr.Create(effectId, m_ent, SBindPont.L_HAND);
+                                int r = CEffectMgr.Create(effectId, m_ent, SBindPont.R_HAND);
+                                hid.Add(l);
+                                hid.Add(r);
+                                m_dicBuff[effectId] = hid;
+
+                                if (!IsVisible())
+                                {
+                                    CEffectMgr.GetEffect(l).SetShow(false);
+                                    CEffectMgr.GetEffect(r).SetShow(false);
+                                }
+                            }
+                            else if (buff.bindType == (int)SBindPont.eBindType.CreaturePos)
+                            {
+                                int hid = CEffectMgr.CreateByCreaturePos(effectId, m_ent, 1);
+                                m_dicBuff[effectId] = hid;
+
+                                if (!IsVisible())
+                                {
+                                    CEffect c = CEffectMgr.GetEffect(hid);
+                                    if (c != null)
+                                        c.SetShow(false);
+                                }
+                            }
+                            else if (buff.bindType == (int)SBindPont.eBindType.CreatureHeadPos)
+                            {
+                                int hid = CEffectMgr.CreateByCreaturePos(effectId, m_ent, 2);
+                                m_dicBuff[effectId] = hid;
+
+                                if (!IsVisible())
+                                {
+                                    CEffect c = CEffectMgr.GetEffect(hid);
+                                    if (c != null)
+                                        c.SetShow(false);
+                                }
+                            }
+                            else
+                            {
+                                int hid = CEffectMgr.Create(effectId, m_ent, SBindPont.GetBindPont(buff.bindType), null);
+                                m_dicBuff[effectId] = hid;
+
+                                if (!IsVisible())
+                                {
+                                    CEffect c = CEffectMgr.GetEffect(hid);
+                                    if (c != null)
+                                        c.SetShow(false);
+                                }
+                            }
+                        }
+                        if (!m_dicBuffCount.ContainsKey(effectId))
+                        {
+                            m_dicBuffCount[effectId] = 1;
+                        }
+                        else
+                        {
+                            m_dicBuffCount[effectId]++;
+                        }
+                    }
+                    else
+                    {
+                        if (m_dicBuffCount.ContainsKey(effectId))
+                        {
+                            m_dicBuffCount[effectId]--;
+                            if (m_dicBuffCount[effectId] <= 0)
+                            {
+                                m_dicBuffCount.Remove(effectId);
+                            }
+                        }
+
+                        if (m_dicBuff.ContainsKey(effectId) && !m_dicBuffCount.ContainsKey(effectId))   // 如果包含这个BUFF，并且计数=0，才销毁
+                        {
+                            if (buff.bindType == (int)SBindPont.eBindType.LRHand)
+                            {
+                                List<int> hid = (List<int>)m_dicBuff[effectId];
+                                for (int i = 0; i < hid.Count; i++)
+                                {
+                                    CEffectMgr.Destroy(hid[i]);
+                                }
+                            }
+                            else
+                            {
+                                CEffectMgr.Destroy((int)m_dicBuff[effectId]);
+                            }
+                            m_dicBuff.Remove(effectId);
+                        }
+                    }
+     
+                    break;
+                #endregion
+
+                #region 状态表现
+                case CmdFspEnum.eState:                      // 外观状态设置
+                    CmdFspState state = cmd as CmdFspState;
+                    eVObjectState type = state.type;
+                    //Debug.Log("状态 add:" + state.bAdd + "   " + (eVObjectState)type);
+                    if (state.bAdd)
+                    {
+                        SetShowState(type, true);
+                        switch (type)
+                        {
+                            case eVObjectState.AlphaToHide:   // 全透 all alpha need hide effect
+                                ent.SetShader(eShaderType.eAlphaToHide, Color.white, 0.3f, false, () =>
+                                {
+                                    ent.SetShow(false);
+                                });
+                                break;
+                            case eVObjectState.AlphaToHalf: // 半透
+                                GetEnt().SetShow(true);
+                                if (CheckState(eVObjectState.AlphaToHide)) // 半透，全透状态应该是互斥的
+                                {
+                                    SetShowState(eVObjectState.AlphaToHide, false);
+                                    ent.SetShader(eShaderType.eAlphaToHalf, Color.white, 0.0f, false);
+                                }
+                                else
+                                {
+                                    ent.SetShader(eShaderType.eAlphaToHalf, Color.white, 0.3f, false);
+                                }
+                                break;
+                            case eVObjectState.Nihility:    // 虚无
+                                //if (m_head != null)
+                                //{
+                                //    m_head.SetHeadAlpha(0.5f);
+                                //}
+                                //ent.SetShader(eShaderType.eNihility, new Color(1, 1, 1, 0.7f));
+                                break;
+                            case eVObjectState.God:    // 无敌
+                                //ent.SetShader(eShaderType.eRim, Color.yellow);
+                                break;
+                            case eVObjectState.Hit:    // 受击
+                                //ent.SetShader(eShaderType.eRim, new Color(0.8f, 0.8f, 0.8f, 1.0f));
+                                break;
+                            case eVObjectState.Silence:   // 被沉默
+                                if (m_bMaster)
+                                {
+                                    JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
+                                    //js.SetLock(true);
+                                }
+                                break;
+                            case eVObjectState.Show:
+                                GetEnt().SetShow(true);
+                                break;
+                            case eVObjectState.stun:    // 晕眩
+                                ((BattleEntity)GetEnt()).Play(false);
+                                if (m_bMaster)
+                                {
+                                    JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
+                                    //js.SetLock(true);
+                                }
+                                break;
+                            case eVObjectState.unmove:    // 禁锢
+                    
+                                break;
+                            case eVObjectState.sleep:    // 睡眠
+                       
+                                if (m_bMaster)
+                                {
+                                    JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
+                                    //js.SetLock(true);
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        SetShowState(type, false);
+                        switch (type)
+                        {
+                            case eVObjectState.AlphaToHide:   // 全透
+                                ent.RemoveShader();
+                                ent.SetShow(true);
+                                break;
+                            case eVObjectState.AlphaToHalf: // 半透,暂时都只用了移除全透
+                                if (m_head != null)
+                                {
+                                    m_head.SetHeadAlpha(1.0f);
+                                }
+                                ent.RemoveShader();
+                                break;
+                            case eVObjectState.Nihility:
+                            case eVObjectState.God:
+                            case eVObjectState.Hit:
+                                //if (m_head != null)
+                                //{
+                                //    m_head.SetHeadAlpha(1.0f);
+                                //}
+                                //ent.RemoveShader();
+                                break;
+                            case eVObjectState.Silence:   // 取消沉默
+                                if (m_bMaster)
+                                {
+                                    JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
+                                    //js.SetLock(false);
+                                }
+                                break;
+                            case eVObjectState.Show:
+                                GetEnt().SetShow(false);
+                                break;
+                            case eVObjectState.stun:    // 晕眩
+                                ((BattleEntity)GetEnt()).Play(true);
+                                ResetState();
+                                if (m_bMaster)
+                                {
+                                    JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
+                                    //js.SetLock(false);
+                                }
+                                break;
+                            case eVObjectState.unmove:    // 禁锢
+                                ResetState();
+                                break;
+                            case eVObjectState.sleep:    // 睡眠
+                                ResetState();
+                                if (m_bMaster)
+                                {
+                                    JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
+                                    //js.SetLock(false);
+                                }
+                                break;
+                        }
+                    }
+                    break;
+                #endregion
+
+                case CmdFspEnum.eSkillAnimaPriority:   // 设置技能动作优先级
+                    CmdSkillAnimaPriority cmdPri = cmd as CmdSkillAnimaPriority;
+                    ((BattleEntity)GetEnt()).SetPriority(cmdPri.priority);
+                    break;
             }
         }
 
-        public virtual void Update(float time, float fdTime)
+        /// <summary>
+        /// 重置动作状态
+        /// 1.施法动作结束时
+        /// 2.移除某状态时
+        /// </summary>
+        public void ResetState()
         {
-            if(m_ent == null || !m_ent.IsInited())
+            if (m_bDead || CheckState(eVObjectState.stun))
                 return;
-            if(m_head != null)
+
+            if (m_state == CmdFspEnum.eFspStopMove || m_state == CmdFspEnum.none)
             {
-                m_head.UpdatePos(m_ent.GetPos() + Vector3.up * m_baseInfo.m_headHeight * 0.001f);
+                PlayIdle();
             }
-            if(m_bMoveing)
+            else
             {
-                Entity ent = m_ent as Entity;
-                _UpdateMove(time, fdTime, ref ent, m_moveInfo);
-                _UpdateRotate(time, fdTime);
-                //GetEnt().SetRot(Quaternion.LookRotation(m_moveInfo.m_dir));
+                PlayMove();
             }
         }
 
-        public virtual void Destory()
+        private void PlayIdle()
         {
+            if (m_ent == null)
+                return;
+            //Debug.Log("play idle");
+            BattleEntity bEnt = (BattleEntity)m_ent;
+
+            if (m_cmdUpdateEquip == null)
+            {
+                bEnt.PlayAnima(SMtCreatureAnima.ANIMA_IDLE);
+            }
+            else
+            {
+                bEnt.PlayAnima(SMtCreatureAnima.ANIMA_IDLE2);
+            }
+            StopMoveSound();
+        }
+
+        private void PlayMove()
+        {
+            //Debug.Log("play move");
+            if (m_ent == null)
+                return;
+            BattleEntity bEnt = (BattleEntity)m_ent;
+            if(m_cmdUpdateEquip == null)
+            {
+                bEnt.PlayAnima(SMtCreatureAnima.ANIMA_WAlk);
+            }
+            else
+            {
+                bEnt.PlayAnima(SMtCreatureAnima.ANIMA_WAlk2);
+            }
+            PlayMoveSound();
+        }
+
+        private void UpdateEquip()
+        {
+            if (m_ent is BattleEntity)
+            {
+                ShowVipEffect(0);
+                DestoryFootHalo_Master();
+                (m_ent as BattleEntity).UpdateEquip(m_cmdUpdateEquip.m_dicEquip, ()=> {
+                    ResetState();
+                    ShowVipEffect(m_cmdUpdateEquip.m_vipLv);
+                    ShowFootHalo_Master();
+                });
+            }
+        }
+
+
+
+        public Vector3 GetHeadPos()
+        {
+            return m_ent.GetPos() + Vector3.up * m_baseInfo.m_headHeight;
+        }
+
+        public Vector3 GetHitHeight()
+        {
+            return Vector3.up * m_baseInfo.m_headHeight * 0.7f;
+        }
+
+        public override void Update(float time, float fdTime)
+        {
+            if (m_ent == null || !m_ent.IsInited())
+                return;
+
+
+            // 主角声音监听
+            if (m_bMaster && !CameraMgr.Inst.m_bDrag && !m_bDead)
+            {
+                CameraMgr.Inst.SetAudioListenerPos(m_ent.GetPos());
+            }
+            _UpdateMoveSound();
+            //_Update_MoveSpeak(fdTime);
+            if (m_head != null)
+            {
+                m_head.UpdatePos(GetHeadPos());
+            }
+
+            if (m_ride)
+                return;
+
+            base.Update(time, fdTime);
+        }
+
+        /// <summary>
+        /// 是否可见，全局的，用于添加特效时
+        /// </summary>
+        public bool IsVisible()
+        {
+            return true;
+        }
+
+        private void DestoryBuffEffect()
+        {
+            // 销毁特效
+            if (m_dicBuff != null)
+            {
+                foreach (KeyValuePair<int, object> item in m_dicBuff)
+                {
+                    if (item.Value is List<int>)
+                    {
+                        List<int> hid = (List<int>)item.Value;
+                        for (int i = 0; i < hid.Count; i++)
+                        {
+                            CEffectMgr.Destroy(hid[i]);
+                        }
+                    }
+                    else
+                    {
+                        CEffectMgr.Destroy((int)item.Value);
+                    }
+                }
+                m_dicBuff.Clear();
+                m_dicBuff = null;
+            }
+            if (m_dicBuffCount != null)
+            {
+                m_dicBuffCount.Clear();
+                m_dicBuffCount = null;
+            }
+        }
+
+        public override void Destory()
+        {
+            DestoryBuffEffect();
+            DestoryFootHalo_Master();
+            DestoryFootHalo();
+            DestoryMoveSound();
             m_destroy = true;
             if(m_head != null)
             {
                 m_head.RemoveHead();
                 m_head = null;
             }
-            if(m_ent != null)
-            {
-                EntityManager.Inst.RemoveEntity(m_ent.m_hid, true);
-                m_ent = null;
-            }
+            base.Destory();
         }
-
-        /// <summary>
-        /// 1.距离差值 小于 逻辑每帧偏移量，最终位置为 表现层位置（也理解为，当按照表现层去平滑移动时，如果达不到逻辑位置，就继续按照表现层计算）
-        /// 2.距离差值 小于 3倍的每帧偏移量，大于 逻辑每帧偏移量（就是要把表现层拉一点回去）
-        ///     1.调节比例 = 距离差值 / 最大偏移距离
-        ///     2.距离差值的方向 与 当前移动方向 做点乘
-        ///     3.根据逻辑信息 计算 评估位置
-        ///     4.根据 最大移动的位置 计算 评估方向
-        ///     5.根据点乘值 与 距离差值 做判断
-        ///         1.如果同方向表现层过快，就拉回来一点点
-        ///         2.如果方向相反，就增加一点点
-        ///         3.其他情况同2
-        /// 3.距离差值 大于 3倍的每帧偏移量，帧率在变化的时候，就是网络正常时，直接取逻辑位置 | 网络卡主了，实体位置不变
-        /// （比如在切后台，按暂停键，再切回游戏时，因为逻辑层的加速播放导致每帧逻辑位置增加非常快，如果逻辑位置和表现位置差值大，此时直接让玩家跳到逻辑位置即可）
-        /// </summary>
-        /// <param name="fTime"></param>
-        /// <param name="fdTime"></param>
-        /// <param name="ent"></param>
-        /// <param name="moveInfo"></param>
-        /// <returns></returns>
-        public Vector3 _UpdateMove(float fTime, float fdTime, ref Entity ent, MtBaseMoveInfo moveInfo)
-        {
-            // 表现层每帧增加距离
-            float dist = moveInfo.m_speed * fdTime;
-            Vector3 dir = moveInfo.m_dir;
-            Vector3 logicPos = moveInfo.m_pos;
-            Vector3 curPos = ent.GetPos();
-            // 表现层模拟的新位置
-            Vector3 viewPos = curPos + dir * dist;
-
-            Vector3 result = logicPos;
-            // 逻辑位置和表现层位置差值向量
-            Vector3 offsetVec = viewPos - logicPos;
-            // 偏移向量的长度
-            float offsetVecLen = offsetVec.magnitude;
-            // 最大偏移量， 这个应该是不对的
-            float minOffset = moveInfo.m_speed * FSPParam.clientFrameScTime;
-            float maxOffset = minOffset * 3;
-            if (offsetVecLen < moveInfo.RepairFramesMin * minOffset)  // （每帧表现-逻辑）小于最小的每帧偏移量时，取渲染位置，这样才能保证每一帧移动的流畅
-            {
-                result = viewPos;
-                moveInfo.RepairFramesMin = 1;
-                moveInfo.FrameBlockIndex = GameManager.Inst.GetFspManager().GetCurFrameIndex();
-                //Debug.Log("1.渲染位置和逻辑位置差值小于最小帧偏移， 直接取渲染位置");
-            }
-            else if (offsetVecLen < maxOffset)   // （每帧表现-逻辑）大于每帧偏移量时，也需要平滑处理
-            {
-                //Debug.Log("2.渲染位置和逻辑位置差值小于最大帧偏移，进行插值逼近");
-                float adjustRatio = Mathf.Clamp(offsetVecLen / maxOffset, 0.05f, 0.3f);
-                float dotValue = Vector3.Dot(offsetVec, dir);        // 计算方向是否相反，逻辑可能改变方向，但是表现层还在保持之前的
-                Vector3 estimPos = logicPos + dir * maxOffset;       // 逻辑估计的目标位置
-                Vector3 estimDir = (estimPos - curPos).normalized;   // 逻辑估计的方向
-
-                //Debug.Log("dotValue:" + dotValue);
-
-                if (dotValue > offsetVecLen * 0.707f)           // 方向一致时，减少一点点
-                {
-                    result = curPos + estimDir * dist * (1.0f - adjustRatio);
-                }
-
-                else if (dotValue < offsetVecLen * (-0.707f))  // 方向相反时（逻辑层改变了方向），根据最新的方向，增加一点点
-                {
-                    result = curPos + estimDir * dist * (1.0f + adjustRatio);
-                }
-                else
-                {
-                    result = curPos + estimDir * dist * (1.0f + adjustRatio);
-                }
-                moveInfo.RepairFramesMin = 1;
-                moveInfo.FrameBlockIndex = GameManager.Inst.GetFspManager().GetCurFrameIndex();
-            }
-            else
-            {
-                Debug.Log("3.差值非常大时");
-                //卡住了暂时保持原位
-                if (GameManager.Inst.GetFspManager().GetCurFrameIndex()== moveInfo.FrameBlockIndex)
-                {
-                    Debug.Log("4.差值非常大时，帧率不变时，取实体本身的位置");
-                    result = curPos;
-                }
-                else
-                {
-                    //超出最大偏差，直接拉扯
-                    moveInfo.RepairFramesMin = 1;
-                }
-            }
-            // 切到后台时，网络层没卡，渲染帧卡主，但是切回来时，会获取最新逻辑位置
-            //if ((this as MtCreature) != null)
-            //{
-            //    Debug.Log("logicPos:" + logicPos.x + "|" + logicPos.z);
-            //    Debug.Log("entityPos:" + curPos.x + "|" + curPos.z);
-            //}
-            ent.SetPos(result);
-            return result;
-        }
-
     }
 
     
-    public class MtBaseMoveInfo
-    {
-        public bool m_teleport;
-        public Vector3 m_pos;
-        public Vector3 m_dir;   // 单位方向
-        public float m_speed;
-        // 平滑插值下限偏差（好像并没什么用）
-        public int RepairFramesMin = 1;
-        // 卡住时的当前帧
-        public int FrameBlockIndex;
-    }
 }
 

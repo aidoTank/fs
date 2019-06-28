@@ -1,227 +1,257 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using UnityEngine;
 
-//namespace Roma
-//{
-//    /// <summary>
-//    /// 需要在进入游戏时，就加载的shader资源
-//    /// </summary>
-//    public enum eShaderRes      // 对应资源表
-//    {
-//        eButtonDark = 50,
-//        eButtonGray = 51,
-//        eButtonLight = 52,
-//        eOutLine2 = 53,
-//        eMobileBloom = 54,
-//        eCCLookupFilter = 55,
-//        eAlphaDiffuse = 56,
-//        eUIGuideMask = 57,
-//        eDissolve = 58,
-//        eStone = 59,// 石头shader
-//        eMax,
-//    }
+namespace Roma
+{
+    /// <summary>
+    /// 需要在进入游戏时，就加载的shader资源
+    /// </summary>
+    public enum eShaderRes      // 对应资源表
+    {
+        eAlphaDiffuse = 21,
+        eNihility = 22,     // 虚无
+        eRim = 23,
 
-//    /// <summary>
-//    /// Entity使用的动态shader类型
-//    /// </summary>
-//    public enum eShaderType
-//    {
-//        eColorToBlack,    // 只是设置颜色
-//        eOutLine,         // 高亮描边
-//        eDissolve,        // 溶解
-//        eAlphaDiffuse,    // 透明
-//        eStone,           // 石化
-//    }
 
-//    public delegate void OnAllShaderLoaded(int cur, int max);
-//    public delegate void ShaderShowEnd();
+        eAlphaMask = 31,
+        eButtonDark = 32,
+        eButtonGray = 33,
+        eButtonLight = 34,
+        eUIMatAnim = 35,
 
-//    public class ShaderManager : Singleton
-//	{
-//        public Dictionary<int, Shader> m_dicShaer = new Dictionary<int, Shader>();
+        eMax,
+    }
 
-//        private OnAllShaderLoaded m_onShaderLoaded;
-//        private int m_curNum;
-//        private int m_maxNum;
+    /// <summary>
+    /// Entity使用的动态shader类型
+    /// </summary>
+    public enum eShaderType
+    {
+        eAlphaToHalf,     // 透明至半透明
+        eAlphaToHide,     // 透明至消失
+        eNihility,        // 虚无
+        eRim,             // 无敌
 
-//        public ShaderManager()
-//            : base(true)
-//        {
-//        }
 
-//        public void LoadAllShader(OnAllShaderLoaded loaded)
-//        {
-//            m_onShaderLoaded = loaded;
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eButtonDark, OnShaderLoaded, null);
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eButtonGray, OnShaderLoaded, null);
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eButtonLight, OnShaderLoaded, null);
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eOutLine2, OnShaderLoaded, null);
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eMobileBloom, OnShaderLoaded, null);
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eCCLookupFilter, OnShaderLoaded, null);
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eAlphaDiffuse, OnShaderLoaded, null);
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eUIGuideMask, OnShaderLoaded, null);
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eDissolve, OnShaderLoaded, null);
-//            ResourceFactory.Inst.LoadResource((uint)eShaderRes.eStone, OnShaderLoaded, null);
-//            m_maxNum = (int)eShaderRes.eMax - (int)eShaderRes.eButtonDark;
-//        }
+        eColorToBlack,    // 只是设置颜色
+        eOutLine,         // 高亮描边
+        eDissolve,        // 溶解
 
-//        private void OnShaderLoaded(Resource res)
-//        {
-//            Shader shader = (Shader)res.m_assertBundle.LoadAsset(res.GetResInfo().strName);
-//            if (Application.isEditor)
-//            {
-//                shader = Shader.Find(shader.name);
-//            }
-//            m_dicShaer[(int)res.GetResInfo().nResID] = shader;
+        eStone,           // 石化
+    }
 
-//            m_curNum++;
-//            m_onShaderLoaded(m_curNum, m_maxNum);
-//        }
+    public delegate void OnAllShaderLoaded(int cur, int max);
+    public delegate void ShaderShowEnd();
 
-//        public Shader GetShader(eShaderRes res)
-//        {
-//            if (!m_dicShaer.ContainsKey((int)res))
-//                return null;
-//            Shader shader = m_dicShaer[(int)res];
-//            if (shader == null)
-//            {
-//                Debug.LogWarning("shader is null:"+ res);
-//            }
-//            return shader;
-//        }
+    public class ShaderManager : Singleton
+    {
+        public Dictionary<int, Shader> m_dicShaer = new Dictionary<int, Shader>();
 
-//        public void RemoveShader(EntityShaderInfo info)
-//        {
-//            if (m_entityMap.ContainsKey(info.entity.m_handleID))
-//            {
-//                m_entityMap[info.entity.m_handleID] = null;
-//                m_entityMap.Remove(info.entity.m_handleID);
-//            }
-//        }
+        private Action<int, int> m_onShaderLoaded;
+        private int m_curNum;
+        private int m_maxNum;
 
-//        public void AddShader(EntityShaderInfo info)
-//        {
-//            if (m_entityMap.ContainsKey(info.entity.m_handleID))
-//            {
-//                info.entity.RestoreShader();
-//                info.entity.RestoreColor();
-//                m_entityMap[info.entity.m_handleID] = null;
-//                m_entityMap.Remove(info.entity.m_handleID);
-//            }
-//            m_entityMap[info.entity.m_handleID] = info;
-//            for (int i = 0; i < info.entity.m_listRenderer.Count; i++)
-//            {
-//                Renderer render = info.entity.m_listRenderer[i];
-//                if (render == null)
-//                    continue;
-//                if (info.type == eShaderType.eOutLine)
-//                {
-//                    Material mat = render.material;
-//                    mat.shader = GetShader(eShaderRes.eOutLine2);
-//                    mat.SetColor("_RimColor", info.color);
-//                }
-//                else if (info.type == eShaderType.eDissolve)
-//                {
-//                    Material mat = render.material;
-//                    mat.shader = GetShader(eShaderRes.eDissolve);
-//                    mat.SetColor("_Color", info.color);
-//                }
-//                else if (info.type == eShaderType.eAlphaDiffuse)
-//                {
-//                    Material mat = render.material;
-//                    mat.shader = GetShader(eShaderRes.eAlphaDiffuse);
-//                    info.color.a = 0.2f;
-//                    mat.SetColor("_Color", info.color);
-//                }
-//                else if (info.type == eShaderType.eStone)
-//                {
-//                    Material mat = render.material;
-//                    mat.shader = GetShader(eShaderRes.eStone);  // 石头shader无需设置颜色
-//                    //mat.SetColor("_Color", info.color);
-//                }
-//            }
-//        }
+        public ShaderManager()
+            : base(true)
+        {
+        }
 
-//        private void UpdatePower(EntityShaderInfo info, float val)
-//        {
-//            for (int i = 0; i < info.entity.m_listRenderer.Count; i++)
-//            {
-//                Renderer render = info.entity.m_listRenderer[i];
-//                if (render == null)
-//                    continue;
-  
-//                if (info.type == eShaderType.eColorToBlack)
-//                {
-//                    float rgb = ((1 - val) * 0.1f + 0.2f);
-//                    render.material.SetColor("_Color",
-//                    new Color(
-//                        info.color.r * rgb,
-//                        info.color.g * rgb,
-//                        info.color.b * rgb,
-//                        1.0f));
-//                }
-//                else if (info.type == eShaderType.eOutLine)
-//                {
-//                    render.material.SetFloat("_RimPower", val);
-//                }
-//                else if(info.type == eShaderType.eDissolve)
-//                {
-//                    render.material.SetFloat("_Tile", val);
-//                    render.material.SetFloat("_Amount", val);
-//                    render.material.SetFloat("_DissSize", val * 0.5f);
-//                    render.material.SetTexture("_DissolveText", render.material.GetTexture("_MainTex"));
-//                }
-//            }
-//        }
+        public void LoadAllShader(Action<int, int> loaded)
+        {
+            m_onShaderLoaded = loaded;
+            ResourceFactory.Inst.LoadResource((int)eShaderRes.eAlphaDiffuse, OnShaderLoaded);
+            ResourceFactory.Inst.LoadResource((int)eShaderRes.eNihility, OnShaderLoaded);
+            ResourceFactory.Inst.LoadResource((int)eShaderRes.eRim, OnShaderLoaded);
 
-//        public override void Update(float fTime, float fDTime)
-//        {
-//            Dictionary<uint, EntityShaderInfo>.Enumerator ms = m_entityMap.GetEnumerator();
-//            while (ms.MoveNext())
-//            {
-//                EntityShaderInfo info = ms.Current.Value;
-//                info.curTime += fDTime;
-//                if (info.curTime >= info.showTime)
-//                {
-//                    m_tempDestoryEntityList.Add(info);
-//                }
-//                else
-//                {
-//                    UpdatePower(info, info.curTime / info.showTime);
-//                }
-//            }
+            ResourceFactory.Inst.LoadResource((int)eShaderRes.eAlphaMask, OnShaderLoaded);
+            ResourceFactory.Inst.LoadResource((int)eShaderRes.eButtonDark, OnShaderLoaded);
+            ResourceFactory.Inst.LoadResource((int)eShaderRes.eButtonGray, OnShaderLoaded);
+            ResourceFactory.Inst.LoadResource((int)eShaderRes.eButtonLight, OnShaderLoaded);
+            ResourceFactory.Inst.LoadResource((int)eShaderRes.eUIMatAnim, OnShaderLoaded);
 
-//            List<EntityShaderInfo>.Enumerator del = m_tempDestoryEntityList.GetEnumerator();
-//            while (del.MoveNext())
-//            {
-//                EntityShaderInfo info = del.Current;
-//                info.entity.RestoreShader();
-//                info.entity.RestoreColor();
-//                m_entityMap.Remove(info.entity.m_handleID);
-//                if (info.showEnd != null)
-//                    info.showEnd();
-//                info.showEnd = null;
-//                info = null;
-//            }
-//            m_tempDestoryEntityList.Clear();
-//        }
+            m_maxNum = 8;
+        }
 
-//        public class EntityShaderInfo
-//        {
-//            public Entity entity;
-//            public eShaderType type;
-//            public Color color;
-//            public float showTime;
-//            public float curTime = 0.0f;
-//            public ShaderShowEnd showEnd;
-//        }
+        private void OnShaderLoaded(Resource res)
+        {
+            Shader shader = (Shader)res.m_assertBundle.LoadAsset(res.GetResInfo().strName);
+            if (Application.isEditor)
+            {
+                shader = Shader.Find(shader.name);
+            }
+            m_dicShaer[(int)res.GetResInfo().nResID] = shader;
 
-//        private Dictionary<uint, EntityShaderInfo> m_entityMap = new Dictionary<uint, EntityShaderInfo>();
-//        private List<EntityShaderInfo> m_tempDestoryEntityList = new List<EntityShaderInfo>();
+            m_curNum++;
+            if (m_onShaderLoaded != null)
+                m_onShaderLoaded(m_curNum, m_maxNum);
+        }
 
-//        public new static ShaderManager Inst;
-//	}
-//}
+        public Shader GetShader(eShaderRes res)
+        {
+            if (!m_dicShaer.ContainsKey((int)res))
+                return null;
+            Shader shader = m_dicShaer[(int)res];
+            if (shader == null)
+            {
+                Debug.LogWarning("shader is null:" + res);
+            }
+            return shader;
+        }
+
+
+        public void RemoveShader(int entHid)
+        {
+            EntityShaderInfo info;
+            if (m_entityMap.TryGetValue(entHid, out info))
+            {
+                //m_entityMap[info.entity.m_hid] = null;
+                m_entityMap.Remove(entHid);
+            }
+        }
+
+        public void AddShader(EntityShaderInfo info)
+        {
+            RemoveShader(info.entity.m_hid);
+            m_entityMap[info.entity.m_hid] = info;
+            for (int i = 0; i < info.entity.m_listRenderer.Count; i++)
+            {
+                Renderer render = info.entity.m_listRenderer[i];
+                if (render == null)
+                    continue;
+                Material mat = render.material;
+                switch (info.type)
+                {
+                    case eShaderType.eAlphaToHalf:
+                        mat.shader = GetShader(eShaderRes.eAlphaDiffuse);
+                        info.color.a = 1f;
+                        mat.SetColor("_TintColor", info.color);
+                        break;
+                    case eShaderType.eAlphaToHide:
+                        mat.shader = GetShader(eShaderRes.eAlphaDiffuse);
+                        info.color.a = 1f;
+                        mat.SetColor("_TintColor", info.color);
+                        break;
+                    case eShaderType.eNihility:
+                        mat.shader = GetShader(eShaderRes.eNihility);
+                        mat.SetColor("_TintColor", info.color);
+                        break;
+                    case eShaderType.eRim:
+                        mat.shader = GetShader(eShaderRes.eRim);
+                        mat.SetColor("_RimColor", info.color);
+                        break;
+                }
+            }
+        }
+
+        private void UpdatePower(EntityShaderInfo info, float val)
+        {
+            //if (info == null)
+            //    return;
+            Entity ent = info.entity;
+            if (ent == null)
+                return;
+            List<Renderer> list = ent.m_listRenderer;
+            if (list == null)
+                return;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                Renderer render = list[i];
+                if (render == null)
+                    continue;
+
+                switch (info.type)
+                {
+                    case eShaderType.eAlphaToHalf:
+                        info.color.a = val < 0.5f ? 1 - val : 0.5f;
+                        render.material.SetColor("_TintColor", info.color);
+                        break;
+                    case eShaderType.eAlphaToHide:
+                        if (val < 0.5f)
+                            val = 0.5f;
+                        info.color.a = 1 - val;
+                        render.material.SetColor("_TintColor", info.color);
+                        break;
+                }
+
+
+
+                //if (info.type == eShaderType.eColorToBlack)
+                //{
+                //    float rgb = ((1 - val) * 0.1f + 0.2f);
+                //    render.material.SetColor("_Color",
+                //    new Color(
+                //        info.color.r * rgb,
+                //        info.color.g * rgb,
+                //        info.color.b * rgb,
+                //        1.0f));
+                //}
+                //else if (info.type == eShaderType.eOutLine)
+                //{
+                //    render.material.SetFloat("_RimPower", val);
+                //}
+                //else if (info.type == eShaderType.eDissolve)
+                //{
+                //    render.material.SetFloat("_Tile", val);
+                //    render.material.SetFloat("_Amount", val);
+                //    render.material.SetFloat("_DissSize", val * 0.5f);
+                //    render.material.SetTexture("_DissolveText", render.material.GetTexture("_MainTex"));
+                //}
+            }
+        }
+
+        public override void Update(float fTime, float fDTime)
+        {
+            Dictionary<int, EntityShaderInfo>.Enumerator ms = m_entityMap.GetEnumerator();
+            while (ms.MoveNext())
+            {
+                EntityShaderInfo info = ms.Current.Value;
+                info.curTime += fDTime;
+                if (info.curTime >= info.showTime)
+                {
+                    if (info.showEnd != null)   // time out,execute callback
+                    {
+                        info.showEnd();
+                        info.showEnd = null;
+                    }
+                    if (info.bAutoEnd)
+                        m_tempDestoryEntityList.Add(info);
+
+                    UpdatePower(info, 1.0f);
+                }
+                else
+                {
+                    UpdatePower(info, info.curTime / info.showTime);
+                }
+            }
+
+            List<EntityShaderInfo>.Enumerator del = m_tempDestoryEntityList.GetEnumerator();
+            while (del.MoveNext())
+            {
+                EntityShaderInfo info = del.Current;
+                RemoveShader(info.entity.m_hid);
+                //info = null;
+            }
+            m_tempDestoryEntityList.Clear();
+        }
+
+        private Dictionary<int, EntityShaderInfo> m_entityMap = new Dictionary<int, EntityShaderInfo>();
+        private List<EntityShaderInfo> m_tempDestoryEntityList = new List<EntityShaderInfo>();
+
+        public static ShaderManager Inst;
+    }
+
+    public struct EntityShaderInfo
+    {
+        public Entity entity;
+        public eShaderType type;
+        public Color color;
+        public bool bAutoEnd; // 是否自动结束，移除
+        public float showTime;
+        public float curTime;
+        public Action showEnd;
+    }
+}

@@ -35,12 +35,12 @@ namespace Roma
                     case eEntityType.eEffectEntity:
                         entity = new EffectEntity(s_entityHandleId, initEnd, eType, baseInfo);
                         break;
-                    //case eEntityType.eSoundEntity:
-                    //    entity = new SoundEntity(s_entityHandleId, initEnd, eType, baseInfo);
-                    //    break;
-                    //case eEntityType.eBattleEntity:
-                    //    entity = new BattleEntity(s_entityHandleId, initEnd, eType, baseInfo);
-                    //    break;
+                    case eEntityType.eSoundEntity:
+                        entity = new SoundEntity(s_entityHandleId, initEnd, eType, baseInfo);
+                        break;
+                    case eEntityType.eBattleEntity:
+                        entity = new BattleEntity(s_entityHandleId, initEnd, eType, baseInfo);
+                        break;
                 }
                 if (null == entity)
                 {
@@ -84,6 +84,7 @@ namespace Roma
             }
             m_entityMap.Remove(uHandle);
             ent.m_hid = 0;
+
             if (bCache)
             {
                 if (ent != null)
@@ -130,7 +131,6 @@ namespace Roma
                     Entity ent = entNode.Value;
                     info.m_active = true;
                     ent.Revive(handleId, notify, info);
-                    m_curCacheNums--;
                     entityList.RemoveFirst();
                     //Debug.Log("===========================取出缓存" + ent.GetObject() + "  " + ent.GetResource().GetResInfo().nResID);
                     return ent;
@@ -141,24 +141,30 @@ namespace Roma
 
         private bool PushToPool(Entity ent)
         {
-            LinkedList<Entity> lstEntities = null;
-            if (!m_cacheEntityMap.TryGetValue(ent.GetEntityBaseInfo().m_resID, out lstEntities))
-            {
-                lstEntities = new LinkedList<Entity>();
-                m_cacheEntityMap.Add(ent.GetEntityBaseInfo().m_resID, lstEntities);
-            }
-            if (lstEntities.Count >= m_unitMaxCacheNums)
-            {
-                return false;
-            }
             if (!ent.IsInited())
             {
                 return false;
             }
-            //ent.Bind(null);
-            ent.SetShow(false);
-            lstEntities.AddLast(ent);
-            m_curCacheNums++;
+            LinkedList<Entity> listEnt = null;
+            if (!m_cacheEntityMap.TryGetValue(ent.GetEntityBaseInfo().m_resID, out listEnt))
+            {
+                listEnt = new LinkedList<Entity>();
+                m_cacheEntityMap.Add(ent.GetEntityBaseInfo().m_resID, listEnt);
+            }
+
+            if (listEnt.Count >= m_unitMaxCacheNums)
+            {
+                return false;
+            }
+
+            if (!listEnt.Contains(ent))
+            {
+                ent.ClearBind();
+                ent.Stop();
+                ent.SetShow(false);
+                listEnt.AddLast(ent);
+                return true;
+            }
             //Debug.Log("===========================加入缓存" + ent.GetObject() + "  " + ent.GetResource().GetResInfo().nResID);
             return true;
         }
@@ -186,21 +192,35 @@ namespace Roma
             m_entityMap.Clear();
         }
 
+        /// <summary>
+        /// 遍历设置现有实体画质
+        /// </summary>
+        public void SetQuality(bool bHigh)
+        {
+            foreach (KeyValuePair<int, Entity> item in m_entityMap)
+            {
+                item.Value.SetQuality(bHigh);
+            }
+            foreach (KeyValuePair<int, LinkedList<Entity>> item in m_cacheEntityMap)
+            {
+                LinkedList<Entity> list = item.Value;
+                foreach (Entity ent in list)
+                {
+                    ent.SetQuality(bHigh);
+                }
+            }
+        }
+
         public static EntityManager Inst;
         public static int s_entityHandleId;
         public Dictionary<int, Entity> m_entityMap = new Dictionary<int, Entity>();
-
-
         private List<Entity> m_tempEntityList = new List<Entity>();
-        /// <summary>
-        /// 当前资源缓存种类数
-        /// </summary>
-        public int m_curCacheNums = 0;
+
         /// <summary>
         /// 单个资源的最大缓存数量,MOBA类型，最大缓存9个差不多了
         /// </summary>
-        public int m_unitMaxCacheNums = 9;
-        public Dictionary<int, LinkedList<Entity>> m_cacheEntityMap = new Dictionary<int, LinkedList<Entity>>();
+        private int m_unitMaxCacheNums = 16;
+        private Dictionary<int, LinkedList<Entity>> m_cacheEntityMap = new Dictionary<int, LinkedList<Entity>>();
 
         public string GetCahceEntityInfo()
         {
@@ -245,7 +265,7 @@ namespace Roma
                 }
                 else
                 {
-                    info += num + "." + item.Value.GetEntityBaseInfo().m_strName + "(野对象)\n";
+                    info += num + "." + item.Value.GetEntityBaseInfo().m_resID + "(野对象)\n";
 
                 }
                 num++;

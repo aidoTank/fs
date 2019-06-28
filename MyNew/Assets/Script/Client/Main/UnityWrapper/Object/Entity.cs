@@ -16,32 +16,18 @@ namespace Roma
         eSoundEntity,
     }
 
-    // 用于区分实体的作用范围
-    public enum eEntityTag
-    {
-        eScene = 0,
-        eSmallGame,
-    }
-
-    public enum eUserData
-    {
-        Uid,
-        Type,
-    }
-
-
-    public class Entity
+    public partial class Entity
     {
         private Action<Entity> m_entityInitNofity;
 
         public int m_hid;
-        public eEntityType m_entityType = eEntityType.eBoneEntity;
+        public eEntityType m_entityType;
         public GameObject m_object;
         public Transform m_transform;
         private Resource m_res;          // 每一个实体对应一个Resource类，调用资源工厂加载，也会调用资源工厂销毁
         private float m_loadProcess;
         private bool m_bNeedLoadResource = true;
-        private bool m_LoadingDestory = false;  // 下载中需删除
+        private bool m_LoadingDestory;  // 下载中需删除
         public EntityBaseInfo m_entityInfo;
 
         // 渲染器是不可能没有的，开始new没问题
@@ -51,10 +37,20 @@ namespace Roma
 
         // 设置特效层级
         protected int[] m_orderList; // 渲染层级
+        private bool m_bRevive;  // 下一帧执行重置回调
+        public Transform m_highObject;  // 高画质对象
+        private Vector3 m_hightPos;  // 高画质对象初始位置
+
+        public float m_headPos; // 头顶位置，因为外部逻辑，这个位置会变动
 
 
         public Entity(int handle, Action<Entity> notity, eEntityType tpye, EntityBaseInfo baseInfo)
         {
+            if (baseInfo.m_resID == 0)
+            {
+                Debug.LogError("资源id为0，请检查配置");
+                return;
+            }
             m_entityInitNofity = notity;
             m_hid = handle;
             m_entityType = tpye;
@@ -67,9 +63,67 @@ namespace Roma
             }
             else
             {
-                m_entityInfo.m_strName = ResInfosResource.GetResInfo(m_entityInfo.m_resID).strName;
-                m_res = ResourceFactory.Inst.LoadResource(m_entityInfo.m_resID, ResourceLoaded);
+                ResInfo resInfo = ResInfosResource.GetResInfo(m_entityInfo.m_resID);
+                if (resInfo != null && resInfo.strUrl != null)
+                {
+                    m_entityInfo.m_strName = resInfo.strName;
+                    m_res = ResourceFactory.Inst.LoadResource(m_entityInfo.m_resID, ResourceLoaded);
+                }
+                else
+                {
+                    Debug.LogError("创建失败，无资源id：" + m_entityInfo.m_resID + " 现用灰色盒子代替，请注意更换！");
+                    m_res = ResourceFactory.Inst.LoadResource(4, ResourceLoaded);
+                }
             }
+        }
+
+        /// <summary>
+        /// 改变模型资源的接口
+        /// </summary>
+        /// <param name="notity"></param>
+        /// <param name="baseInfo"></param>
+        public virtual void ChangeResource(Action<Entity> notity, EntityBaseInfo baseInfo)
+        {
+            m_entityInitNofity = notity;
+            m_entityInfo = baseInfo;
+
+            // 先卸载
+            if (!m_res.IsLoaded())
+            {
+                return;
+            }
+            m_listRenderer.Clear();
+            if (m_originalColorList != null)
+            {
+                m_originalColorList.Clear();
+                m_originalColorList = null;
+            }
+            if (m_originalShaderList != null)
+            {
+                m_originalShaderList.Clear();
+                m_originalShaderList = null;
+            }
+            if (m_orderList != null)
+            {
+                m_orderList = null;
+            }
+
+            if (m_object != null)
+            {
+                GameObject.Destroy(m_object);
+            }
+            ResourceFactory.Inst.UnLoadResource(m_res, true);
+            m_object = null;
+            m_res = null;
+
+            m_LoadingDestory = false;
+            // 开始下载资源
+            m_res = ResourceFactory.Inst.LoadResource(m_entityInfo.m_resID, ChangeResourceLoaded);
+        }
+
+        public virtual void ChangeResourceLoaded(Resource res)
+        {
+            ResourceLoaded(res);
         }
 
         public virtual void Revive(int handleId, Action<Entity> notity, EntityBaseInfo baseInfo)
@@ -80,11 +134,17 @@ namespace Roma
             m_entityInitNofity = notity;
             m_entityInfo = baseInfo;
             SetBaseInfo();  // 重复利用的对象池时，不用再去获取组件信息，设置基本信息就行
-            OnInited();
+            m_bRevive = true;
+            //OnInited();
         }
 
         public virtual void Update(float fTime, float fDTime)
         {
+            if (m_bRevive)
+            {
+                OnInited();
+                m_bRevive = false;
+            }
             if (m_bNeedLoadResource)
             {
                 if (m_res != null)
@@ -92,6 +152,8 @@ namespace Roma
                     m_loadProcess = m_res.GetDownLoadProcess();
                 }
             }
+            //_UpdateHight(fDTime);
+            //_UpdateFllow(fDTime);
         }
 
         public float GetLoadProcess()
@@ -108,12 +170,13 @@ namespace Roma
         {
             if (null == res)
             {
-                Debug.LogError("配置了id和名称，但是没有资源，如果是无用资源请删除相关配置。id:" + m_entityInfo.m_resID);
+                //Debug.LogError("配置了id和名称，但是没有资源，如果是无用资源请删除相关配置。id:" + m_entityInfo.m_resID);
                 return;
             }
             //Debug.LogError("完成加载资源。。。。。。。。。。。。" + res.GetResInfo().nResID + " m_LoadingDestory :" + m_LoadingDestory);
             if (m_LoadingDestory)
             {
+                //Debug.LogError("立马删除资源" + res.GetResInfo().nResID + " m_LoadingDestory :" + m_LoadingDestory);
                 ResourceFactory.Inst.UnLoadResource(m_res);
                 return;
             }
@@ -145,27 +208,45 @@ namespace Roma
                 return;
             }
             // 获取渲染器
-            if (m_listRenderer.Count <= 0)
+            m_listRenderer.Clear();
+            Renderer[] render = m_object.GetComponentsInChildren<Renderer>();
+            for (int i = 0; i < render.Length; i++)
             {
-                Renderer[] render = m_object.GetComponentsInChildren<Renderer>();
-                for (int i = 0; i < render.Length; i++)
-                {
-                    Renderer re = render[i];
-                    m_listRenderer.Add(re);
-                }
+                Renderer re = render[i];
+                m_listRenderer.Add(re);
             }
 
-            if (Application.isEditor)
+
+            if (Application.isEditor)    // 在编辑器时，安卓和苹果平台需要重新赋值
             {
-                for (int i = 0; i < m_listRenderer.Count; i++)
+                if (!Client.m_prefix.Equals("pc"))
                 {
-                    for (int j = 0; j < m_listRenderer[i].materials.Length; j++)
+                    for (int i = 0; i < m_listRenderer.Count; i++)
                     {
-                        m_listRenderer[i].materials[j].shader = Shader.Find(m_listRenderer[i].materials[j].shader.name);
+                        for (int j = 0; j < m_listRenderer[i].materials.Length; j++)
+                        {
+                            m_listRenderer[i].materials[j].shader = Shader.Find(m_listRenderer[i].materials[j].shader.name);
+                        }
                     }
                 }
             }
+
+            // 获取原shader
+            GetOriginaShader();
             SetBaseInfo();
+
+            // 刚加载出来时设置一次
+            Transform hTransform = m_object.transform.FindChild("high");
+            if (hTransform != null)
+            {
+                m_highObject = hTransform;
+                m_hightPos = hTransform.localPosition;
+                if (!m_highObject.gameObject.activeSelf)
+                {
+                    m_highObject.gameObject.SetActive(true);
+                }
+            }
+            //SetQuality(SettingMgr.m_imageQuality);
         }
 
         public virtual void SetBaseInfo()
@@ -184,7 +265,7 @@ namespace Roma
             if (null != m_entityInitNofity)
             {
                 m_entityInitNofity(this);
-                m_entityInitNofity = null;
+                //m_entityInitNofity = null;
             }
         }
 
@@ -203,7 +284,7 @@ namespace Roma
             }
             if (null != m_object)
             {
-                //Debug.LogError("销毁对戏。。。。。。。。。。。" + m_object.name);
+                //Debug.LogError("销毁对象。。。。。。。。。。。" + m_object.name);
                 // 移除shader
                 m_listRenderer.Clear();
                 m_listRenderer = null;
@@ -231,18 +312,29 @@ namespace Roma
         public void SetColor(Color color)
         {
             if (m_listRenderer == null)
-            {
                 return;
-            }
+
             GetOriginalColor();
             for (int i = 0; i < m_listRenderer.Count; i++)
             {
                 if (m_listRenderer[i] != null)
                 {
-                    if (m_listRenderer[i].material.HasProperty("_TintColor"))
+                    if (m_listRenderer[i].material.HasProperty("_AddTintColor"))
                     {
-                        m_listRenderer[i].material.SetColor("_TintColor", color);
+                        m_listRenderer[i].material.SetColor("_AddTintColor", color);
                     }
+                }
+            }
+        }
+
+        private void GetOriginaShader()
+        {
+            if (m_originalShaderList == null)
+            {
+                m_originalShaderList = new List<Shader>();
+                for (int i = 0; i < m_listRenderer.Count; i++)
+                {
+                    m_originalShaderList.Add(m_listRenderer[i].material.shader);
                 }
             }
         }
@@ -250,15 +342,17 @@ namespace Roma
         private void GetOriginalColor()
         {
             if (m_originalColorList == null)
-                m_originalColorList = new List<Color>();
-            for (int i = 0; i < m_listRenderer.Count; i++)
             {
-                Color oldColor = Color.white;
-                if (m_listRenderer[i].material.HasProperty("_TintColor"))
+                m_originalColorList = new List<Color>();
+                for (int i = 0; i < m_listRenderer.Count; i++)
                 {
-                    oldColor = m_listRenderer[i].material.GetColor("_TintColor");
+                    Color oldColor = Color.white;
+                    if (m_listRenderer[i].material.HasProperty("_AddTintColor"))
+                    {
+                        oldColor = m_listRenderer[i].material.GetColor("_AddTintColor");
+                    }
+                    m_originalColorList.Add(oldColor);
                 }
-                m_originalColorList.Add(oldColor);
             }
         }
 
@@ -272,46 +366,48 @@ namespace Roma
             {
                 if (m_listRenderer[i] != null)
                 {
-                    if (m_listRenderer[i].material.HasProperty("_TintColor"))
+                    if (m_listRenderer[i].material.HasProperty("_AddTintColor"))
                     {
                         if (i < m_originalColorList.Count)
-                            m_listRenderer[i].material.SetColor("_TintColor", m_originalColorList[i]);
+                            m_listRenderer[i].material.SetColor("_AddTintColor", m_originalColorList[i]);
                     }
                 }
             }
         }
 
         /// <summary>
+        /// 设置shader的时候，内部会移除之前的shader
         ///可以把shader接口统一为一个
         ///time：当前shader的变化时间
         ///bAutoEnd：自动结束并移除
         /// </summary>
-        //public void SetShader(eShaderType type, Color color, float time = 9999999, bool bAutoEnd = true, Action end = null)
-        //{
-        //    GetOriginalColor();
-        //    if (m_originalShaderList == null)
-        //    {
-        //        m_originalShaderList = new List<Shader>();
-        //        for (int i = 0; i < m_listRenderer.Count; i++)
-        //        {
-        //            m_originalShaderList.Add(m_listRenderer[i].material.shader);
-        //        }
-        //    }
+        public void SetShader(eShaderType type, Color color, float time = 9999999, bool bAutoEnd = true, Action end = null)
+        {
+            UnityEngine.Profiling.Profiler.BeginSample("SetShader");
+            GetOriginalColor();
 
-        //    EntityShaderInfo info = new EntityShaderInfo();
-        //    info.entity = this;
-        //    info.color = color;
-        //    info.bAutoEnd = bAutoEnd;
-        //    info.showTime = time;
-        //    info.type = type;
-        //    info.showEnd = end;
-        //    ShaderManager.Inst.AddShader(info);
-        //}
 
-        //public void RemoveShader()
-        //{
-        //    ShaderManager.Inst.RemoveShader(m_hid);
-        //}
+            EntityShaderInfo info;
+            info.entity = this;
+            info.type = type;
+            info.color = color;
+            info.bAutoEnd = bAutoEnd;
+            info.showTime = time;
+            info.curTime = 0;
+            info.showEnd = end;
+            ShaderManager.Inst.AddShader(info);
+
+            UnityEngine.Profiling.Profiler.EndSample();
+        }
+
+        /// <summary>
+        /// 还原shader,并从shader管理器中移除当前ent的shader
+        /// </summary>
+        public void RemoveShader()
+        {
+            RestoreShader();
+            ShaderManager.Inst.RemoveShader(m_hid);
+        }
 
         public void RestoreShader()
         {
@@ -321,10 +417,12 @@ namespace Roma
             }
             for (int i = 0; i < m_listRenderer.Count; i++)
             {
-                if (m_listRenderer[i] != null && m_originalShaderList[i] != null)
-                    m_listRenderer[i].material.shader = m_originalShaderList[i];
+                Renderer ren = m_listRenderer[i];
+                if (ren != null && ren != null &&
+                    ren.material.shader != m_originalShaderList[i])
+                    ren.material.shader = m_originalShaderList[i];
             }
-            RestoreColor();
+            //RestoreColor();  // 还原shader不应该处理颜色
         }
 
         public virtual void SetLayer(LusuoLayer layer)
@@ -348,9 +446,8 @@ namespace Roma
                 m_object.gameObject.layer = layer;
                 for (int i = 0; i < m_listRenderer.Count; i++)
                 {
-                    if(m_listRenderer[i] == null)
-                        continue;
-                    m_listRenderer[i].gameObject.layer = (int)layer;
+                    if (m_listRenderer[i] != null)
+                        m_listRenderer[i].gameObject.layer = (int)layer;
                 }
             }
         }
@@ -376,7 +473,7 @@ namespace Roma
         }
         public void ClearBind()
         {
-            if (null != m_object)
+            if (null != m_transform)
             {
                 m_transform.SetParent(null);
             }
@@ -388,8 +485,7 @@ namespace Roma
             if (null != m_transform)
             {
                 //Debug.Log(m_transform.name + " pos:" + pos);
-                m_transform.position
-                    = new Vector3(pos.x, pos.y, pos.z);
+                m_transform.position = pos;
             }
         }
 
@@ -403,11 +499,22 @@ namespace Roma
             }
         }
 
+        public void SetDirection(float y)
+        {
+            m_entityInfo.m_vRotate = new Vector3(0, y, 0);
+            if (null != m_transform)
+            {
+                m_transform.localEulerAngles
+                    = m_entityInfo.m_vRotate;
+            }
+        }
+
         public void SetDirection(Vector3 rotate)
         {
             m_entityInfo.m_vRotate = rotate;
             if (null != m_transform)
             {
+                //Debug.Log(m_transform.name + "  :" + rotate);
                 m_transform.localEulerAngles
                     = new Vector3(rotate.x, rotate.y, rotate.z);
             }
@@ -422,32 +529,34 @@ namespace Roma
             }
         }
 
-        public void SetScale(float scale, bool bConChild = false)
-        {
-            m_entityInfo.m_vScale.x = scale;
-            m_entityInfo.m_vScale.y = scale;
-            m_entityInfo.m_vScale.z = scale;
-            if (null != m_transform)
-            {
-                if (bConChild)
-                {
-                    Transform[] itemList = m_transform.GetComponentsInChildren<Transform>();
-                    for (int i = 0; i < itemList.Length; i++)
-                    {
-                        itemList[i].localScale = new Vector3(scale, scale, scale);
-                    }
-                }
-                else
-                {
-                    m_transform.localScale = new Vector3(scale, scale, scale);
-                }
-            }
-        }
+        //public void SetScale(float scale, bool bConChild = false)
+        //{
+        //    m_entityInfo.m_vScale.x = scale;
+        //    m_entityInfo.m_vScale.y = scale;
+        //    m_entityInfo.m_vScale.z = scale;
+        //    if (null != m_transform)
+        //    {
+        //        if (bConChild)
+        //        {
+        //            Transform[] itemList = m_transform.GetComponentsInChildren<Transform>();
+        //            for (int i = 0; i < itemList.Length; i++)
+        //            {
+        //                itemList[i].localScale = new Vector3(scale, scale, scale);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            m_transform.localScale = new Vector3(scale, scale, scale);
+        //        }
+        //    }
+        //}
+
         public void SetScale(Vector3 scale)
         {
             m_entityInfo.m_vScale = scale;
             if (null != m_transform)
             {
+                //Debug.Log(m_transform.name + "  "+ scale);
                 m_transform.localScale
                     = new Vector3(scale.x, scale.y, scale.z);
             }
@@ -464,16 +573,13 @@ namespace Roma
                 m_orderList = new int[m_listRenderer.Count];
                 for (int i = 0; i < m_listRenderer.Count; i++)
                 {
-                    if(m_listRenderer[i] == null)
-                        continue;
                     m_orderList[i] = m_listRenderer[i].sortingOrder;
                 }
             }
             for (int i = 0; i < m_listRenderer.Count; i++)
             {
-                if(m_listRenderer[i] == null)
-                    continue;
-                m_listRenderer[i].sortingOrder = layer + m_orderList[i];
+                if (m_listRenderer[i] != null)
+                    m_listRenderer[i].sortingOrder = layer + m_orderList[i];
             }
         }
 
@@ -504,16 +610,52 @@ namespace Roma
             return (int)LusuoLayer.eEL_Default;
         }
 
-        public virtual void SetShow(bool bActive)
+        public virtual void SetShow(bool bActive, bool bStop = true)
         {
             m_entityInfo.m_active = bActive;
             if (null == m_transform)
                 return;
             for (int i = 0; i < m_listRenderer.Count; i++)
             {
-                if(m_listRenderer[i] == null)
+                Renderer ren = m_listRenderer[i];
+                if (ren == null)
                     continue;
-                m_listRenderer[i].enabled = bActive;
+
+                if (!bActive)
+                {
+                    if (ren is TrailRenderer)
+                    {
+                        ((TrailRenderer)ren).Clear();
+                    }
+                }
+                ren.enabled = bActive;
+            }
+        }
+
+        /// <summary>
+        /// 停止实体内部行为，特效播放等
+        /// </summary>
+        public virtual void Stop()
+        {
+
+        }
+
+        /// <summary>
+        /// 1.刚加载时设置一次
+        /// 2.战斗中切换画质时，遍历一次
+        /// 用于特效和场景
+        /// </summary>
+        public void SetQuality(bool bHigh)
+        {
+            if (m_highObject == null)
+                return;
+            if (bHigh)
+            {
+                m_highObject.localPosition = m_hightPos;
+            }
+            else
+            {
+                m_highObject.localPosition = m_hightPos + Vector3.up * 2000;
             }
         }
 
@@ -596,5 +738,52 @@ namespace Roma
         {
             return m_entityType;
         }
+
+
+        public void AddBoxCollider()
+        {
+            if (m_object == null)
+                return;
+            // 如果美术自己加了碰撞体，程序就不自动生成
+            if (m_object.GetComponent<BoxCollider>() != null)
+            {
+                return;
+            }
+            BoxCollider boxColl = m_object.AddComponent<BoxCollider>();
+            Vector3 LocalAngle = m_transform.localEulerAngles;
+            //Zero the rotation before we calculate as bounds are never rotated
+            m_transform.localEulerAngles = Vector3.zero;
+            //Establish a default center location
+            Vector3 center = Vector3.zero;
+            //Establish a default empty bound
+            Bounds m_bounds = new Bounds(Vector3.zero, Vector3.zero);
+            //Count the children with renderers
+            int count = 0;
+            //We only count childrent with renderers which should be fine as the bounds center is global space
+            foreach (Renderer render in m_transform.GetComponentsInChildren<Renderer>())
+            {
+                center += render.bounds.center;
+                count++;
+            }
+            //Return the average center assuming we have any renderers
+            if (count > 0)
+                center /= count;
+            //Update the parent bound accordingly
+            m_bounds.center = center;
+            //Again for each and only after updating the center expand via encapsulate
+            foreach (Renderer render in m_transform.GetComponentsInChildren<Renderer>())
+            {
+                m_bounds.Encapsulate(render.bounds);
+            }
+            //In by case I want to update the parents box collider so first I need to bring things into local space
+            m_bounds.center -= m_transform.position;
+            boxColl.center = m_bounds.center;
+            boxColl.size = new Vector3(
+               (int)(m_bounds.size.x * 1.3f),
+               (int)(m_bounds.size.y * 1.2f),
+               (int)(m_bounds.size.z * 1.3f));
+            m_transform.localEulerAngles = LocalAngle;
+        }
+
     }
 }

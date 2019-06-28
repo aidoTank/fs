@@ -40,6 +40,7 @@ namespace Roma
             {
                 int[] info = new int[1];
                 info[0] = 0;
+                EGame.m_uin = 0;
                 GameManager.Inst.Start(info);
                 GameManager.Inst.GetFspManager().m_bStartCtl = true;
                 return;

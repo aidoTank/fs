@@ -11,29 +11,31 @@ namespace Roma
             m_creature = cc;
         }
 
-        //public void SetMtCreatrue(MtCreature mt)
-        //{
-        //    m_mtCreature = mt;
-        //}
-
-        public void SetResource(Resource res)
+        public void SetEnt(Entity mt)
         {
-            m_resource = res;
+            m_ent = mt;
         }
+
+
 
         public CCreature GetCreature()
         {
             return m_creature;
         }
 
-        //public MtCreature GetMTCreature()
-        //{
-        //    return m_mtCreature;
-        //}
-
-        public Resource GetResource()
+        public Entity GetEnt()
         {
-            return m_resource;
+            return m_ent;
+        }
+
+        public void SetUid(int uid)
+        {
+            m_uid = uid;
+        }
+
+        public int GetUid()
+        {
+            return m_uid;
         }
 
         static public GameObjectHelper Get(GameObject go)
@@ -45,7 +47,7 @@ namespace Roma
         }
 
         private CCreature m_creature;
-        //private MtCreature m_mtCreature;
-        private Resource m_resource;
+        private Entity m_ent;
+        private int m_uid;
     }
 }

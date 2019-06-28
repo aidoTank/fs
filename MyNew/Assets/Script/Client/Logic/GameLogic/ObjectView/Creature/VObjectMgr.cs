@@ -7,62 +7,36 @@ namespace Roma
     {
         None,
         Creature,
-        SkillBase,
-        SkllNear,
-        SkillSingleFly,
-        SkillAoe,
-        SkillCurve,
+        SkillTrigger,
     }
 
+    /// <summary>
+    /// 断线重连时，表现层只用创建角色，不用创建技能，并且停止执行表现层命令和心跳
+    /// </summary>
     public class VObjectMgr
     {
-        // public static SkillBase Create(long uid, int skillId)
-        // {
-        //     if (m_dicPlayer.ContainsKey(uid))
-        //     {
-        //         return m_dicPlayer[uid];
-        //     }
-
-        //     SkillBase player = new SkillBase(uid, skillId);
-        //     Add(uid, player);
-
-        //     return player;
-        // }
-
         private static int m_uid;
 
-        public static VObject  Create(eVOjectType type)
+        public static VBase Create(eVOjectType type)
         {
-            VObject obj = null;
+            VBase obj = null;
             switch (type)
             {
                 case eVOjectType.Creature:
                     obj = new VObject();
                 break;
-                case eVOjectType.SkillBase:
-                    obj = new VSkillBase();
-                break;
-                case eVOjectType.SkllNear:
-                    obj = new VSkillNear();
-                break;
-                case eVOjectType.SkillSingleFly:
-                    obj = new VSkillSingleFly();
-                break;
-                case eVOjectType.SkillAoe:
-                    obj = new VSkillBase();
-                break;
-                case eVOjectType.SkillCurve:
-                    obj = new VSkillCurve();
-                break;
+                //case eVOjectType.SkillTrigger:
+                //    obj = new VTrigger();
+                //    break;
             }
-            obj.m_id = m_uid ++;
+            obj.m_id = m_uid++;
             Add(obj.m_id, obj);
             return obj;
         }
 
-        public static VObject Get(int uId)
+        public static VBase Get(int uId)
         {
-            VObject cc;
+            VBase cc;
             if (m_dicPlayer.TryGetValue(uId, out  cc))
             {
                 return cc;
@@ -70,7 +44,7 @@ namespace Roma
             return null;
         }
 
-        public static void Add(int uid, VObject creature)
+        public static void Add(int uid, VBase creature)
         {
             m_dicPlayer[uid] = creature;
         }
@@ -85,7 +59,7 @@ namespace Roma
 
         public static void Update(float time, float fdTime)
         {
-            foreach(KeyValuePair<int, VObject> item in m_dicPlayer)
+            foreach (KeyValuePair<int, VBase> item in m_dicPlayer)
             {
                 item.Value.Update(time, fdTime);
                 if(item.Value.m_destroy)
@@ -93,7 +67,8 @@ namespace Roma
                     m_listDestroy.Add(item.Key);
                 }
             }
-            for(int i = 0; i < m_listDestroy.Count; i ++)
+
+            for (int i = 0; i < m_listDestroy.Count; i ++)
             {
                 Remove(m_listDestroy[i]);
             }
@@ -101,7 +76,7 @@ namespace Roma
             //Debug.Log("voject mgr:" + m_dicPlayer.Count);
         }
 
-        public static Dictionary<int, VObject> m_dicPlayer = new Dictionary<int, VObject>();
+        public static Dictionary<int, VBase> m_dicPlayer = new Dictionary<int, VBase>();
         public static List<int> m_listDestroy = new List<int>();
     }
 }

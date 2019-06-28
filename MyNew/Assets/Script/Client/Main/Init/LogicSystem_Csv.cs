@@ -9,6 +9,9 @@ namespace Roma
     public enum eAllCSV
     {
         eAC_None = 0,
+        eAC_Sound,
+        eAC_Animation,
+        eAC_Effect,
 
         eAC_Dns,
         eAC_GameText,
@@ -16,7 +19,6 @@ namespace Roma
         eAC_SceneBarrier,
 
         eAC_Player,
-        eAC_Effect,
         eAC_Skill,
         eAC_SkillStep,
     }
@@ -40,13 +42,16 @@ namespace Roma
         /// </summary>
         public void InitCsv(ref CsvManager csvMgr)
         {
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_Animation, "动作表", new AnimationCsv());
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_Effect, "特效表", new EffectCsv());
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_Sound, "音效表", new SoundCsv());
+
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Dns, "域名表", new DnsCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_GameText, "游戏文本表", new GameTextCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Scene, "地图表", new SceneCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_SceneBarrier, "地图障碍表", new SceneBarrierCsv());
 
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Player, "角色表", new PlayerCsv());
-            csvMgr.AddCSVCreate((int)eAllCSV.eAC_Effect, "特效表", new EffectCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Skill, "技能主表", new SkillCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_SkillStep, "技能子表", new SkillStepCsv());
 

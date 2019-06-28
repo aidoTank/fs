@@ -12,7 +12,7 @@ namespace Roma
     /// 角色的创建由管理器创建
     /// 销毁由自身死亡状态时，自己调用管理器销毁
     /// </summary>
-    public partial class CCreature : CThing
+    public partial class CCreature : CObject
     {
         public CCreature(long id)
             : base(id)
@@ -33,14 +33,15 @@ namespace Roma
             SetDir(dir);
 
             // 表现
-            m_vCreature = VObjectMgr.Create(eVOjectType.Creature);
-            m_vCreature.m_bMaster = this is CMasterPlayer;
-            sVOjectBaseInfo info = new sVOjectBaseInfo();
-            info.m_resId = m_csv.ModelResId;
-            info.m_pos = pos.ToVector3();
-            info.m_dir = dir.ToVector3();
-            info.m_headHeight = m_csv.headHeight;
-            m_vCreature.Create(info);
+            //m_vCreature = VObjectMgr.Create(eVOjectType.Creature);
+            //sVOjectBaseInfo info = new sVOjectBaseInfo();
+            //info.m_resId = m_csv.ModelResId;
+            //info.m_pos = pos.ToVector3();
+            //info.m_dir = dir.ToVector3();
+            //info.m_headHeight = m_csv.headHeight;
+            //m_vCreature.Create(info);
+
+            UpdateVO_Create(m_csv.ModelResId, 5, eVOjectType.Creature);
 
             UpdateHeadName(name);
             UpdateHeadLv();
@@ -176,7 +177,7 @@ namespace Roma
             Debug.Log("==============" + cmd.GetCmdType());
             if(cmd.GetCmdType() == CmdFspEnum.eFspStopMove)
             {
-                EnterStopMove();
+                //EnterStopMove();
                 m_vCreature.PushCommand(cmd);
             }
             else if(cmd.GetCmdType() == CmdFspEnum.eFspMove)
@@ -191,7 +192,7 @@ namespace Roma
 
                 m_cmdFspSendSkill = cmd as CmdFspSendSkill;
                 //Debug.Log("切换技能状态：");
-                EnterSkill();
+                //EnterSkill();
                 m_vCreature.PushCommand(cmd);
             }
             SetLogicState(cmd.GetCmdType());
@@ -210,7 +211,7 @@ namespace Roma
             }
             else if(m_logicState == CmdFspEnum.eFspStopMove)
             {
-                TickStopMove();
+                //TickStopMove();
             }
             else if(m_logicState == CmdFspEnum.eFspSendSkill)
             {
@@ -239,8 +240,5 @@ namespace Roma
 
         // 属性
         public PlayerCsvData m_csv;
-
-        // 表现层
-        public VObject m_vCreature;
     }
 }

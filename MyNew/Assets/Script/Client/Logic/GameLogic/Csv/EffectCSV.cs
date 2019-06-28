@@ -1,129 +1,86 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.IO;
 using System.Collections.Generic;
-
 namespace Roma
 {
-    enum eEffectCSV_Enum
+    public enum eEffectCsv
     {
-        eEE_EffectID,       // ID
-        eEE_ResID,          // 资源ID
-        eEE_EffectDesc,     // 描述
-        eEE_LiveTime,       // 生存时间
-        eEE_SoundRes,      // SoundResID
+        Id,
+        resId,
+        resName,
+        liveTime,
+        soundId,
+        shakeCamera,
     }
 
-    public class EffectData
+    public class EffectCsvData
     {
-        public int nEffectID;
-        public int nResID;
-        public string strDesc;
-        public float fLiveTime = 0;
-        public string uSoundID;
+        /// <summary>
+        /// 特效编号
+        /// </summary>
+        public int Id;
+
+        /// <summary>
+        /// 资源编号
+        /// </summary>
+        public int resId;
+
+        /// <summary>
+        /// 资源名称
+        /// </summary>
+        public string resName;
+
+        /// <summary>
+        /// 生命时间
+        /// </summary>
+        public float lifeTime;
+
+        /// <summary>
+        /// 声音编号
+        /// </summary>
+        public int soundId;
+
+        public int shakeCamera;
+
     }
 
     public class EffectCsv : CsvExWrapper
     {
-        protected override void _Save()
-        {
-            base._Save();
-            foreach (KeyValuePair<int, EffectData> key in m_mapEffectCSV)
-            {
-                int nRow = m_csv.AddRow();
-                m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_EffectID,  key.Value.nEffectID.ToString());
-                m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_ResID,     key.Value.nResID.ToString());
-                m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_EffectDesc,key.Value.strDesc);
-                m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_LiveTime,  key.Value.fLiveTime.ToString());
-                m_csv.SetData(nRow, (int)eEffectCSV_Enum.eEE_SoundRes, key.Value.uSoundID.ToString());
-            }
-        }
-
-        public override void Clear()
-        {
-            base.Clear();
-            m_mapEffectCSV.Clear();
-        }
-
-        protected override void _Load()
-        {
-            for (int i = 0; i < m_csv.GetRows(); i++)
-            {
-                EffectData effect = new EffectData();
-                effect.nEffectID = m_csv.GetIntData(i, (int)eEffectCSV_Enum.eEE_EffectID);
-                effect.nResID = m_csv.GetIntData(i, (int)eEffectCSV_Enum.eEE_ResID);
-                effect.strDesc = m_csv.GetData(i, (int)eEffectCSV_Enum.eEE_EffectDesc);
-                effect.fLiveTime = m_csv.GetFloatData(i, (int)eEffectCSV_Enum.eEE_LiveTime);
-                effect.uSoundID = m_csv.GetData(i, (int)eEffectCSV_Enum.eEE_SoundRes);
-
-                m_mapEffectCSV.Add(effect.nEffectID, effect);
-            }
-        }
-
         static public CsvExWrapper CreateCSV()
         {
             return new EffectCsv();
         }
 
-        public EffectData GetData(int uID)
+        protected override void _Load()
         {
-            EffectData effect = null;
-            if (m_mapEffectCSV.TryGetValue(uID, out effect))
+            m_dicData.Clear();
+            for (int i = 0; i < m_csv.GetRows(); i++)
             {
-                return effect;
+                EffectCsvData data = new EffectCsvData();
+                data.Id = m_csv.GetIntData(i, (int)eEffectCsv.Id);
+                data.resId = m_csv.GetIntData(i, (int)eEffectCsv.resId);
+                data.resName = m_csv.GetData(i, (int)eEffectCsv.resName);
+                data.lifeTime = m_csv.GetFloatData(i, (int)eEffectCsv.liveTime);
+                data.soundId = m_csv.GetIntData(i, (int)eEffectCsv.soundId);
+                data.shakeCamera = m_csv.GetIntData(i, (int)eEffectCsv.shakeCamera);
+                if (m_dicData.ContainsKey(data.Id))
+                {
+                    //Debug.LogError("重复特效的ID:" + data.Id);
+                    continue;
+                }
+                m_dicData.Add(data.Id, data);
+            }
+        }
+
+        public EffectCsvData GetData(int csvId)
+        {
+            EffectCsvData data;
+            if (m_dicData.TryGetValue(csvId, out data))
+            {
+                return data;
             }
             return null;
         }
 
-
-        public string[] GetNameList()
-        {
-            string[] nameList = new string[m_mapEffectCSV.Count];
-            int i = 0;
-            foreach (KeyValuePair<int, EffectData> item in m_mapEffectCSV)
-            {
-                nameList[i] = item.Value.strDesc;
-                i++;
-            }
-            return nameList;
-        }
-
-        public int GetId(string npcName)
-        {
-            foreach (KeyValuePair<int, EffectData> item in m_mapEffectCSV)
-            {
-                if (item.Value.strDesc == npcName)
-                {
-                    return (int)item.Value.nEffectID;
-                }
-            }
-            return 0;
-        }
-
-        public int GetIndex(int effecfId)
-        {
-            int index = 0;
-            foreach (KeyValuePair<int, EffectData> item in m_mapEffectCSV)
-            {
-                if (item.Value.nEffectID == effecfId)
-                    break;
-                index++;
-            }
-            return index;
-        }
-
-        public int GetId(int index)
-        {
-            int curIndex = 0;
-            foreach (KeyValuePair<int, EffectData> item in m_mapEffectCSV)
-            {
-                if (curIndex == index)
-                    return (int)item.Key;
-                curIndex++;
-            }
-            return curIndex;
-        }
-
-        public Dictionary<int, EffectData> m_mapEffectCSV = new Dictionary<int, EffectData>();
+        public Dictionary<int, EffectCsvData> m_dicData = new Dictionary<int, EffectCsvData>();
     }
 }

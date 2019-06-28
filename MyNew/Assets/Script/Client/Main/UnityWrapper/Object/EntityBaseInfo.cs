@@ -28,6 +28,7 @@ namespace Roma
         // 音量
         public float m_soundVolume;
         public int m_soundType;
+        public bool m_soundLoop;
         public bool m_soundMute;
         public void Save(ref LusuoStream ls)
         {

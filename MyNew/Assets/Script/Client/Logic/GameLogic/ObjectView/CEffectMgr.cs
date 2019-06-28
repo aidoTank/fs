@@ -7,10 +7,14 @@ using UnityEngineInternal;
 
 namespace Roma
 {
+    /// <summary>
+    /// 如果是场景特效需循环的，时间配0，并且声音配循环，同特效一起销毁
+    /// </summary>
     public class CEffect
     {
         private Entity m_ent;
-        private EffectData m_effectData;   // 如果是场景特效，需要控制声音的销毁，UI特效就不控制
+        private EffectCsvData m_effectData;
+        private EntityBaseInfo m_entBaseInfo;
         public float m_curTime;
         public float m_maxTime;
         // 默认是自动删除，如果开始时间是0，那么就是需要手动删除
@@ -20,44 +24,58 @@ namespace Roma
         public BoneEntity m_parentEnt; // 挂载的父对象
         private Action<CEffect> m_playEnd;
 
+        private bool m_playSound;
         private Entity m_soundEnt;
 
-        public CEffect(int csvId, Vector3 start, Action<Entity> loaded = null)
+
+        public float m_offsetPos; // 跟随位置的偏移位置
+        public int m_followType;  // 跟随类型的特效，1脚底，2头顶
+
+
+        public CEffect(int csvId, EntityBaseInfo entInfo, Action<Entity> loaded = null)
         {
-            Create(csvId, start, loaded);
+            m_entBaseInfo = entInfo;
+            Create(csvId, m_entBaseInfo, loaded);
         }
 
         public CEffect(int csvId, Action<Entity> loaded = null)
         {
             if (csvId == 0)
                 return;
-            Create(csvId, Vector3.zero, loaded);
+            Create(csvId, m_entBaseInfo, loaded);
         }
 
-        private void Create(int csvId, Vector3 startPos, Action<Entity> loaded = null)
+        private void Create(int csvId, EntityBaseInfo entInfo, Action<Entity> loaded = null)
         {
             EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
             m_effectData = effectCsv.GetData(csvId);
-            if (m_effectData == null || m_effectData.nResID == 0)
+            if (m_effectData == null || m_effectData.resId == 0)
             {
                 Debug.LogError("找不到特效id:" + csvId);
                 return;
             }
-            EntityBaseInfo info = new EntityBaseInfo();
-            info.m_vPos = startPos;
-            info.m_resID = m_effectData.nResID;
-            int handldId = EntityManager.Inst.CreateEntity(eEntityType.eEffectEntity, info, loaded);
+            if (entInfo == null)
+                entInfo = new EntityBaseInfo();
+            entInfo.m_resID = m_effectData.resId;
+            int handldId = EntityManager.Inst.CreateEntity(eEntityType.eEffectEntity, entInfo, loaded);
             m_ent = EntityManager.Inst.GetEnity(handldId);
 
-            m_maxTime = m_effectData.fLiveTime;
+            m_maxTime = m_effectData.lifeTime;
             if (m_maxTime.Equals(0.0f))
             {
                 m_bAutoDel = false;
             }
 
-            //int soundHid = SoundManager.Inst.PlaySound(m_effectData.uSoundID, startPos);
-            //m_soundEnt = EntityManager.Inst.GetEnity(soundHid);
-
+            //if (GameManager.Instance.m_speedUpInLoading)
+            //    return;
+            if (m_effectData == null)
+                return;
+            int soundHid = SoundManager.Inst.PlaySound(m_effectData.soundId, m_ent.GetPos());
+            m_soundEnt = EntityManager.Inst.GetEnity(soundHid);
+            if (m_effectData.shakeCamera == 1)
+            {
+                CameraMgr.Inst.OnShake();
+            }
         }
 
         public void AddPlayEnd(Action<CEffect> end)
@@ -67,7 +85,10 @@ namespace Roma
 
         public virtual void Update(float fTime, float fDTime)
         {
-            if (m_ent.IsInited() && m_bAutoDel && !m_isFinish)
+            //if (!m_ent.IsInited())
+            //    return;
+
+            if (m_bAutoDel && !m_isFinish)
             {
                 m_curTime += fDTime;
                 if (m_curTime >= m_maxTime)
@@ -76,11 +97,12 @@ namespace Roma
                     if (m_playEnd != null)
                         m_playEnd(this);
                 }
-                // 声音位置和特效位置一致
-                if (m_soundEnt != null)
-                {
-                    m_soundEnt.SetPos(m_ent.GetPos());
-                }
+            }
+
+            // 声音位置和特效位置一致
+            if (m_soundEnt != null && m_soundEnt.IsInited())
+            {
+                m_soundEnt.SetPos(m_ent.GetPos());
             }
         }
 
@@ -96,29 +118,36 @@ namespace Roma
 
         public void Destory()
         {
-            // if effect have parent then parent object need clear bind objects
             if (m_parentEnt != null)
                 m_parentEnt.RemoveBindObject(m_ent);
             EntityManager.Inst.RemoveEntity(m_ent.m_hid, true);
-            //if (m_soundEnt != null)
-            //{
-            //    SoundManager.Inst.Remove(m_soundEnt.m_hid);
-            //}
+            if (m_soundEnt != null)
+            {
+                SoundManager.Inst.Remove(m_soundEnt.m_hid);
+            }
         }
 
         public void SetBind(int bindHandleId, string bingPoint)
         {
+            if (m_parentEnt != null)
+                m_parentEnt.RemoveBindObject(m_ent);  // 移除之前的绑定
+
             BoneEntity bindEnt = (BoneEntity)EntityManager.Inst.GetEnity(bindHandleId);
+            if (bindEnt == null || bindEnt.GetObject() == null)
+                return;
+
             Transform bindTransform = bindEnt.GetBone(bingPoint);
             if (bindTransform == null)
             {
-                m_ent.SetPos(bindEnt.GetPos());
-                //ent.SetParent(bindEnt.GetObject().transform);
+                //m_ent.SetPos(bindEnt.GetPos());
+                bindTransform = bindEnt.GetObject().transform;
             }
-            else
-            {
-                m_ent.SetParent(bindTransform);
-            }
+            //else
+            //{
+            m_ent.SetParent(bindTransform);
+            m_parentEnt = bindEnt;
+            bindEnt.AddBindObject(m_ent);
+            //}
         }
 
         public void SetLayer(LusuoLayer lay)
@@ -130,6 +159,17 @@ namespace Roma
         {
             m_ent.SetShow(bShow);
         }
+
+        /// <summary>
+        /// 拖尾特效在最后要脱离跟随
+        /// </summary>
+        public void ClearFollow()
+        {
+            if (CEffectMgr.m_followPos.ContainsKey(this))
+            {
+                CEffectMgr.m_followPos.Remove(this);
+            }
+        }
     }
 
     public class CEffectMgr
@@ -138,7 +178,18 @@ namespace Roma
         {
             if (effectId == 0)
                 return 0;
-            CEffect effect = new CEffect(effectId, pos, loaded);
+            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
+            EffectCsvData m_effectData = effectCsv.GetData(effectId);
+            if (m_effectData == null)
+            {
+                Debug.LogError("特效为空：" + effectId);
+                return 0;
+            }
+            EntityBaseInfo entInfo = new EntityBaseInfo();
+            entInfo.m_resID = m_effectData.resId;
+            entInfo.m_vPos = pos;
+            entInfo.m_vRotate = rota;
+            CEffect effect = new CEffect(effectId, entInfo, loaded);
             Entity ent = effect.GetEntity();
             ent.SetLayer((int)LusuoLayer.eEL_Dynamic);
             ent.SetPos(pos);
@@ -148,45 +199,68 @@ namespace Roma
         }
 
         /// <summary>
-        /// 创建基于绑定实体身上的特效
+        /// 创建基于绑定实体身上的特效,和角色一起显隐，无绑定点的在角色位置，不和角色一起显隐,比如刺客的施法特效
+        /// 挂载特效可能需要缩放，在设置挂载之后
         /// </summary>     
-        public static int Create(int effectId, int bindHandleId, string bingPoint, Action<Entity> loaded = null)
+        public static int Create(int effectId, Entity newEnt, string bingPoint, Action<Entity> loaded = null, float scale = 1.0f)
         {
             if (effectId == 0)
                 return 0;
-            CEffect effect = new CEffect(effectId, loaded);
-            Entity ent = effect.GetEntity();
-            if (ent == null)
-            {
+            EffectCsv effectCsv = CsvManager.Inst.GetCsv<EffectCsv>((int)eAllCSV.eAC_Effect);
+            EffectCsvData m_effectData = effectCsv.GetData(effectId);
+            if (m_effectData == null)
                 return 0;
-            }
-            ent.SetLayer((int)LusuoLayer.eEL_Dynamic);
+            EntityBaseInfo baseInfo = new EntityBaseInfo();
+            baseInfo.m_resID = m_effectData.resId;
+            baseInfo.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
+            baseInfo.m_vScale = Vector3.one * scale;
+            // 获取绑定点
+            BoneEntity boneEnt = newEnt as BoneEntity;
+            Transform bindTransform = boneEnt.GetBone(bingPoint);
 
-            BoneEntity bindEnt = (BoneEntity)EntityManager.Inst.GetEnity(bindHandleId);
-            Transform bindTransform = bindEnt.GetBone(bingPoint);
+            CEffect effect;
+            Entity ent;
             if (bindTransform == null)
             {
-                ent.SetPos(bindEnt.GetPos());
-                //ent.SetParent(bindEnt.GetObject().transform);
+                //baseInfo.m_vPos = boneEnt.GetPos();
+                //baseInfo.m_vRotate = boneEnt.GetRotate();
+                //effect = new CEffect(effectId, baseInfo, loaded);
+                //ent = effect.GetEntity();
+                GameObject obj = boneEnt.GetObject();
+                if (obj == null)
+                    return 0;
+                bindTransform = obj.transform;
             }
-            else
-            {
-                ent.SetParent(bindTransform);
-                effect.m_parentEnt = bindEnt;
-                bindEnt.AddBindObject(ent);
-            }
+            //else
+            //{
+            baseInfo.m_parent = bindTransform;
+            effect = new CEffect(effectId, baseInfo, loaded);
+            ent = effect.GetEntity();
+            effect.m_parentEnt = boneEnt;
+            boneEnt.AddBindObject(ent);
+            //}
+
+            if (ent == null)
+                return 0;
             m_mapEffect.Add(ent.m_hid, effect);
             return ent.m_hid;
         }
 
         /// <summary>
-        /// 创建基于实体位置跟随的特效
+        /// 创建基于实体位置跟随的特效，followType一般就2种
+        /// 1.脚底
+        /// 2.头顶
         /// </summary>
-        public static int CreateByCreaturePos(int effectId, int bindHandleId, Action<Entity> loaded = null)
+        public static int CreateByCreaturePos(int effectId, Entity newEnt, int followType, Action<Entity> loaded = null)
         {
             if (effectId == 0)
                 return 0;
-            CEffect effect = new CEffect(effectId, loaded);
+            //BoneEntity bindEnt = (BoneEntity)EntityManager.Inst.GetEnity(bindHandleId);
+            // 获取绑定点
+            BoneEntity bindEnt = newEnt as BoneEntity;
+            EntityBaseInfo baseInfo = new EntityBaseInfo();
+            baseInfo.m_vPos = bindEnt.GetPos();
+            CEffect effect = new CEffect(effectId, baseInfo, loaded);
             Entity ent = effect.GetEntity();
             if (ent == null)
             {
@@ -194,8 +268,8 @@ namespace Roma
             }
             ent.SetLayer((int)LusuoLayer.eEL_Dynamic);
 
-            BoneEntity bindEnt = (BoneEntity)EntityManager.Inst.GetEnity(bindHandleId);
             effect.m_parentEnt = bindEnt;
+            effect.m_followType = followType;
             bindEnt.AddBindObject(ent);
 
             m_mapEffect.Add(ent.m_hid, effect);
@@ -205,14 +279,34 @@ namespace Roma
         }
 
 
-        /// <summary>
-        /// 创建基于UI的特效绑定
-        /// </summary>     
-        public static int CreateUI(int effectId, Transform uiBindPoint, int order = 0, Action<CEffect> playend = null)
+        public static int Create(int effectId, Transform uiBindPoint)
         {
             if (effectId == 0)
                 return 0;
-            CEffect effect = new CEffect(effectId, null);
+            EntityBaseInfo baseInfo = new EntityBaseInfo();
+            baseInfo.m_parent = uiBindPoint;
+            baseInfo.m_vScale = Vector3.one;
+
+            CEffect effect = new CEffect(effectId, baseInfo, null);
+            Entity ent = effect.GetEntity();
+            ent.SetLayer((int)LusuoLayer.eEL_Dynamic);
+            ent.SetParent(uiBindPoint);
+            m_mapEffect.Add(ent.m_hid, effect);
+            return ent.m_hid;
+        }
+
+        /// <summary>
+        /// 创建基于UI的特效绑定
+        /// </summary>     
+        public static int CreateUI(int effectId, Transform uiBindPoint, int order = 0, Action<CEffect> playend = null, Action<Entity> loaded = null, float scale = 1.0f)
+        {
+            if (effectId == 0)
+                return 0;
+            EntityBaseInfo baseInfo = new EntityBaseInfo();
+            baseInfo.m_parent = uiBindPoint;
+            baseInfo.m_vScale = new Vector3(scale, scale, scale);
+
+            CEffect effect = new CEffect(effectId, baseInfo, loaded);
             Entity ent = effect.GetEntity();
             ent.SetLayer((int)LusuoLayer.eEL_UI);
             ent.SetOrder(order);
@@ -220,7 +314,6 @@ namespace Roma
             m_mapEffect.Add(ent.m_hid, effect);
             effect.AddPlayEnd(playend);
             return ent.m_hid;
-
         }
 
         public static void Destroy(int hid)
@@ -230,6 +323,12 @@ namespace Roma
             CEffect effect;
             if (m_mapEffect.TryGetValue(hid, out effect))
             {
+                //Debug.Log("移除特效:" + effect.GetEntity().m_transform.name + " hid:" + hid);
+                if (m_followPos.ContainsKey(effect))
+                {
+                    m_followPos.Remove(effect);
+                }
+
                 effect.Destory();
                 effect = null;
                 m_mapEffect.Remove(hid);
@@ -263,9 +362,9 @@ namespace Roma
                 }
                 else
                 {
-                    m_followPos.Remove(ef);
-                    m_mapEffect.Remove(ef.GetEntity().m_hid);
-                    ef.Destory();
+                    //m_mapEffect.Remove(ef.GetEntity().m_hid);
+                    //ef.Destory();
+                    Destroy(ef.GetEntity().m_hid);
                 }
             }
             m_tempListEffect.Clear();
@@ -275,9 +374,24 @@ namespace Roma
                 Entity ent = item.Key.GetEntity();
                 if (ent.IsInited())
                 {
-                    ent.SetPos(item.Value.GetPos());
+                    if (item.Key.m_followType == 1)
+                    {
+                        ent.SetPos(item.Value.GetPos());
+                    }
+                    else
+                    {
+                        ent.SetPos(item.Value.GetPos() + Vector3.up * item.Value.m_headPos);
+                    }
+
                 }
             }
+        }
+
+        public static void UnInit()
+        {
+            m_mapEffect.Clear();
+            m_tempListEffect.Clear();
+            m_followPos.Clear();
         }
 
         private static Dictionary<int, CEffect> m_mapEffect = new Dictionary<int, CEffect>();
@@ -287,7 +401,7 @@ namespace Roma
         /// <summary>
         /// 跟随角色位置的特效
         /// </summary>
-        private static Dictionary<CEffect, Entity> m_followPos = new Dictionary<CEffect, Entity>();
+        public static Dictionary<CEffect, Entity> m_followPos = new Dictionary<CEffect, Entity>();
 
 
 
