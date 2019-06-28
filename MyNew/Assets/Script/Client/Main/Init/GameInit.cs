@@ -136,6 +136,15 @@ namespace Roma
 
             // 读取CSV之前，初始化CSV管理器,把CSV信息传给DLL，进行CSV构建
             LogicSystem.Inst.InitCsv(ref CsvManager.Inst);
+            // 给mapCsv赋值，编辑器状态读取本地配置，运行状态读取二进制数据
+            if (Application.isEditor)
+            {
+                LoadCsvInEditor();
+                OnCsvInfoLoaded(null);
+                return;
+            }
+
+            LogicSystem.Inst.InitCsv(ref CsvManager.Inst);
             CsvListResource.SetCsvList(CsvManager.Inst.m_mapCSV);
             ResInfo resInfo = new ResInfo();
             resInfo.m_bDepend = false;
@@ -146,6 +155,26 @@ namespace Roma
 
             LogicSystem.Inst.GetMapLoadProcess().strCurInfo = "正在加载配置表：";
             LogicSystem.Inst.GetMapLoadProcess().fPercent = 0.2f;
+        }
+
+        private static string m_resCsvPath = Application.dataPath + "/Config/";
+        public void LoadCsvInEditor()
+        {
+            Dictionary<int, CsvExWrapper> dic = CsvManager.Inst.m_mapCSV;
+            foreach (KeyValuePair<int, CsvExWrapper> item in dic)
+            {
+                item.Value.Clear();
+                string name = CsvManager.Inst.GetName(item.Key);
+                if (name.Equals("0"))
+                    continue;
+
+                string path = m_resCsvPath + name + ".csv";
+                bool b = item.Value.LoadRead(path, Encoding.Default);
+                if (!b)
+                {
+                    Debug.LogError("注意： 表格读取失败：" + path);
+                }
+            }
         }
 
         private void OnCsvInfoLoaded(Resource res)

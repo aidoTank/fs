@@ -141,82 +141,70 @@ namespace Roma
             }
             FspNetRunTime.Inst.SendMessage(msg);
         }
-
-        public void SetLogicState(CmdFspEnum state)
+        public void SetLogicState(IFspCmdType state)
         {
             m_logicState = state;
         }
 
-        public CmdFspEnum GetLogicState()
+        public IFspCmdType GetLogicState()
         {
+            if (m_logicState == null)
+                return CmdFspStopMove.Inst;
             return m_logicState;
         }
 
-        public void SetLogicEnabled(bool enabled)
-        {
-            m_logicCmdEnabled = enabled;
-        }
-
-        public bool GetLogicEnabled()
-        {
-            return m_logicCmdEnabled;
-        }
-
-
+     
 
         /// <summary>
         /// 执行本地指令,push的指令，要更加当前情况，才能去设置玩家状态
         /// </summary>
-        public virtual void PushCommand(IFspCmdType cmd)
-        {            
-            if(!GetLogicEnabled())
-            {
+        public override void PushCommand(IFspCmdType cmd)
+        {
+            if (IsDie())
                 return;
-            }
 
-            Debug.Log("==============" + cmd.GetCmdType());
-            if(cmd.GetCmdType() == CmdFspEnum.eFspStopMove)
+            if (cmd.GetCmdType() == CmdFspEnum.eFspSendSkill)
             {
-                //EnterStopMove();
-                m_vCreature.PushCommand(cmd);
-            }
-            else if(cmd.GetCmdType() == CmdFspEnum.eFspMove)
-            {
-                m_cmdFspMove = cmd as CmdFspMove;
-                EnterMove();
-                m_vCreature.PushCommand(cmd);
-            }
-            else if(cmd.GetCmdType() == CmdFspEnum.eFspSendSkill)
-            {
-                PushCommand(new CmdFspStopMove()); // 中止移动
-
                 m_cmdFspSendSkill = cmd as CmdFspSendSkill;
-                //Debug.Log("切换技能状态：");
                 //EnterSkill();
+            }
+
+            // 属于四种独立状态
+            if (m_logicMoveEnabled && cmd.GetCmdType() == CmdFspEnum.eFspAutoMove)
+            {
+                //EnterAutoMove();
                 m_vCreature.PushCommand(cmd);
             }
-            SetLogicState(cmd.GetCmdType());
+            base.PushCommand(cmd);
+
+            if (m_logicMoveEnabled &&
+                (cmd.GetCmdType() == CmdFspEnum.eFspAutoMove ||
+                cmd.GetCmdType() == CmdFspEnum.eFspMove ||
+                cmd.GetCmdType() == CmdFspEnum.eFspStopMove) ||
+                cmd.GetCmdType() == CmdFspEnum.eFspRotation)
+            {
+                SetLogicState(cmd);
+            }
         }
 
-        public virtual void ExecuteFrame(int frameId)
+        public override void ExecuteFrame(int frameId)
         {
-            if(!GetLogicEnabled())
-            {
-                return;
-            }
+            //ExecuteFrameSkill();
 
-            if(m_logicState == CmdFspEnum.eFspMove)
+            if (IsDie())
+                return;
+
+            // 独立状态
+            if (m_logicMoveEnabled && m_logicState.GetCmdType() == CmdFspEnum.eFspAutoMove)
             {
-                TickMove();
+                //TickAutoMove();
             }
-            else if(m_logicState == CmdFspEnum.eFspStopMove)
-            {
-                //TickStopMove();
-            }
-            else if(m_logicState == CmdFspEnum.eFspSendSkill)
-            {
-                //TickSkill(frameId);
-            }
+            base.ExecuteFrame(frameId);
+
+            //if (collider == null)
+            //    return;
+            //if (IsPlayer() || IsMonster() || IsPartner())
+            //    collider.Update();
         }
        
         public override void Destory()
@@ -230,10 +218,6 @@ namespace Roma
         }
 
 
-        // 逻辑状态数据
-        public CmdFspEnum m_logicState;
-        // 逻辑命令是否可用，比如游戏开始前，技能释放动作时，逻辑都是不可以的
-        public bool m_logicCmdEnabled = true;
 
         public CmdFspMove m_cmdFspMove;
         public CmdFspSendSkill m_cmdFspSendSkill;

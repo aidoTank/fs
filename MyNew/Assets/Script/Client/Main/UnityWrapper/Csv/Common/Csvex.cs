@@ -386,6 +386,28 @@ namespace Roma
             lf.Close();
         }
 
+        public bool LoadRead(string strPath, Encoding encoding)
+        {
+            if (string.IsNullOrEmpty(strPath))
+            {
+                return false;
+            }
+
+            LusuoStream lf = null;
+            try
+            {
+                lf = new LusuoStream(new FileStream(strPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+            }
+            catch (Exception e)
+            {
+                Debug.Log("e:" + e.Message);
+                return false;
+            }
+            bool bRef = Load(lf, encoding);
+            lf.Close();
+            return bRef;
+        }
+
         public bool Load(string strPath, Encoding encoding)
         {
             if (string.IsNullOrEmpty(strPath))
@@ -546,6 +568,15 @@ namespace Roma
             LusuoStream lf = new LusuoStream(uData);
             bool bRef = Load(lf, coding);
             lf.Close();
+            return bRef;
+        }
+
+        public bool LoadRead(string strPath, Encoding encoding)
+        {
+            m_strOpenPath = strPath;
+            Clear();
+            bool bRef = m_csv.LoadRead(strPath, encoding);
+            _Load();
             return bRef;
         }
 

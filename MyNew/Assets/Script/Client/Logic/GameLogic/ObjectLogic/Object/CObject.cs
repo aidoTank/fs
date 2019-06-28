@@ -21,11 +21,11 @@ namespace Roma
         //public AOINode m_aoiNode;
 
         // 逻辑状态数据
-        public IFspCmdType m_logicState;
+        public IFspCmdType m_logicState = CmdFspStopMove.Inst;
         public Vector2 m_curPos;
         public Vector2 m_dir;
         public float m_scale =1;
-        public float m_speed;
+        public float m_speed = 10;
 
         public CmdFspMove m_cmdFspMove;
         // 用于状态BUFF控制的是否能移动

@@ -9,19 +9,19 @@ namespace Roma
         public Entity m_moveSoundEnt;
         public void PlayMoveSound()
         {
-            if (!m_bMaster)
-                return;
+            //if (!m_bMaster)
+            //    return;
 
-            if(m_moveSoundEnt == null)
-            {
-                int soundHid = SoundManager.Inst.PlaySound(51018, m_ent.GetPos());
-                m_moveSoundEnt = EntityManager.Inst.GetEnity(soundHid);
-            }
-            else
-            {
-                SoundEntity sEnt = m_moveSoundEnt as SoundEntity;
-                sEnt.Stop(false);
-            }
+            //if(m_moveSoundEnt == null)
+            //{
+            //    int soundHid = SoundManager.Inst.PlaySound(51018, m_ent.GetPos());
+            //    m_moveSoundEnt = EntityManager.Inst.GetEnity(soundHid);
+            //}
+            //else
+            //{
+            //    SoundEntity sEnt = m_moveSoundEnt as SoundEntity;
+            //    sEnt.Stop(false);
+            //}
         }
 
         public void _UpdateMoveSound()

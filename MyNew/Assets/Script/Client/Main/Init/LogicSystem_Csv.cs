@@ -66,12 +66,12 @@ namespace Roma
                 csvMgr.AddCSVCreate(item.Key, item.Value, new CsvExWrapper());
             }
 
-            int lastCsvId = m_listLuaCsv[m_listLuaCsv.Count - 1].Key;
-            for (int i = 0; i < m_luaCsvUpdateMaxNum; i++)
-            {
-                int id = lastCsvId + i + 1;
-                csvMgr.AddCSVCreate(id, i.ToString(), new CsvExWrapper());
-            }
+            //int lastCsvId = m_listLuaCsv[m_listLuaCsv.Count - 1].Key;
+            //for (int i = 0; i < m_luaCsvUpdateMaxNum; i++)
+            //{
+            //    int id = lastCsvId + i + 1;
+            //    csvMgr.AddCSVCreate(id, i.ToString(), new CsvExWrapper());
+            //}
         }
     }
 }
