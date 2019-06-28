@@ -1,0 +1,25 @@
+动作ID,动作名字,切换速度,播放速度,播放模式1播一次 2循环播,长度 时间长度,优先级 die99 stand0 astand0 jump0  run0  skill 60  hit70  gosh80  victory90,相同动作立刻播放,是火炮技能 释放时火炮需要切换到手上,备注
+animationID,animationName,fadeLength,speed,mode,length,priority,atOnce,switchHand,name
+uint,string,float,float,int,float,int,bool,bool,string
+1,stand,0.2,1,2,,0,,,近战待机
+2,stand,0.2,1,2,,0,,,远程待机
+3,run,0.2,0.88,2,,20,,,近战行走
+4,run,0.2,0.88,2,,20,,,远程行走
+5,shanbi,0.2,1,1,,90,,,闪避
+6,siwang,0.2,1,1,,100,,,死亡
+7,shouji,0.2,1,1,,10,,,受击
+8,fuhuo,0.2,1,1,,60,,,复活
+,,,,,,,,,
+9,gongji_1_1,0.2,1,1,,60,,,剑攻击1段
+10,gongji_1_2,0.2,1,1,,60,,,剑攻击2段
+11,gongji_1_3,0.2,1,1,,60,,,剑攻击3段
+12,gongji_2,0.2,1.7,2,,60,,,机枪普攻
+13,yidonggongji_2_1,0.2,0.82,2,,60,,,移动机枪普攻
+14,gongji_3,0.2,1,1,,60,,TRUE,肩扛火炮
+15,gongji_4,0.2,1,1,,60,,,手雷投掷
+16,xp_1,0.2,1,1,,60,,,幻影之舞
+17,yidonggongji_2_2,0.2,0.82,2,,60,,,后退机枪普攻
+,,,,,,,,,
+101,gongji_1,0.2,1,1,,60,,,怪物攻击方式1
+102,gongji_2,0.2,1,1,,60,,,怪物攻击方式2
+103,gongji_3,0.2,1,1,,60,,,怪物攻击方式3
