@@ -65,7 +65,7 @@ namespace Roma
 
         private void OnLoadSelect()
         {
-            m_master = CPlayerMgr.GetMaster();
+            m_master = CCreatureMgr.GetMaster();
             EntityBaseInfo info = new EntityBaseInfo();
             info.m_resID = 3;
             info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
@@ -194,7 +194,7 @@ namespace Roma
         {
             m_curSkillIndex = index;
             m_curSkillJoyStick = jsEvent;
-            CMasterPlayer master = CPlayerMgr.GetMaster();
+            CCreature master = CCreatureMgr.GetMaster();
 
             if(jsEvent == eJoyStickEvent.Drag)
             {
@@ -309,7 +309,7 @@ namespace Roma
             ent.SetColor(SKLL_BLUE);
         }
 
-        private CMasterPlayer m_master;
+        private CCreature m_master;
         private int m_skillChoseHid;
         private Transform m_skillChose;
         private Transform m_skillCenter;

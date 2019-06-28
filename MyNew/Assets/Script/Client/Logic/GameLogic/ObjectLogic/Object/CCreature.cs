@@ -32,58 +32,14 @@ namespace Roma
             SetPos(pos);
             SetDir(dir);
 
-            // 表现
-            //m_vCreature = VObjectMgr.Create(eVOjectType.Creature);
-            //sVOjectBaseInfo info = new sVOjectBaseInfo();
-            //info.m_resId = m_csv.ModelResId;
-            //info.m_pos = pos.ToVector3();
-            //info.m_dir = dir.ToVector3();
-            //info.m_headHeight = m_csv.headHeight;
-            //m_vCreature.Create(info);
-
             UpdateVO_Create(m_csv.ModelResId, 5, eVOjectType.Creature);
-
-            UpdateHeadName(name);
-            UpdateHeadLv();
-            UpdateHeadHp();
+            UpdateVO_ShowHeadName(name);
+            UpdateVO_ShowHeadLv();
+            UpdateVO_ShowHeadHp();
             return true;
         }
 
-        public void UpdateHeadName(string sName)
-        {
-            CmdUIHead name = new CmdUIHead();
-            name.type = 1;
-            name.name = sName;
-            m_vCreature.PushCommand(name);
-        }
 
-        public void UpdateHeadLv()
-        {
-            CmdUIHead lv = new CmdUIHead();
-            lv.type = 2;
-            lv.lv = GetPropNum(eCreatureProp.Lv);
-            m_vCreature.PushCommand(lv);
-        }
-
-        public void UpdateHeadHp()
-        {
-            CmdUIHead hp = new CmdUIHead();
-            hp.type = 3;
-            hp.curHp = (int)(GetPropNum(eCreatureProp.CurHp) * 0.001f);
-            hp.maxHp = (int)(GetPropNum(eCreatureProp.MaxHp) * 0.001f);
-            m_vCreature.PushCommand(hp);
-
-            if(GetPropNum(eCreatureProp.CurHp) <= 0)
-            {
-                CmdLife life = new CmdLife();
-                life.state = false;
-                m_vCreature.PushCommand(life);
-
-                CFrameTimeMgr.Inst.RegisterEvent(m_csv.dieDelay, ()=>{
-                    Destory();
-                });
-            }
-        }
 
         public bool IsDie()
         {
@@ -219,10 +175,12 @@ namespace Roma
 
 
 
-        public CmdFspMove m_cmdFspMove;
         public CmdFspSendSkill m_cmdFspSendSkill;
 
         // 属性
         public PlayerCsvData m_csv;
+
+        public bool m_bActive = true; // 非主角时，是否处于激活状态
+
     }
 }

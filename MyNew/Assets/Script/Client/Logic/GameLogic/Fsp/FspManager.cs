@@ -105,7 +105,8 @@ namespace Roma
             }
             
             CFrameTimeMgr.Inst.FixedUpdate();
-            CPlayerMgr.ExecuteFrame(frameId);            // 场景帧心跳等
+            CCreatureMgr.ExecuteFrame(frameId);
+            //CPlayerMgr.ExecuteFrame(frameId);      
             //CSkillMgr.ExecuteFrame(frameId);
         }
 
@@ -118,7 +119,7 @@ namespace Roma
             uint uid = cmd.playerId;
             if(uid == 0)
                 return;
-            CPlayer player = CPlayerMgr.Get(uid);
+            CCreature player = CCreatureMgr.Get(uid);
             IFspCmdType logicCmd = null;
             switch (type)
             {

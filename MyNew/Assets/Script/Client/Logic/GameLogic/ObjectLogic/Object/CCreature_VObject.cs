@@ -44,6 +44,9 @@ namespace Roma
             m_vCreature.Create(info);
         }
 
+
+
+
         public void UpdateVO_ShowHeadName(string sName)
         {
             if (m_vCreature == null)

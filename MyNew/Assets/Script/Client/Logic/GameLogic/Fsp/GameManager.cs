@@ -69,21 +69,20 @@ namespace Roma
                 if(EGame.m_openid.Equals(playerData[i].ToString()))
                 {
                     Debug.Log("客户端主角:" + EGame.m_openid);
-                    CPlayer master = CPlayerMgr.CreateMaster(playerData[i]);
+                    CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
                     master.Create(playerData[i].ToString(), new Vector2(8, 8), Collide.GetVector(-220));
-                    master.UpdateUI();
                 }
                 else
                 {
                     Debug.Log("客户端玩家:" + playerData[i]);
-                    CPlayer master = CPlayerMgr.Create(playerData[i]);
+                    CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
                     master.Create(playerData[i].ToString(), new Vector2(8, 8), Collide.GetVector(60));
                 }
             }
 
             for(int i = 0; i < 6; i ++)
             {
-                CPlayer p1 = CPlayerMgr.Create(i);
+                CCreature p1 = CCreatureMgr.Create(EThingType.Player, i);
                 p1.Create("测试：" + i, new Vector2(4 + i * 5, 8), Collide.GetVector(60));
             }
     
