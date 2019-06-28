@@ -23,7 +23,6 @@ namespace Roma
         public GameManager() : base(true) { }
 
         public FspManager m_fspMgr;      // FSP管理器
-        private int m_gameState; // 游戏状态
 
         private bool m_bRunning;
         private float m_sendProgressTime;  // 发送进度间隔
@@ -32,10 +31,7 @@ namespace Roma
         public override void Init()
         {
             FspNetRunTime.Inst = new FspNetRunTime();
-
             CFrameTimeMgr.Inst = new CFrameTimeMgr();
-
-
             CreatureProp.Init();
         }
         /// <summary>
@@ -106,11 +102,7 @@ namespace Roma
             {
                 m_bSendLoaded = true;
                 m_sendProgressTime = 1;
-
-                // FspMsgLoadProgress msgPro = (FspMsgLoadProgress)NetManager.Inst.GetMessage(eNetMessageID.FspMsgLoadProgress);
-                // msgPro.m_progress = 1.0f;
-                // FspNetRunTime.Inst.SendMessage(msgPro);
-
+                // 进度加载完成，发送可以控制
                 FspMsgStartControl msg = (FspMsgStartControl)NetManager.Inst.GetMessage(eNetMessageID.FspMsgStartControl);
                 FspNetRunTime.Inst.SendMessage(msg);
                 return;

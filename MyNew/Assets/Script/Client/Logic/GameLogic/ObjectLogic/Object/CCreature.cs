@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Roma
 {
+    // 优化一下类的层级
     /// <summary>
     /// 角色的创建由管理器创建
     /// 销毁由自身死亡状态时，自己调用管理器销毁

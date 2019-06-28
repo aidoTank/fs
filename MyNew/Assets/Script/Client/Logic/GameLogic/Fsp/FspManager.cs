@@ -61,24 +61,7 @@ namespace Roma
                 }
                 speed--;
             }
-
-            // 场景帧心跳等.临时本地测试
-            // foreach(KeyValuePair<long, CPlayer> item in CPlayerMgr.m_dicPlayer)
-            // {
-            //     item.Value.ExecuteFrame();
-            // }
-            //HandleLoadingPro();
         }
-
-        //public void HandleLoadingPro()
-        //{
-        //    FspMsgFrame msg = (FspMsgFrame)NetManager.Inst.GetMessage(eNetMessageID.FspMsgFrame);
-        //    FspVKey fsp = new FspVKey();
-        //    fsp.vkey = FspVKeyType.READY;
-        //    msg.m_frameData.vkeys.Add(fsp);
-        //    FspNetRunTime.Inst.SendMessage(msg);
-        //}
-
 
         /// <summary>
         /// 添加FSP消息，问题：接受FSP消息时，是存储List<FspFrame> ，还是FspFrame
@@ -89,10 +72,6 @@ namespace Roma
             FspMsgFrame frameMsg = msg as FspMsgFrame;
             if (frameMsg != null)
             {
-                //for(int i = 0; i < frameMsg.frameMsg.Count; i ++)
-                //{
-                //    AddServerFrameUnit(frameMsg.frameMsg[i]);
-                //}
                 AddServerFrameUnit(frameMsg.m_frameData);
             }
         }

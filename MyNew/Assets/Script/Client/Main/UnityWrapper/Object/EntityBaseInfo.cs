@@ -5,6 +5,7 @@ namespace Roma
 {
     public class EntityBaseInfo
     {
+        public int m_uid;
         public int m_resID;
         public string m_strName;
         public Vector3 m_vPos = Vector3.zero;
