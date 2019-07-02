@@ -21,7 +21,7 @@ namespace Roma
         }
 
 
-        public virtual bool Create(string name, Vector2 pos, Vector2 dir)
+        public virtual bool Create(string name, Vector2d pos, Vector2d dir)
         {
             PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
             m_csv = playerCsv.GetData(1);
@@ -31,6 +31,28 @@ namespace Roma
             // 数据
             SetPos(pos);
             SetDir(dir);
+
+            // 碰撞
+            collider = new Circle();
+            collider.isObstacle = false;
+            collider.c = pos;
+            collider.r = GetR();
+            if (IsMaster() || IsPlayer() || IsNpc())
+            {
+                collider.notPush = true;
+            }
+            else if (IsMonster())
+            {
+                collider.notPush = false;
+            }
+            PhysicsManager.Inst.Add(collider);
+            collider.m_updatePosEvent = (newPos, newDir) => {
+
+                if (m_vCreature != null)
+                    m_vCreature.m_bMoveing = true;
+                SetPos(newPos);
+                SetSpeed(GetSpeed());
+            };
 
             UpdateVO_Create(m_csv.ModelResId, 5, eVOjectType.Creature);
             UpdateVO_ShowHeadName(name);
@@ -157,12 +179,21 @@ namespace Roma
             }
             base.ExecuteFrame(frameId);
 
-            //if (collider == null)
-            //    return;
-            //if (IsPlayer() || IsMonster() || IsPartner())
-            //    collider.Update();
+            if (collider == null)
+                return;
+            if (IsPlayer() || IsMonster())
+                collider.Update();
         }
-       
+
+        public override void SetPos(Vector2d pos, bool bTeleport = false)
+        {
+            base.SetPos(pos, bTeleport);
+            if (collider != null)
+            {
+                collider.c = pos;
+            }
+        }
+
         public override void Destory()
         {
             m_destroy = true;
@@ -181,6 +212,6 @@ namespace Roma
         public PlayerCsvData m_csv;
 
         public bool m_bActive = true; // 非主角时，是否处于激活状态
-
+        private Circle collider;
     }
 }

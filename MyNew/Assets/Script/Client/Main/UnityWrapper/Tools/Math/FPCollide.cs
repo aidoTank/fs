@@ -51,6 +51,18 @@ namespace Roma
 
     public class FPCollide
     {
+        public static FixedPoint GetDis2(Vector2d v1, Vector2d v2)
+        {
+            Vector2d dV = v1 - v2;
+            return Vector2d.Dot(dV, dV);
+        }
+
+        public static void GetDis2(ref FixedPoint dis2, ref Vector2d v1, ref Vector2d v2)
+        {
+            Vector2d dV = v1 - v2;
+            dis2 = Vector2d.Dot(dV, dV);
+        }
+
         public static Vector2d GetVector(int angle)
         {
             return new Vector2d(CustomMath.Sin(angle), CustomMath.Cos(angle));

@@ -32,6 +32,10 @@ namespace Roma
         {
             FspNetRunTime.Inst = new FspNetRunTime();
             CFrameTimeMgr.Inst = new CFrameTimeMgr();
+
+            PhysicsManager.Inst = new PhysicsManager();
+            PhysicsManager.Inst.SetRolePush(true);
+
             CreatureProp.Init();
         }
         /// <summary>
@@ -70,21 +74,21 @@ namespace Roma
                 {
                     Debug.Log("客户端主角:" + EGame.m_openid);
                     CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
-                    master.Create(playerData[i].ToString(), new Vector2(8, 8), Collide.GetVector(-220));
+                    master.Create(playerData[i].ToString(), new Vector2d(8, 8), FPCollide.GetVector(-220));
                 }
                 else
                 {
                     Debug.Log("客户端玩家:" + playerData[i]);
                     CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
-                    master.Create(playerData[i].ToString(), new Vector2(8, 8), Collide.GetVector(60));
+                    master.Create(playerData[i].ToString(), new Vector2d(8, 8), FPCollide.GetVector(60));
                 }
             }
 
-            for(int i = 0; i < 6; i ++)
-            {
-                CCreature p1 = CCreatureMgr.Create(EThingType.Player, i);
-                p1.Create("测试：" + i, new Vector2(4 + i * 5, 8), Collide.GetVector(60));
-            }
+            //for(int i = 0; i < 6; i ++)
+            //{
+            //    CCreature p1 = CCreatureMgr.Create(EThingType.Player, i);
+            //    p1.Create("测试：" + i, new Vector2d(4 + i * 5, 8), FPCollide.GetVector(60));
+            //}
     
             m_bRunning = true;
         }

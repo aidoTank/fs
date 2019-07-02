@@ -22,10 +22,10 @@ namespace Roma
 
         // 逻辑状态数据
         public IFspCmdType m_logicState = CmdFspStopMove.Inst;
-        public Vector2 m_curPos;
-        public Vector2 m_dir;
+        public Vector2d m_curPos;
+        public Vector2d m_dir;
         public float m_scale =1;
-        public float m_speed = 10;
+        public FixedPoint m_speed =  new FixedPoint(10);
 
         public CmdFspMove m_cmdFspMove;
         // 用于状态BUFF控制的是否能移动
@@ -40,8 +40,8 @@ namespace Roma
         /// </summary>
         private float m_rotateCurTime;
         private float m_rotateMaxTime = 0.5f;
-        private Vector2 m_curDir;
-        private Vector2 m_destDir;
+        private Vector2d m_curDir;
+        private Vector2d m_destDir;
 
         // 表现层
         public VBase m_vCreature;
@@ -88,7 +88,7 @@ namespace Roma
                 CmdFspRotation rota = cmd as CmdFspRotation;
                 m_rotateCurTime = 0;
                 m_curDir = GetDir();
-                m_destDir = rota.m_rotation.ToVector2();
+                m_destDir = rota.m_rotation.ToVector2d();
                 m_vCreature.PushCommand(cmd);
             }
         }
@@ -101,10 +101,11 @@ namespace Roma
             }
             else if (m_logicSkillRotationEnabled && m_logicState.GetCmdType() == CmdFspEnum.eFspRotation)
             {
+                // 旋转顶点数待处理
                 m_rotateCurTime += FSPParam.clientFrameScTime;
                 float t = m_rotateCurTime / m_rotateMaxTime;
                 t = t >= 1.0f ? 1.0f : t;
-                Vector2 dir = Vector2.Lerp(m_curDir, m_destDir, t);
+                Vector2d dir = Vector2d.Lerp(m_curDir, m_destDir, new FixedPoint(t));
                 SetDir(dir);
             }
         }
@@ -120,9 +121,9 @@ namespace Roma
             if (m_cmdFspMove == null)
                 return;
 
-            Vector2 moveDir = m_cmdFspMove.m_dir.normalized;
-            float delta = FSPParam.clientFrameScTime * GetSpeed();
-            Vector2 nextPos = m_curPos + moveDir * delta;
+            Vector2d moveDir = m_cmdFspMove.m_dir.normalized;
+            FixedPoint delta = new FixedPoint(FSPParam.clientFrameScTime) * GetSpeed();
+            Vector2d nextPos = m_curPos + moveDir * delta;
 
             SetPos(nextPos);
             SetDir(moveDir);  // 技能前摇时，移动时，模型表现方向失效，比如机枪移动时射击
@@ -139,17 +140,17 @@ namespace Roma
             }
         }
 
-        public virtual void SetSpeed(float speed)
+        public virtual void SetSpeed(FixedPoint speed)
         {
             m_speed = speed;
 
             if (m_vCreature != null)
             {
-                m_vCreature.SetSpeed(speed);
+                m_vCreature.SetSpeed(speed.value);
             }
         }
 
-        public float GetSpeed()
+        public FixedPoint GetSpeed()
         {
             return m_speed;
         }
@@ -169,7 +170,7 @@ namespace Roma
         }
 
 
-        public virtual void SetPos(Vector2 pos, bool tr = false)
+        public virtual void SetPos(Vector2d pos, bool tr = false)
         {
             m_curPos = pos;
 
@@ -185,12 +186,12 @@ namespace Roma
             //}
         }
 
-        public Vector2 GetPos()
+        public Vector2d GetPos()
         {
             return m_curPos;
         }
 
-        public virtual void SetDir(Vector2 dir)
+        public virtual void SetDir(Vector2d dir)
         {
             m_dir = dir;
             if (m_vCreature != null)
@@ -199,14 +200,14 @@ namespace Roma
             }
         }
 
-        public virtual Vector2 GetDir()
+        public virtual Vector2d GetDir()
         {
             return m_dir;
         }
 
-        public float GetR()
+        public FixedPoint GetR()
         {
-            return 1.0f;
+            return new FixedPoint(1.0f);
         }
 
 

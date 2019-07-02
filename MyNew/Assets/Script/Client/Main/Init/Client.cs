@@ -243,10 +243,14 @@ namespace Roma
         }
 
 #if UNITY_EDITOR
-        //void OnDrawGizmos()
-        //{
-        //    Camera.main.depthTextureMode |= DepthTextureMode.Depth;
-        //}
+        void OnDrawGizmos()
+        {
+            //Camera.main.depthTextureMode |= DepthTextureMode.Depth;
+            if (PhysicsManager.Inst != null)
+            {
+                PhysicsManager.Inst.OnDrawGizmos();
+            }
+        }
 #endif
     }
 }

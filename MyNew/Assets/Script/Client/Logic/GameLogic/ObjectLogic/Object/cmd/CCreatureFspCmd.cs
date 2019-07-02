@@ -47,18 +47,18 @@ namespace Roma
     /// </summary>
     public class CmdFspMove : IFspCmdType
     {
-        public Vector2 m_dir;
-        public Vector2 m_pos;
+        public Vector2d m_dir;
+        public Vector2d m_pos;
         public CmdFspMove()
         {
             cmdenum = CmdFspEnum.eFspMove;
         }
-        public CmdFspMove(ref Vector2 dir)
+        public CmdFspMove(ref Vector2d dir)
         {
             cmdenum = CmdFspEnum.eFspMove;
             m_dir = dir;
         }
-        public CmdFspMove(ref Vector2 dir, ref Vector2 pos)
+        public CmdFspMove(ref Vector2d dir, ref Vector2d pos)
         {
             cmdenum = CmdFspEnum.eFspMove;
             m_dir = dir;

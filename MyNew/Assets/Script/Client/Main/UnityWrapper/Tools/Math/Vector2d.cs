@@ -172,6 +172,11 @@ namespace Roma
             return v1.x != v2.x || v1.y != v2.y;
         }
 
+        public static Vector2d operator -(Vector2d a)
+        {
+            return a * -1;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is Vector2d)

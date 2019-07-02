@@ -29,7 +29,7 @@ namespace Roma
             info.m_pos = GetPos().ToVector3();
             info.m_dir = GetDir().ToVector3();
             info.m_scale = GetScale();
-            info.m_speed = GetSpeed();
+            info.m_speed = GetSpeed().value;
             info.m_headHeight = headHeight;
             //if (m_csvData != null)
             //{

@@ -277,6 +277,27 @@ namespace Roma
             return new Vector2(vec.x, vec.z);
         }
 
+        public static Vector3 ToVector3(this Vector2d vec)
+        {
+            return new Vector3(vec.x.value, 0, vec.y.value);
+        }
+
+        public static Vector2d ToVector2d(this Vector3 vec)
+        {
+            return new Vector2d(vec.x, vec.z);
+        }
+
+        public static Vector2 ToVector2(this Vector2d vec)
+        {
+            return new Vector2(vec.x.value, vec.y.value);
+        }
+
+        public static Vector2d ToVector2d(this Vector2 vec)
+        {
+            return new Vector2d(vec.x, vec.y);
+        }
+
+
         public static void SetActiveNew(this Component component, bool bShow)
         {
             if (null != component)

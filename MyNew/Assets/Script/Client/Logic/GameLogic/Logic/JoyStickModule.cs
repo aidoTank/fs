@@ -177,9 +177,10 @@ namespace Roma
 
             if (m_master != null)
             {
-                CmdFspMove cmd = new CmdFspMove(ref dir);
+                Vector2d _dir = dir.ToVector2d();
+                CmdFspMove cmd = new CmdFspMove(ref _dir);
                 m_master.SendFspCmd(cmd);
-                                Debug.Log("发送移动。。。。。。。。。。。。。。。。。。。。。");
+                Debug.Log("发送移动。。。。。。。。。。。。。。。。。。。。。");
                                 
                 m_preMoveDir = dir;
                 m_isFirstJoyStick = false;

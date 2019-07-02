@@ -129,7 +129,7 @@ namespace Roma
                 break;
                 case CmdFspEnum.eFspMove:
                     //Debug.Log(uid + " 客户端调用移动命令 " + cmd.args[0] + " " + cmd.args[1]);
-                    Vector2 v = new Vector2(cmd.args[0], cmd.args[1]) * 0.01f;
+                    Vector2d v = new Vector2d(cmd.args[0], cmd.args[1]) * new FixedPoint(0.01f);
                     logicCmd = new CmdFspMove(ref v);
                 break;
                 case CmdFspEnum.eFspSendSkill:
