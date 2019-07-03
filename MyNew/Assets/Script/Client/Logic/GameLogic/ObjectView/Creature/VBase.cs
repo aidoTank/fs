@@ -33,6 +33,8 @@ namespace Roma
         public int RepairFramesMin;
         // 卡住时的当前帧
         public int FrameBlockIndex;
+
+        public bool m_isBarrier;
     }
 
     public struct sCurveParam
@@ -141,6 +143,11 @@ namespace Roma
             }
         }
 
+        public virtual void SetBarrier(bool isBarrier)
+        {
+            m_moveInfo.m_isBarrier = isBarrier;
+        }
+
         public virtual void SetSpeed(float speed)
         {
             m_moveInfo.m_speed = speed;
@@ -222,19 +229,19 @@ namespace Roma
             Vector3 viewPos = curPos + dir * dist;
 
             Vector3 result = logicPos;
-            if(true)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
-            {
-                Vector3 offsetMove = curPos - logicPos;
-                float tempDis = offsetMove.magnitude;
-                if(tempDis != 0.0f)
-                {
-                    result = Vector3.Lerp(curPos, logicPos, dist / tempDis);
-                }
-                moveInfo.RepairFramesMin = 1;
-                moveInfo.FrameBlockIndex = GameManager.Inst.GetFspManager().GetCurFrameIndex();
-            }
-            else
-            {
+           if(moveInfo.m_isBarrier)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
+           {
+               Vector3 offsetMove = curPos - logicPos;
+               float tempDis = offsetMove.magnitude;
+               if(tempDis != 0.0f)
+               {
+                   result = Vector3.Lerp(curPos, logicPos, dist / tempDis);
+               }
+               moveInfo.RepairFramesMin = 1;
+               moveInfo.FrameBlockIndex = GameManager.Inst.GetFspManager().GetCurFrameIndex();
+           }
+           else
+           {
                 // 逻辑位置和表现层位置差值向量
                 Vector3 offsetVec = viewPos - logicPos;
                 // 偏移向量的长度

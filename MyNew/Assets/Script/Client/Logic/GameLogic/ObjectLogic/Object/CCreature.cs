@@ -52,6 +52,7 @@ namespace Roma
                     m_vCreature.m_bMoveing = true;
                 SetPos(newPos);
                 SetSpeed(GetSpeed());
+                m_vCreature.SetBarrier(true);
             };
 
             UpdateVO_Create(m_csv.ModelResId, 5, eVOjectType.Creature);

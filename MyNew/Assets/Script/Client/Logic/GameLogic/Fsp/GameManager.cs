@@ -72,6 +72,7 @@ namespace Roma
              
                 if(EGame.m_openid.Equals(playerData[i].ToString()))
                 {
+                    EGame.m_uin = playerData[i];
                     Debug.Log("客户端主角:" + EGame.m_openid);
                     CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
                     master.Create(playerData[i].ToString(), new Vector2d(8, 8), FPCollide.GetVector(-220));

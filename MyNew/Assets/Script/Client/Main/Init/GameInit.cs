@@ -144,7 +144,7 @@ namespace Roma
                 return;
             }
 
-            LogicSystem.Inst.InitCsv(ref CsvManager.Inst);
+            //LogicSystem.Inst.InitCsv(ref CsvManager.Inst);
             CsvListResource.SetCsvList(CsvManager.Inst.m_mapCSV);
             ResInfo resInfo = new ResInfo();
             resInfo.m_bDepend = false;
