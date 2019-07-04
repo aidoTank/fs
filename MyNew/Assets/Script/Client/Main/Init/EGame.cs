@@ -21,9 +21,9 @@ namespace Roma
     {
         public const int clientFrameInterval = 30;        //客户端帧率
         
-        public const float clientFrameScTime = 0.032f;        //客户端帧率时间(秒)
+        public const float clientFrameScTime = 0.033f;        //客户端帧率时间(秒)
         //public const long clientFrameScLongTime = (long)((double)clientFrameScTime * FixedMath.One);        //客户端帧率时间(秒)
-        public const int clientFrameMsTime = 32;        //客户端帧率时间(毫秒)
+        public const int clientFrameMsTime = 33;        //客户端帧率时间(毫秒)
         public const int serverTimeout = 15000;          //服务器判断客户端的超时
         public const int clientFrameRateMultiple = 1;   //客户端和服务器端的帧率倍数
         public const bool enableSpeedUp = true;         //  是否可以加速

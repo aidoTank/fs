@@ -128,6 +128,7 @@ namespace Roma
             SetPos(nextPos);
             SetDir(moveDir);  // 技能前摇时，移动时，模型表现方向失效，比如机枪移动时射击
             SetSpeed(GetSpeed());
+
             m_vCreature.SetBarrier(false);
         }
 

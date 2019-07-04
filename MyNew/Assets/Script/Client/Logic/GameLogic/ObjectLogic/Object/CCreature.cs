@@ -48,11 +48,14 @@ namespace Roma
             PhysicsManager.Inst.Add(collider);
             collider.m_updatePosEvent = (newPos, newDir) => {
 
-                if (m_vCreature != null)
-                    m_vCreature.m_bMoveing = true;
                 SetPos(newPos);
                 SetSpeed(GetSpeed());
-                m_vCreature.SetBarrier(true);
+
+                if (m_vCreature != null)
+                {
+                    m_vCreature.m_bMoveing = true;
+                    m_vCreature.SetBarrier(true);
+                }
             };
 
             UpdateVO_Create(m_csv.ModelResId, 5, eVOjectType.Creature);

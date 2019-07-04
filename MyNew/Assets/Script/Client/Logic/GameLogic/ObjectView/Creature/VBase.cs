@@ -231,14 +231,15 @@ namespace Roma
             Vector3 result = logicPos;
            if(moveInfo.m_isBarrier)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
            {
-               Vector3 offsetMove = curPos - logicPos;
-               float tempDis = offsetMove.magnitude;
-               if(tempDis != 0.0f)
-               {
-                   result = Vector3.Lerp(curPos, logicPos, dist / tempDis);
-               }
-               moveInfo.RepairFramesMin = 1;
-               moveInfo.FrameBlockIndex = GameManager.Inst.GetFspManager().GetCurFrameIndex();
+                Debug.Log("遇到障碍");
+                Vector3 offsetMove = curPos - logicPos;
+                float tempDis = offsetMove.magnitude;
+                if(tempDis != 0.0f)
+                {
+                    result = Vector3.Lerp(curPos, logicPos, dist / tempDis);
+                }
+                moveInfo.RepairFramesMin = 1;
+                moveInfo.FrameBlockIndex = GameManager.Inst.GetFspManager().GetCurFrameIndex();
            }
            else
            {
