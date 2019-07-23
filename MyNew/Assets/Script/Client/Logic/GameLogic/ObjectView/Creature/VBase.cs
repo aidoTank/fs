@@ -29,12 +29,14 @@ namespace Roma
         public Vector3 m_pos;
         public Vector3 m_dir;   // 单位方向
         public float m_speed;
-        // 平滑插值下限偏差（好像并没什么用）
+        // 弥补最新偏差的倍率。默认是1，如果当前表现层和逻辑层的差值，小于逻辑层当前帧移动的值，则使用表现层的移动值
         public int RepairFramesMin;
-        // 卡住时的当前帧
+        // 卡住时的当前帧，其实是设置表现层位置时最后的帧号，用于识别网络是否卡住
         public int FrameBlockIndex;
 
         public bool m_isBarrier;
+        // 平滑分步，逻辑停止移动时，会通知表现层，但是表现层并不会立马停止，而是在下一帧停止
+        public int LerpStep;
     }
 
     public struct sCurveParam
@@ -92,7 +94,7 @@ namespace Roma
 
             int hid = EntityManager.Inst.CreateEntity(eType, info, CreateEnd);
             SetDir(baseInfo.m_dir);
-            SetPos(baseInfo.m_pos);
+            SetPos(baseInfo.m_pos, true);
             SetSpeed(baseInfo.m_speed);
             m_ent = EntityManager.Inst.GetEnity(hid);
         }
@@ -120,12 +122,16 @@ namespace Roma
         public virtual void SetPos(Vector3 pos, bool isTeleport = false)
         {
             m_moveInfo.m_pos = pos;
-            if(isTeleport)
+            if (isTeleport)
             {
                 if (m_ent != null && m_ent.IsInited())
                 {
                     m_ent.SetPos(m_moveInfo.m_pos);
                 }
+            }
+            else
+            {
+                m_moveInfo.LerpStep = 2;
             }
         }
 
@@ -180,10 +186,11 @@ namespace Roma
 
             _UpdateRotate(time, fdTime);
 
-            if (m_bMoveing)
+            if (m_bMoveing || m_moveInfo.LerpStep > 0)
             {
                 Entity ent = m_ent as Entity;
                 _UpdateMove(time, fdTime, ref ent, m_moveInfo);
+                m_moveInfo.LerpStep -= 1;
             }
         }
 
@@ -229,8 +236,8 @@ namespace Roma
             Vector3 viewPos = curPos + dir * dist;
 
             Vector3 result = logicPos;
-           if(moveInfo.m_isBarrier)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
-           {
+            if(moveInfo.m_isBarrier)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
+            {
                 Debug.Log("遇到障碍");
                 Vector3 offsetMove = curPos - logicPos;
                 float tempDis = offsetMove.magnitude;
@@ -240,9 +247,9 @@ namespace Roma
                 }
                 moveInfo.RepairFramesMin = 1;
                 moveInfo.FrameBlockIndex = GameManager.Inst.GetFspManager().GetCurFrameIndex();
-           }
-           else
-           {
+            }
+            else
+            {
                 // 逻辑位置和表现层位置差值向量
                 Vector3 offsetVec = viewPos - logicPos;
                 // 偏移向量的长度
