@@ -2,6 +2,7 @@ using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace Roma
 { 
@@ -124,5 +125,101 @@ namespace Roma
             }
             return Encoding.UTF8.GetBytes(str.Trim());
         }
-	}
+
+
+        public static int GetLength(string str)
+        {
+            if (str == null || str.Length == 0) { return 0; }
+
+            int l = str.Length;
+            int realLen = l;
+
+            #region 计算长度
+            int clen = 0;//当前长度
+            while (clen < l)
+            {
+                //每遇到一个中文，则将实际长度加一。
+                if ((int)str[clen] > 128) { realLen++; }
+                clen++;
+            }
+            #endregion
+
+            return realLen;
+        }
+
+        public static string GetSize(int size)
+        {
+            if (size / 1024.0f / 1024.0f >= 0.5f)
+            {
+                return (size / 1024.0f / 1024.0f).ToString("f1") + "MB";
+            }
+            else
+            {
+                return (size / 1024.0f).ToString("f1") + "KB";
+            }
+        }
+
+        public static Vector3 GetVector3(string pos)
+        {
+            string[] posList = pos.Split('_');
+            if (posList.Length != 3)
+            {
+                Debug.LogError("位置解析错误。" + pos);
+                return Vector3.zero;
+            }
+            float x, y, z;
+            float.TryParse(posList[0], out x);
+            float.TryParse(posList[1], out y);
+            float.TryParse(posList[2], out z);
+            return new Vector3(x, y, z);
+        }
+
+        public static string GetVector3Str(Vector3 pos)
+        {
+            return pos.x + "_" + pos.y + "_" + pos.z;
+        }
+
+        public static Vector2 GetVector2(string pos)
+        {
+            string[] posList = pos.Split('_');
+            if (posList.Length != 2)
+            {
+                Debug.LogError("位置解析错误。" + pos);
+                return Vector3.zero;
+            }
+            float x, y;
+            float.TryParse(posList[0], out x);
+            float.TryParse(posList[1], out y);
+            return new Vector2(x, y);
+        }
+
+        public static Color GetColor(string pos)
+        {
+            string[] colorList = pos.Split('_');
+            if (colorList.Length != 3)
+            {
+                Debug.LogError("颜色解析错误。");
+                return Color.white;
+            }
+            float x, y, z;
+            float.TryParse(colorList[0], out x);
+            float.TryParse(colorList[1], out y);
+            float.TryParse(colorList[2], out z);
+            return new Color(x, y, z);
+        }
+
+        public static int[] GetIntList(string info)
+        {
+            string[] infoList = info.Split('_');
+            int[] rInfo = new int[infoList.Length];
+            for(int i = 0; i < infoList.Length; i ++)
+            {
+                int val = 0;
+                int.TryParse(infoList[i], out val);
+                rInfo[i] = val;
+            }
+            return rInfo;
+        }
+
+    }
 }

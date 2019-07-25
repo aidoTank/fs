@@ -11,6 +11,7 @@ namespace Roma
         eCE_ResName,
         eCE_url,
         eCE_type,
+        eCE_bz,
     }
 
     public class AllResInfoCsv : CsvExWrapper
@@ -40,6 +41,7 @@ namespace Roma
                 m_csv.SetData(nRow, (int)eCSV_Enum.eCE_ResName, key.strName);
                 m_csv.SetData(nRow, (int)eCSV_Enum.eCE_url, key.strUrl);
                 m_csv.SetData(nRow, (int)eCSV_Enum.eCE_type, ResInfo.Type2String(key.iType));
+                m_csv.SetData(nRow, (int)eCSV_Enum.eCE_bz, key.bz);
             }
         }
 
@@ -59,6 +61,7 @@ namespace Roma
                 res.strName = m_csv.GetData(i, (int)eCSV_Enum.eCE_ResName);
                 res.strUrl = m_csv.GetData(i, (int)eCSV_Enum.eCE_url);
                 res.iType = ResInfo.String2Type(m_csv.GetData(i, (int)eCSV_Enum.eCE_type));
+                res.bz = m_csv.GetData(i, (int)eCSV_Enum.eCE_bz);
                 m_lstResinfo.Add(res);
                 m_mapNameResInfo[res.strName] = res;
                 m_mapIDResInfo[res.nResID] = res;

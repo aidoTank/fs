@@ -106,7 +106,7 @@ public class ExportAB
     {
         SetMainAssetBundleName();
         //打包资源的路径，打包在对应平台的文件夹下
-        string targetPath = Application.dataPath + "/StreamingAssets/" + ExportDefine.m_prefix + "/";
+        string targetPath = Application.dataPath + "/StreamingAssets/" + Client.m_prefix + "/";
         if (!Directory.Exists(targetPath))
         {
             Directory.CreateDirectory(targetPath);

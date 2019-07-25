@@ -45,7 +45,7 @@ d.透明贴图：RGBA 16BITS
 public class ExportConfig
 {
 
-    private static string m_exportPath = Application.dataPath + "/StreamingAssets/" + ExportDefine.m_prefix + "/";
+    private static string m_exportPath = Application.dataPath + "/StreamingAssets/" + Client.m_prefix + "/";
 
     private static string m_csvPath = Application.dataPath + "/Config/";
     private static uint m_csvNums = 0;
@@ -53,7 +53,7 @@ public class ExportConfig
     private static string m_csvAssetBundleName = "config/allcsvinfo";
 
     private static string m_resCsvPath = Application.dataPath + "/Config/resinfo.csv";
-    private static string m_resPath = Application.dataPath + "/StreamingAssets/" + ExportDefine.m_prefix + "/";
+    private static string m_resPath = Application.dataPath + "/StreamingAssets/" + Client.m_prefix + "/";
     private static string m_resBytesPath = Application.dataPath + "/Resource/config/allresinfo.bytes";
     private static string m_resAssetBundleName = "config/allresinfo";
 
@@ -254,10 +254,10 @@ public class ExportConfig
                 ResInfo res = new ResInfo();
                 string resName = item.Name.ToLower();
                 string resPath = item.FullName;
-                int pathStartPos = resPath.IndexOf(ExportDefine.m_prefix);     // 从android开始截取
+                int pathStartPos = resPath.IndexOf(Client.m_prefix);     // 从android开始截取
                 resPath = item.FullName.Substring(pathStartPos, item.FullName.Length - pathStartPos);
 
-                res.strUrl = resPath.Replace("\\", "/").Replace(ExportDefine.m_prefix + "/", "");
+                res.strUrl = resPath.Replace("\\", "/").Replace(Client.m_prefix + "/", "");
                 res.strName = resName;
                 //res.iSize = (int)item.Length;
                 //byte[] bytes = File.ReadAllBytes(item.FullName);

@@ -10,6 +10,7 @@ namespace Roma
         CsvListResource = 2,
         AllLuaResource,
 
+
         EffectResource,
         PanelResource,
         IconResource,      // 界面动态下载大小图统称为icon
@@ -18,9 +19,12 @@ namespace Roma
         SceneCfgResource,
         LightMapResource,
         SceneDataResource,
-        SoundResource,
 
         BoneResource,   // 蒙皮骨骼
+        ShaderResource,
+        SoundResource,
+
+        PreloadShaderResource,
     }
 
 
@@ -34,7 +38,7 @@ namespace Roma
 
             f.WriteString(strUrl);
             f.WriteString(strName);
- 
+
             f.WriteInt(nResID);
         }
 
@@ -57,7 +61,7 @@ namespace Roma
 
         public static ResType PrefixString2Type(string strName)
         {
-            if(strName == "allresinfo")
+            if (strName == "allresinfo")
             {
                 return ResType.ResInfosResource;
             }
@@ -68,6 +72,10 @@ namespace Roma
             else if (strName == "alllua")
             {
                 return ResType.AllLuaResource;
+            }
+            else if (strName == "static_shader")
+            {
+                return ResType.PreloadShaderResource;
             }
 
             strName = GetPrefixString(strName);
@@ -100,9 +108,18 @@ namespace Roma
             {
                 return ResType.SceneDataResource;
             }
+
             else if (strName == "bo_")
             {
                 return ResType.BoneResource;
+            }
+            else if (strName == "shader_")
+            {
+                return ResType.ShaderResource;
+            }
+            else if (strName == "snd_")
+            {
+                return ResType.SoundResource;
             }
             return ResType.None;
         }
@@ -151,9 +168,22 @@ namespace Roma
             {
                 return ResType.SceneDataResource;
             }
+
             else if (strName == "骨骼蒙皮")
             {
                 return ResType.BoneResource;
+            }
+            else if (strName == "着色器")
+            {
+                return ResType.ShaderResource;
+            }
+            else if (strName == "声音")
+            {
+                return ResType.SoundResource;
+            }
+            else if (strName == "预加载shader")
+            {
+                return ResType.PreloadShaderResource;
             }
             return ResType.None;
         }
@@ -175,6 +205,9 @@ namespace Roma
                 case ResType.SceneDataResource: return "地图动态数据";
 
                 case ResType.BoneResource: return "骨骼蒙皮";
+                case ResType.ShaderResource: return "着色器";
+                case ResType.SoundResource: return "声音";
+                case ResType.PreloadShaderResource: return "预加载shader";
                 default: { return ""; }
             }
         }
@@ -183,6 +216,7 @@ namespace Roma
         public string strUrl;
         public string strName;
         public ResType iType;
+        public string bz;
         public bool m_bDepend = true;  // 是否依赖其他资源
         public int m_size;
 
@@ -198,8 +232,11 @@ namespace Roma
             "cfg_",
             "lm_",
             "sd_",
-            
+
             "bo_",
+            "shader_",
+            "snd_",
+            "static_shader",
         };
 
         public static bool IsMainResFile(string name)
@@ -208,10 +245,14 @@ namespace Roma
                 return false;
             if (name.Contains(".manifest"))
                 return false;
-            for(int i = 0; i < MainResPrefix.Count; i ++)
+            for (int i = 0; i < MainResPrefix.Count; i++)
             {
-                if (name.Contains(MainResPrefix[i]))
+                string pre = MainResPrefix[i];
+                int pos = name.IndexOf(pre);
+                if (pos == 0)
                     return true;
+                //if (name.Contains(MainResPrefix[i]))
+                //    return true;
             }
             return false;
         }

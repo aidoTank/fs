@@ -15,18 +15,13 @@ namespace Roma
 
     public class DPResourceManager : Singleton
     {
-        public static new DPResourceManager Inst = null;
+        public static DPResourceManager Inst = null;
         public Dictionary<string, DPResource> m_mapResource = new Dictionary<string, DPResource>();
 
         public DPResourceManager()
             : base(true)
         {
 
-        }
-
-        public override void Update(float fTime, float fDTime)
-        {
-            base.Update(fTime, fDTime);
         }
 
         public string GetDPResource()
@@ -58,9 +53,23 @@ namespace Roma
         {
             if (m_mapResource.ContainsKey(name))
             {
-                Debug.LogError("添加依赖资源重复错误："+ name);
+                Debug.LogError("添加依赖资源重复错误：" + name);
                 return;
             }
+
+            // 替换等效静态字体
+            //if (null != UIStaticResHandler.Inst && name.Contains("youyuan"))
+            //{
+            //    Font[] fonts = ab.LoadAllAssets<Font>();
+            //    if (null != fonts)
+            //    {
+            //        for (int i = 0; i < fonts.Length; i++)
+            //        {
+            //            UIStaticResHandler.Inst.ReplaceAllSameFonts(fonts[i]);
+            //        }
+            //    }
+            //}
+
             DPResource res = new DPResource();
             res.m_assertBundle = ab;
             res.AddRef();
@@ -76,9 +85,16 @@ namespace Roma
             if (m_mapResource.TryGetValue(name, out res))
             {
                 res.SubRef();
-                if(res.m_ref == 0)
+                if (res.m_ref == 0)
                 {
-                    res.m_assertBundle.Unload(true);
+                    if (res.m_assertBundle != null)
+                    {
+                        res.m_assertBundle.Unload(true);
+                    }
+                    else
+                    {
+                        Debug.LogError("移除依赖资源错误：" + name);
+                    }
                     m_mapResource.Remove(name);
                 }
             }
@@ -117,8 +133,8 @@ namespace Roma
         private Resource m_res;
         private WWW m_www;
 
-        private int m_curResNum;
-        private int m_maxResNum;
+        private int m_DpResNum;
+        private int m_curDpResNum;
 
         public void Clear()
         {
@@ -131,53 +147,28 @@ namespace Roma
         public void InitNewDownLoad(Resource res
             , Action<Resource> loaded)
         {
+            m_DpResNum = 0;
+            m_curDpResNum = 0;
+
             m_res = res;
             m_bStart = true;
             Clear();
-
-            if(GlobleConfig.m_downLoadType == eDownLoadType.LocalResource)
-            {
-                StartCoroutine(DownloadEditorResource(res, loaded));
-            }
-            else
-            {
-                StartCoroutine(DownloadAssetBundle(res, loaded));
-            }
-        }
-
-        public IEnumerator DownloadEditorResource(Resource res, 
-             Action<Resource> loaded)
-        {
-            UnityEngine.Object eRes = null;
-                  #if UNITY_EDITOR
-            eRes = UnityEditor.AssetDatabase.LoadAssetAtPath(res.m_fullUrl, typeof(UnityEngine.Object));
-                 #endif
-            yield return new WaitForSeconds(0.2f);  
-
-            res.SetEditorResource(eRes);
-            res.SetState(eResourceState.eRS_Loaded);  // 这里只是表示资源加载完成，并没有执行资源内部的下载后的逻辑
-            res.SetDownLoadProcess(1.0f);
-            if(loaded != null)
-                loaded(res);
-
-            m_bStart = false;
-   
+            StartCoroutine(DownloadAssetBundle(res, loaded));
         }
 
         /// <summary>
         /// 下载AssetBundle资源包，并保存在内存中
         /// </summary>
-        public IEnumerator DownloadAssetBundle(Resource res, 
+        public IEnumerator DownloadAssetBundle(Resource res,
              Action<Resource> loaded)
         {
             string[] dependences = null;
             if (res.GetResInfo().m_bDepend) //先下载依赖资源
             {
                 dependences = ResourceManager.ABManifest.GetAllDependencies(res.GetResInfo().strUrl);
-                m_curResNum = 0;
-                m_maxResNum = dependences.Length + 1;
                 if (dependences != null && dependences.Length > 0)
                 {
+                    m_DpResNum = dependences.Length;
                     for (int i = 0; i < dependences.Length; i++)
                     {
                         string name = dependences[i];
@@ -186,22 +177,13 @@ namespace Roma
                         if (dpRes != null)
                         {
                             dpRes.AddRef();
-                            m_curResNum++;
                             continue;
                         }
 
-                        string dpURL;
-                        if (GlobleConfig.m_downLoadType == eDownLoadType.WWW)  // 编辑器服务器
+                        string dpURL = GlobleConfig.GetPersistentPath() + name;
+                        if (!File.Exists(dpURL))
                         {
-                            dpURL = GlobleConfig.GetFileServerPath() + name;
-                        }
-                        else
-                        {
-                            dpURL = GlobleConfig.GetPersistentPath() + name;
-                            if (!File.Exists(dpURL))
-                            {
-                                dpURL = GlobleConfig.GetStreamingPath() + name;
-                            }
+                            dpURL = GlobleConfig.GetStreamingPath() + name;
                         }
 
                         m_www = new WWW(dpURL);
@@ -209,72 +191,50 @@ namespace Roma
                         if (m_www.error != null)
                         {
                             m_bStart = false;
-                            Debug.Log("依赖资源加载出错：" + name + "  " + dpURL);
+                            //Debug.LogError("依赖资源加载出错：" + name + "  " + dpURL);
                         }
                         else
                         {
-                            m_curResNum++;
+                            //Debug.LogError("加载依赖资源：" + res.GetResInfo().strName + "  " + name);
                             DPResourceManager.Inst.Add(name, m_www.assetBundle);
                         }
+                        m_curDpResNum++;
                     }
                 }
             }
 
             //下载主资源
+            if (Application.platform == RuntimePlatform.IPhonePlayer)
+            {
+                res.m_fullUrl = res.m_fullUrl + "?nocache=" + DateTime.Now.Ticks;
+            }
             //Debug.Log("加载资源：" + res.m_fullUrl);
             m_www = new WWW(res.m_fullUrl);
             yield return m_www;
             if (m_www.error != null)
             {
-                m_bStart = false;
-                Debug.LogError("下载AssetBundle出错！地址：" + res.m_fullUrl + "  "+ m_www.error);
+                Debug.LogError("下载AssetBundle出错！地址：" + res.m_fullUrl + "  " + m_www.error);
                 res.SetState(eResourceState.eRS_NoFile);
-
-                ResourceFactory.Inst.UnLoadResource(m_res, true);
-                if (res.m_resInfo.strName.Equals(ExportDefine.m_prefix))
-                {
-                    m_bStart = false;
-                    m_res = null;
-                    Client.Inst().m_uiResInitDialog.OpenPanel(true);
-                    Client.Inst().m_uiResInitDialog.Open("重连", "退出", "连接资源服务器失败，请联系客服。",(bOk, a) =>
-                    {
-                        if (bOk)
-                        {
-                            Debug.Log("重连资源服");
-                            Client.Inst().m_gameInit.OnCheckFirst();
-                        }
-                        else
-                        {
-                            Application.Quit();
-                        }
-                    });
-                }
-                else          // 下载资源错误
-                {
-                    m_bStart = false;
-                    m_res = null;
-                    Client.Inst().m_uiResInitDialog.OpenPanel(true);
-                    Client.Inst().m_uiResInitDialog.Open("退出", "", "获取资源错误：" + m_res.m_fullUrl,(bOk, a) =>
-                    {
-                        if (bOk)
-                        {
-                            Application.Quit();
-                        }
-                    });
-                }
+                if (loaded != null)
+                    loaded(res);
             }
             else
             {
-                m_curResNum++;
-                res.SetDPResource(dependences);
-                res.SetResource(ref m_www);
-                res.SetState(eResourceState.eRS_Loaded);  // 这里只是表示资源加载完成，并没有执行资源内部的下载后的逻辑
-                res.SetDownLoadProcess(1.0f);
+                if (res.GetState() == eResourceState.eRS_Destroy)
+                {
+                    Debug.LogError("下次完成了，但是之前调用了销毁，此时不执行：" + res.m_fullUrl);
+                }
+                else
+                {
+                    res.SetDPResource(dependences);
+                    res.SetResource(ref m_www);
+                    res.SetState(eResourceState.eRS_Loaded);  // 这里只是表示资源加载完成，并没有执行资源内部的下载后的逻辑
+                    res.SetDownLoadProcess(1.0f);
+                    if (loaded != null)
+                        loaded(res);
+                    //Debug.Log("加载完成：" + res.m_fullUrl);
+                }
             }
-
-            if (loaded != null)  
-                loaded(res);
-
             m_bStart = false;
         }
 
@@ -284,11 +244,19 @@ namespace Roma
             {
                 return;
             }
-            if(m_res != null && m_www != null && !m_www.isDone)
+            if (m_res != null && m_www != null)
             {
-                float cur = m_curResNum + m_www.progress / (float)m_maxResNum;
-                float pro = cur / (float)m_maxResNum;
-                m_res.SetDownLoadProcess(pro);
+                float pct = 0.0f;
+                // 当前WWW进度
+                if(m_DpResNum != 0)
+                {
+                    pct = (float)m_curDpResNum / m_DpResNum;
+                }
+                else
+                {
+                    pct = m_www.progress;
+                }
+                m_res.SetDownLoadProcess(pct);
             }
         }
     }

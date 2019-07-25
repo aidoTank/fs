@@ -13,7 +13,7 @@ using System.Collections.Generic;
 public class ExportAssetBundlesAuto_Lua
 {
     private static string m_luaScriptPath = Application.dataPath + "/Script/Client/Lua/LuaScript";
-    private static string m_luaExportPath = Application.dataPath + "/StreamingAssets/" + ExportDefine.m_prefix + "/Config/alllua.unity3d";
+    private static string m_luaExportPath = Application.dataPath + "/StreamingAssets/" + Client.m_prefix + "/Config/alllua.unity3d";
 
     [MenuItem("配置/生成Lua脚本资源 &L")]    
 	static void ExportResource ()

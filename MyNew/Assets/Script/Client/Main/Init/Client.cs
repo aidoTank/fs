@@ -160,6 +160,7 @@ namespace Roma
 
         private void Start()
         {
+            GlobleConfig.SetPlatformPrefix(Client.m_prefix);
             //Handheld.PlayFullScreenMovie("first_movie.mov", Color.black, FullScreenMovieControlMode.CancelOnInput);
             Inst();
             Init();

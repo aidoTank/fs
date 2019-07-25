@@ -671,7 +671,7 @@ namespace Roma
             UIGray gray3 = obj.GetComponent<UIGray>();
             if (gray3 == null)
                 gray3 = obj.AddComponent<UIGray>();
-            gray3.SetActiveNew(bTrue);
+            gray3.gameObject.SetActiveNew(bTrue);
         }
 
         public static void SetItemIsGray(Transform item, string name, bool isGray)

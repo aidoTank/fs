@@ -102,8 +102,8 @@ namespace Roma
             
             ResInfo pInfo = new ResInfo();
             pInfo.m_bDepend = false;
-            pInfo.strName = ExportDefine.m_prefix;
-            pInfo.strUrl = ExportDefine.m_prefix;
+            pInfo.strName = GlobleConfig.s_platformPrefix;
+            pInfo.strUrl = GlobleConfig.s_platformPrefix;
             pInfo.iType = ResType.ManifestResource;
             ResourceFactory.Inst.LoadResource(pInfo, OnManifestLoaded);
 

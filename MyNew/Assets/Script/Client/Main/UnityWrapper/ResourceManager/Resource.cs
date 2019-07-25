@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using System;
 using System.IO;
 
@@ -15,6 +13,7 @@ namespace Roma
         eRS_Loading,
         eRS_Loaded,
         eRS_NoFile,
+        eRS_Destroy,    // 在队列中下载时，外部调用了移除，1还没开始下载时，2下载过程中时
     }
 
     public class Resource
@@ -35,13 +34,16 @@ namespace Roma
         protected float m_fDownLoadProcess;
 
         public int m_ref = 0;         // 当前资源的引用数量
-        protected float m_fCache = 10.0f;
+        protected float m_fCache = 20.0f;
 
         public Resource(ref ResInfo resInfo)
         {
             m_resInfo = resInfo;
-
-            if(GlobleConfig.m_downLoadType == eDownLoadType.WWW)
+            if (string.IsNullOrEmpty(m_resInfo.strUrl))
+            {
+                Debug.LogError("配置了资源id和名字，但是没有资源文件，请检查：" + resInfo.strName);
+            }
+            if (GlobleConfig.m_downLoadType == eDownLoadType.WWW)
             {
                 m_fullUrl = GlobleConfig.GetFileServerPath() + m_resInfo.strUrl;
             }
@@ -49,11 +51,11 @@ namespace Roma
             {
                 m_fullUrl = GlobleConfig.GetStreamingPath() + m_resInfo.strUrl;
             }
-            else if(GlobleConfig.m_downLoadType == eDownLoadType.PersistentDataPath)
+            else if (GlobleConfig.m_downLoadType == eDownLoadType.PersistentDataPath)
             {
                 m_fullUrl = GlobleConfig.GetPersistentPath() + m_resInfo.strUrl;
             }
-            else if(GlobleConfig.m_downLoadType == eDownLoadType.None)  // 无加载模式就是正式游戏环境
+            else if (GlobleConfig.m_downLoadType == eDownLoadType.None)  // 无加载模式就是正式游戏环境
             {
                 // 先从沙盒获取，如果没有就从steam目录获取
                 m_fullUrl = GlobleConfig.GetPersistentPath_File() + m_resInfo.strUrl;
@@ -65,19 +67,6 @@ namespace Roma
                 {
                     m_fullUrl = GlobleConfig.GetStreamingPath() + m_resInfo.strUrl;
                 }
-            }
-            else if(GlobleConfig.m_downLoadType == eDownLoadType.LocalResource)
-            {
-                string suffix = ".prefab";
-                if(resInfo.iType == ResType.CsvListResource || resInfo.iType == ResType.ResInfosResource || resInfo.iType == ResType.SceneDataResource)
-                {
-                    suffix = ".bytes";
-                }
-                else if(resInfo.iType == ResType.IconResource)
-                {
-                    suffix = ".png";
-                }
-                m_fullUrl = "Assets/Resource/" + m_resInfo.strUrl + suffix;
             }
         }
 
@@ -102,11 +91,6 @@ namespace Roma
                 return true;
             }
             return false;
-        }
-
-        public virtual void SetEditorResource(UnityEngine.Object res)
-        {
-            m_editorRes = res;
         }
 
         public eResourceState SetState(eResourceState state)
@@ -135,7 +119,9 @@ namespace Roma
 
 
         /// <summary>
-        /// 资源下载后的内部逻辑处理，各资源不同
+        /// 资源下载后的内部逻辑处理，各资源不同，一般是资源总表，CSV需下载完执行。
+        /// 可以再下载完成时，不执行OnLoadedLogic，而是逻辑层使用时，再去执行
+        /// 暂时是先统一在game状态下，并且下载完成时调用
         /// </summary>
         public virtual bool OnLoadedLogic()
         {
@@ -147,26 +133,29 @@ namespace Roma
         /// </summary>
         public void OnLoadedEvent()
         {
-            if (m_state == eResourceState.eRS_Loaded && m_loadedEvent != null)
+            if (m_loadedEvent == null)
+                return;
+
+            if (m_state == eResourceState.eRS_Loaded)
+            {
+                m_loadedEvent(this);
+            }
+            else if (m_state == eResourceState.eRS_NoFile)
             {
                 m_loadedEvent(this);
             }
         }
 
+        /// <summary>
+        /// 方便外部使用的实例化接口，并配合DestroyGameObject一起使用
+        /// </summary>
         public virtual GameObject InstantiateGameObject()
         {
-            GameObject obj;
-            if(GlobleConfig.m_downLoadType == eDownLoadType.LocalResource)
+            if (null == m_assertBundle)
             {
-                obj = m_editorRes as GameObject;
+                return null;
             }
-            else
-            {
-                if (null == this.m_assertBundle)
-                    return null;
-                
-                obj = m_assertBundle.LoadAsset<GameObject>(m_resInfo.strName);
-            }
+            GameObject obj = m_assertBundle.LoadAsset<GameObject>(m_resInfo.strName);
             if (obj == null)
             {
                 Debug.LogWarning("实例化失败：" + m_resInfo.strName);
@@ -192,12 +181,12 @@ namespace Roma
             // 如果完全销毁，才需要移除依赖资源的引用
             if (m_dpResource != null)
             {
-                for(int i = 0; i < m_dpResource.Length; i ++)
+                for (int i = 0; i < m_dpResource.Length; i++)
                 {
                     DPResourceManager.Inst.Remove(m_dpResource[i]);
                 }
             }
-            m_state = eResourceState.eRS_NoFile;
+            m_state = eResourceState.eRS_Destroy;
         }
 
         public ResInfo GetResInfo()
@@ -232,6 +221,7 @@ namespace Roma
             {
                 return false;
             }
+
             m_fCache -= fDTime;
             return m_fCache < 0.0f;
         }
@@ -239,7 +229,7 @@ namespace Roma
         public bool SaveToDisk()
         {
             string savePath = GlobleConfig.GetPersistentPath_File() + m_resInfo.strUrl;
-            if(!File.Exists(savePath))
+            if (!File.Exists(savePath))
             {
                 string dir = Path.GetDirectoryName(savePath);
                 dir = dir.Replace("\\", "/");
@@ -253,23 +243,27 @@ namespace Roma
             try
             {
                 FileStream file = new FileStream(savePath, FileMode.OpenOrCreate);
-                file.Write(m_wwwByte, 0, m_wwwByte.Length);
-                file.Close();
-            }
-            catch(IOException e)
-            {
-                Client.Inst().m_uiResInitDialog.OpenPanel(true);
-                Client.Inst().m_uiResInitDialog.Open("退出", "", "磁盘空间不足或文件异常，请清理空间后重启游戏。\n" + e.StackTrace,(bOk, a) =>
+                if(file != null && m_wwwByte != null)
                 {
-                    if (bOk)
-                    {
-                        Debug.Log("磁盘满了，退出");
-                        Application.Quit();
-                    }
-                });
+                    file.Write(m_wwwByte, 0, m_wwwByte.Length);
+                    file.Close();
+                }
+            }
+            catch (IOException e)
+            {
+                Debug.LogError("磁盘空间不足或文件异常，请清理空间后重启游戏:" + e);
+                //Client.Inst().m_uiResInitDialog.OpenPanel(true);
+                //Client.Inst().m_uiResInitDialog.SetText("退出", "", "磁盘空间不足或文件异常，请清理空间后重启游戏。\n" + e.StackTrace);
+                //Client.Inst().m_uiResInitDialog.AddEvent((bOk, a, b) =>
+                //{
+                //    if (bOk)
+                //    {
+                //        Debug.Log("磁盘满了，退出");
+                //        Application.Quit();
+                //    }
+                //});
                 return false;
             }
-
             return true;
         }
     }

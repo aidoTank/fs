@@ -48,8 +48,8 @@ namespace Roma
 
             ResInfo rInfo = new ResInfo();
             rInfo.m_bDepend = false;
-            rInfo.strName = ExportDefine.m_prefix;
-            rInfo.strUrl = ExportDefine.m_prefix;
+            rInfo.strName = GlobleConfig.s_platformPrefix;
+            rInfo.strUrl = GlobleConfig.s_platformPrefix;
             rInfo.iType = ResType.ManifestResource;
             ResourceFactory.Inst.LoadResource(rInfo, (res)=> {
 
@@ -73,8 +73,8 @@ namespace Roma
 
             ResInfo rInfo = new ResInfo();
             rInfo.m_bDepend = false;
-            rInfo.strName = ExportDefine.m_prefix;
-            rInfo.strUrl = ExportDefine.m_prefix;
+            rInfo.strName = GlobleConfig.s_platformPrefix;
+            rInfo.strUrl = GlobleConfig.s_platformPrefix;
             rInfo.iType = ResType.ManifestResource;
             ResourceFactory.Inst.LoadResource(rInfo, OnOldInfoEnd);
         }
@@ -88,8 +88,8 @@ namespace Roma
             GlobleConfig.m_downLoadType = eDownLoadType.WWW;
             ResInfo rInfo = new ResInfo();
             rInfo.m_bDepend = false;
-            rInfo.strName = ExportDefine.m_prefix;
-            rInfo.strUrl = ExportDefine.m_prefix;
+            rInfo.strName = GlobleConfig.s_platformPrefix;
+            rInfo.strUrl = GlobleConfig.s_platformPrefix;
             rInfo.iType = ResType.ManifestResource;
             ResourceFactory.Inst.LoadResource(rInfo, (newRes)=> {
 

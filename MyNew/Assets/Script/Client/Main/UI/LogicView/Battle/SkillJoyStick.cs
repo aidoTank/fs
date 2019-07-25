@@ -114,7 +114,7 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         m_txtCd.gameObject.SetActiveNew(false);
 
         ClearPoint();
-        m_energeImage.SetActiveNew(false);
+        m_energeImage.gameObject.SetActiveNew(false);
     }
 
     public void SetSelectOrder(int order)

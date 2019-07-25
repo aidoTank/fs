@@ -13,29 +13,24 @@ namespace Roma
         public static AssetBundleManifest ABManifest;
 
         private DownLoadHelper m_downLoadHelper;
-
-        // 请求队列,手游一个个的请求就好
+        // 请求队列
         private List<Resource> m_DelayQuestDownLoader = new List<Resource>();
         // 下载完成的通知队列
-        protected List<Resource> m_DelayNotifyDownLoaded = new List<Resource>();
-
+        private List<Resource> m_DelayNotifyDownLoaded = new List<Resource>();
         // 资源列表
         public Dictionary<string, Resource> m_mapResource = new Dictionary<string, Resource>();
-
         // 卸载队列
         public Dictionary<string, Resource> m_mapUnLoad = new Dictionary<string, Resource>();
         // 临时销毁列表
         private LinkedList<Resource> m_tempDestoryResources = new LinkedList<Resource>();
-
-        // 异步回调，当逻辑同时请求同一个资源时，分帧回调
-        private LinkedList<AsynResLoaded> m_listResLoaded = new LinkedList<AsynResLoaded>();
-        public class AsynResLoaded
+        // 异步回调
+        private List<AsynResLoaded> m_listResLoaded = new List<AsynResLoaded>();
+        private class AsynResLoaded
         {
             public Delegate call;
             public Resource res;
         }
-
-        public static new ResourceManager Inst = null;
+        public static ResourceManager Inst = null;
 
         public ResourceManager()
             : base(true)
@@ -52,14 +47,15 @@ namespace Roma
         public Resource LoadResource(ResInfo resInfo, Action<Resource> loaded = null)
         {
             Resource outRes = GetResource(resInfo.strName);
-            if(outRes != null)
+            if (outRes != null)
             {
-                if(outRes.IsLoaded())
+                if (outRes.IsLoaded())
                 {
                     AsynResLoaded pair = new AsynResLoaded();
                     pair.call = loaded;
                     pair.res = outRes;
-                    m_listResLoaded.AddLast(pair);
+                    m_listResLoaded.Add(pair);
+                    //loaded(outRes);
                 }
                 else
                 {
@@ -70,7 +66,7 @@ namespace Roma
             // 如果下载过,直接取,这里改成工厂模式，根据资源类型new不同类型的资源
             outRes = NewResource(ref resInfo);
             if (outRes == null)
-                Debug.LogError("res is null:"+ resInfo.strName);
+                Debug.LogError("res is null:" + resInfo.strName);
             outRes.AddRef();
             outRes.m_loadedEvent = loaded;
             m_mapResource[resInfo.strName] = outRes;
@@ -114,13 +110,13 @@ namespace Roma
                 return false;
             }
             // 如果引用数量为0就卸载掉
-            if (res.SubRef() == 0)
+            if (res.SubRef() <= 0)
             {
                 if (atOnce)
                 {
                     string uResID = res.m_resInfo.strName;
-                    m_mapResource.Remove(uResID);   // 从资源队列中移除
                     res.Destroy();
+                    m_mapResource.Remove(uResID);   // 从资源队列中移除
                     res = null;
                 }
                 else
@@ -137,7 +133,7 @@ namespace Roma
         /// <summary>
         /// 立即销毁
         /// </summary>
-        public void UnLoadAll()
+        public override void Destroy()
         {
             // 可以让子资源，自己决定是否自动卸载
             m_DelayQuestDownLoader.Clear();
@@ -165,13 +161,15 @@ namespace Roma
             if (m_DelayQuestDownLoader.Count > 0)
             {
                 Resource res = m_DelayQuestDownLoader[0];
-                if(res.GetState() == eResourceState.eRS_None)
+                if (res.GetState() == eResourceState.eRS_None)
                 {
                     // 去下载
-                    res.SetState(eResourceState.eRS_Loading);
                     m_downLoadHelper.InitNewDownLoad(res, OnDownLoadend);
+                    res.SetState(eResourceState.eRS_Loading);
                 }
-                else if(res.GetState() == eResourceState.eRS_Loaded)
+                else if (res.GetState() == eResourceState.eRS_Loaded ||
+                    res.GetState() == eResourceState.eRS_NoFile ||
+                    res.GetState() == eResourceState.eRS_Destroy)           // 如果在下载时，状态变成已销毁
                 {
                     m_DelayQuestDownLoader.RemoveAt(0);
                 }
@@ -182,24 +180,34 @@ namespace Roma
             {
                 Resource res = m_DelayNotifyDownLoaded[0];
                 m_DelayNotifyDownLoaded.RemoveAt(0);
-                if(GlobleConfig.m_gameState == eGameState.Game)
+                if (GlobleConfig.m_gameState == eGameState.Game)
                 {
                     res.OnLoadedLogic();
                 }
                 res.OnLoadedEvent();
             }
 
-            // 已经存在的资源的事件处理
-            if (m_listResLoaded.Count > 0)
+
+            for (int i = 0; i < m_listResLoaded.Count; i++)
             {
-                AsynResLoaded pair = m_listResLoaded.First.Value;
-                Action<Resource> call = (Action<Resource>) pair.call;
+                Action<Resource> call = (Action<Resource>)m_listResLoaded[i].call;
                 if (null != call)
                 {
-                    call(pair.res);
+                    call(m_listResLoaded[i].res);
                 }
-                m_listResLoaded.RemoveFirst();
             }
+            m_listResLoaded.Clear();
+
+            //if (m_listResLoaded.Count > 0)
+            //{
+            //    AsynResLoaded pair = m_listResLoaded.First.Value;
+            //    Action<Resource> call = (Action<Resource>) pair.call;
+            //    if (null != call)
+            //    {
+            //        call(pair.res);
+            //    }
+            //    m_listResLoaded.RemoveFirst();
+            //}
 
             // 卸载资源
             Dictionary<string, Resource>.Enumerator map = m_mapUnLoad.GetEnumerator();
@@ -213,8 +221,10 @@ namespace Roma
             LinkedList<Resource>.Enumerator tempMap = m_tempDestoryResources.GetEnumerator();
             while (tempMap.MoveNext())
             {
-                tempMap.Current.Destroy();
-                m_mapUnLoad.Remove(tempMap.Current.GetResInfo().strName);
+                Resource res = tempMap.Current;
+                m_mapUnLoad.Remove(res.GetResInfo().strName);
+                res.Destroy();
+                res = null;
             }
             m_tempDestoryResources.Clear();
 
@@ -235,7 +245,7 @@ namespace Roma
         public Resource NewResource(ref ResInfo resInfo)
         {
             Resource resource = null;
-            switch(resInfo.iType)
+            switch (resInfo.iType)
             {
                 case ResType.None:
                     resource = new Resource(ref resInfo);
@@ -271,8 +281,8 @@ namespace Roma
                     resource = new ModelResource(ref resInfo);
                     break;
                 //case ResType.SceneCfgResource:
-                    //resource = new SceneCfgResource(ref resInfo);
-                    break;
+                //    resource = new SceneCfgResource(ref resInfo);
+                //    break;
                 case ResType.LightMapResource:
                     resource = new LightMapResource(ref resInfo);
                     break;
@@ -282,6 +292,12 @@ namespace Roma
 
                 case ResType.BoneResource:
                     resource = new BoneResource(ref resInfo);
+                    break;
+                case ResType.ShaderResource:
+                    resource = new ShaderResource(ref resInfo);
+                    break;
+                case ResType.PreloadShaderResource:
+                    resource = new PreloadShaderResource(ref resInfo);
                     break;
             }
             return resource;
