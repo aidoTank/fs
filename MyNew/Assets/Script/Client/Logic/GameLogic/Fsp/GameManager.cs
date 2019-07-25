@@ -76,32 +76,32 @@ namespace Roma
                     EGame.m_uin = playerData[i];
                     Debug.Log("客户端主角:" + EGame.m_openid);
                     CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
-                    master.Create(playerData[i].ToString(), new Vector2d(130, 100), FPCollide.GetVector(-220));
+                    master.Create(1, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(-220));
 
                    // master.StartAi(true);
 
-                    master.AddSkill(0, 107100, 1);
-                    master.AddSkill(1, 112100, 1);
-                    master.AddSkill(2, 117100, 1);
-                    master.AddSkill(3, 600100, 1);
+                    master.AddSkill(0, 1100, 1);
+                    master.AddSkill(1, 1200, 1);
+                    master.AddSkill(2, 1300, 1);
+                    master.AddSkill(3, 1400, 1);
                     master.UpdateUI_Skill();
                 }
                 else
                 {
                     Debug.Log("客户端玩家:" + playerData[i]);
                     CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
-                    master.Create(playerData[i].ToString(), new Vector2d(8, 8), FPCollide.GetVector(60));
+                    master.Create(1, playerData[i].ToString(), new Vector2d(8, 8), FPCollide.GetVector(60));
                 }
             }
 
-            CCreature test1 = CCreatureMgr.Create(EThingType.Player, 1000);
-            test1.Create("测试1", new Vector2d(130, 100), FPCollide.GetVector(-220));
 
-            //for(int i = 0; i < 6; i ++)
-            //{
-            //    CCreature p1 = CCreatureMgr.Create(EThingType.Player, i);
-            //    p1.Create("测试：" + i, new Vector2d(4 + i * 5, 8), FPCollide.GetVector(60));
-            //}
+
+            for (int i = 0; i < 6; i++)
+            {
+                CCreature test1 = CCreatureMgr.Create(EThingType.Player, 1000 + i);
+                test1.Create(2, "测试1", new Vector2d(50 + i * 2, 60), FPCollide.GetVector(-220));
+                test1.StartAi(true);
+            }
 
             m_bRunning = true;
         }

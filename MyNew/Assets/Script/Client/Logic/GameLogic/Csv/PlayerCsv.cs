@@ -152,7 +152,7 @@ namespace Roma
 				data.Icon = m_csv.GetIntData(i, (int)ePlayerCsv.icon);
 				data.ModelResId = m_csv.GetIntData(i, (int)ePlayerCsv.ModelResId);
                 data.ModelScale = m_csv.GetFloatData(i, (int)ePlayerCsv.ModelScale);
-                data.HeadHeight = m_csv.GetIntData(i, (int)ePlayerCsv.headHeight);
+                data.HeadHeight = m_csv.GetFloatData(i, (int)ePlayerCsv.headHeight);
 
                 data.moveSpeed = m_csv.GetIntData(i, (int)ePlayerCsv.moveSpeed);
                 data.dieDelay = m_csv.GetIntData(i, (int)ePlayerCsv.dieDelay);

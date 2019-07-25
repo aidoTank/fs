@@ -20,7 +20,7 @@ namespace Roma
         FlySpeed,
 
         DelayTime,
-
+        DelayCheckTime,
 
         ContinuanceTime,
 		IntervalTime,
@@ -134,12 +134,13 @@ namespace Roma
         public int disDelta;
    
         public float FlySpeed;
-        public int DelayTime;
-
-		/// <summary>
-		/// 总持续时间(毫秒)
-		/// </summary>
-		public int ContinuanceTime;
+        public int DelayCreateTime;
+        // 延迟检测时间
+        public int DelayCheckTime;
+        /// <summary>
+        /// 总持续时间(毫秒)
+        /// </summary>
+        public int ContinuanceTime;
 
 		/// <summary>
 		/// 触发间隔
@@ -250,7 +251,8 @@ namespace Roma
 
                 data.FlySpeed = m_csv.GetFloatData(i, (int)eBuffTriggerCsv.FlySpeed);
 
-                data.DelayTime = m_csv.GetIntData(i, (int)eBuffTriggerCsv.DelayTime);
+                data.DelayCreateTime = m_csv.GetIntData(i, (int)eBuffTriggerCsv.DelayTime);
+                data.DelayCheckTime = m_csv.GetIntData(i, (int)eBuffTriggerCsv.DelayCheckTime);
                 data.ContinuanceTime = m_csv.GetIntData(i, (int)eBuffTriggerCsv.ContinuanceTime);
                 data.IntervalTime = m_csv.GetIntData(i, (int)eBuffTriggerCsv.IntervalTime);
 

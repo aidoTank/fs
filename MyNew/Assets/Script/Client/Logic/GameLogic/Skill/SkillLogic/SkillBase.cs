@@ -116,6 +116,7 @@ namespace Roma
             }
             if (!m_skillInfo.bMove)
             {
+                //cc.PushCommand(CmdFspStopMove.Inst);
                 cc.m_logicMoveEnabled = bTrue;
             }
             // 重置遥感，一般在按下移动，并技能释放完之后，还需继续移动

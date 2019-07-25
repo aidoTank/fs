@@ -69,13 +69,13 @@ namespace Roma
                     Debug.LogError("触发器为空：" + triId);
                     return; 
                 }
-                if(triggerData.DelayTime == 0)
+                if(triggerData.DelayCreateTime == 0)
                 {
                     CreateTrigger(triggerData);
                 }
                 else
                 {
-                    m_delayEventHid = CFrameTimeMgr.Inst.RegisterEvent(triggerData.DelayTime, () =>
+                    m_delayEventHid = CFrameTimeMgr.Inst.RegisterEvent(triggerData.DelayCreateTime, () =>
                     {
                         CreateTrigger(triggerData);
                     });

@@ -26,6 +26,8 @@ namespace Roma
         public BuffTriggerCsvData m_triggerData;
         public int m_curIntervalTime;
 
+        public bool m_bStartCheck;
+
         public CBuffTrigger(long id)
             : base(id)
         {
@@ -64,7 +66,19 @@ namespace Roma
                     Destory();
             });
 
-            Trigger();
+            if(m_triggerData.DelayCheckTime == 0)
+            {
+                m_bStartCheck = true;
+                Trigger();
+            }
+            else
+            {
+                CFrameTimeMgr.Inst.RegisterEvent(m_triggerData.DelayCheckTime, () =>
+                {
+                    m_bStartCheck = true;
+                    Trigger();
+                });
+            }
             return true;
         }
 
@@ -76,6 +90,9 @@ namespace Roma
         public override void ExecuteFrame(int frameId)
         {
             if (m_destroy)
+                return;
+
+            if (!m_bStartCheck)
                 return;
 
             _UpdatePos();

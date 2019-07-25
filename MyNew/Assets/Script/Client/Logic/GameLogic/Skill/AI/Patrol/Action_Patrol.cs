@@ -19,7 +19,7 @@ namespace Roma
             {
                 //Vector2 pPos = m_creature.m_bornPoint;
                 Vector2 pPos = m_creature.GetPos().ToVector2();
-                Vector2 end = CMapMgr.m_map.GetRandomPos(pPos.x, pPos.y, 30);
+                Vector2 end = CMapMgr.m_map.GetRandomPos(pPos.x, pPos.y, 10);
                 m_creature.GoTo(end);
             }
             return BtResult.Running;

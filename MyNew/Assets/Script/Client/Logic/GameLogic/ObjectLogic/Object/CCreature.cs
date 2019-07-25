@@ -21,10 +21,10 @@ namespace Roma
         }
 
 
-        public virtual bool Create(string name, Vector2d pos, Vector2d dir)
+        public virtual bool Create(int csvId, string name, Vector2d pos, Vector2d dir)
         {
             PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
-            m_csvData = playerCsv.GetData(1);
+            m_csvData = playerCsv.GetData(csvId);
 
             InitPublicPropList();
 
@@ -58,7 +58,7 @@ namespace Roma
                 }
             };
 
-            UpdateVO_Create(m_csvData.ModelResId, 5, eVOjectType.Creature);
+            UpdateVO_Create(m_csvData.ModelResId, m_csvData.HeadHeight, eVOjectType.Creature);
             UpdateVO_ShowHead(true);
             UpdateVO_ShowHeadName(name);
             UpdateVO_ShowHeadLv();

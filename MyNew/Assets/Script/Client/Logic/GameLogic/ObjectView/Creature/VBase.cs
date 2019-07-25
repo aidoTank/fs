@@ -236,7 +236,7 @@ namespace Roma
             Vector3 viewPos = curPos + dir * dist;
 
             Vector3 result = logicPos;
-            if(moveInfo.m_isBarrier)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
+            if(true)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
             {
                 //Debug.Log("遇到障碍");
                 Vector3 offsetMove = curPos - logicPos;

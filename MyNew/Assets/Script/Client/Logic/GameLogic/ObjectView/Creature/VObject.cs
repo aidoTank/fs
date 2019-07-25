@@ -188,6 +188,7 @@ namespace Roma
 
                     m_state = cmd.GetCmdType();
                     m_bMoveing = false;
+                    Debug.Log("设置停止");
                     ((BattleEntity)GetEnt()).SetPriority(0);
                     ResetState();
                     break;
@@ -195,6 +196,7 @@ namespace Roma
                 case CmdFspEnum.eFspAutoMove:
                     m_state = cmd.GetCmdType();
                     m_bMoveing = true;
+                    Debug.Log("设置移动");
                     ResetState();
                     break;
                 case CmdFspEnum.eUIHead:
