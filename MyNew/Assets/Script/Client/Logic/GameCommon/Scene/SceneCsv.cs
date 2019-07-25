@@ -7,7 +7,10 @@ namespace Roma
         eID = 0,
         eName = 1,
         eResId,
+        eCollider,
         eStaticData,
+        eBgm,
+        bornPoint,
     }
 
     public class SceneCsvData
@@ -15,11 +18,14 @@ namespace Roma
         public int id;
         public string name;
         public int resId;
+        public int collider;
         public int staticData;
+        public int bgm;
+        public Vector3 bornPoint;
     }
 
     public class SceneCsv : CsvExWrapper
-	{
+    {
         public override void Clear()
         {
             base.Clear();
@@ -34,7 +40,11 @@ namespace Roma
                 ani.id = m_csv.GetIntData(i, (int)eMapCsv_Enum.eID);
                 ani.name = m_csv.GetData(i, (int)eMapCsv_Enum.eName);
                 ani.resId = m_csv.GetIntData(i, (int)eMapCsv_Enum.eResId);
+                ani.collider = m_csv.GetIntData(i, (int)eMapCsv_Enum.eCollider);
                 ani.staticData = m_csv.GetIntData(i, (int)eMapCsv_Enum.eStaticData);
+                ani.bgm = m_csv.GetIntData(i, (int)eMapCsv_Enum.eBgm);
+                string pos = m_csv.GetData(i, (int)eMapCsv_Enum.bornPoint);
+                ani.bornPoint = StringHelper.GetVector3(pos);
                 m_mapDataDic.Add(ani.id, ani);
             }
         }
@@ -45,16 +55,16 @@ namespace Roma
         }
 
         public SceneCsvData GetData(int id)
-		{
+        {
             SceneCsvData ani;
             if (m_mapDataDic.TryGetValue(id, out ani))
-			{
+            {
                 return ani;
-			}
-			return null;
-		}
+            }
+            return null;
+        }
 
 
         public Dictionary<int, SceneCsvData> m_mapDataDic = new Dictionary<int, SceneCsvData>();
-	}
+    }
 }

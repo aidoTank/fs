@@ -154,7 +154,7 @@ namespace Roma
             // 属于四种独立状态
             if (m_logicMoveEnabled && cmd.GetCmdType() == CmdFspEnum.eFspAutoMove)
             {
-                //EnterAutoMove();
+                EnterAutoMove();
                 m_vCreature.PushCommand(cmd);
             }
             base.PushCommand(cmd);
@@ -173,13 +173,20 @@ namespace Roma
         {
             //ExecuteFrameSkill();
 
+            if (m_ai != null)
+            {
+              
+                    m_ai.EnterFrame();
+                
+            }
+
             if (IsDie())
                 return;
 
             // 独立状态
             if (m_logicMoveEnabled && m_logicState.GetCmdType() == CmdFspEnum.eFspAutoMove)
             {
-                //TickAutoMove();
+                TickAutoMove();
             }
             base.ExecuteFrame(frameId);
 
@@ -209,6 +216,23 @@ namespace Roma
         }
 
 
+        public void StartAi(bool bRun)
+        {
+            if (m_ai == null)
+            {
+                m_ai = new CCreatureAI(this, eAILevel.HARD);
+            }
+
+            // 取消AI时，如果之前开启了AI，则停止按下技能
+            if (!bRun && m_ai.IsRun())
+            {
+               // DestoryDownUpSkill();
+            }
+            m_ai.SetRun(bRun);
+
+           // UpdateUI_AutoAi(bRun);
+        }
+
 
         public CmdFspSendSkill m_cmdFspSendSkill;
 
@@ -217,5 +241,7 @@ namespace Roma
 
         public bool m_bActive = true; // 非主角时，是否处于激活状态
         private Circle collider;
+
+        public CCreatureAI m_ai;
     }
 }

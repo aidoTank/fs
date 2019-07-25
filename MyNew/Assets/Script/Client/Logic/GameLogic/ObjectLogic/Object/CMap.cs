@@ -11,8 +11,9 @@ namespace Roma
     public class CMap
     {
         public int m_mapId;
-        public List<object> m_listBarrier = new List<object>();
-        private byte[] m_staticData;
+
+        private CBHAStar m_aStar = new CBHAStar();
+        public Action m_mapInited;
 
         public CMap(int mapId)
         {
@@ -21,31 +22,9 @@ namespace Roma
 
         public void Create()
         {
-            // 地图
+            Destroy();
             SceneManager.Inst.LoadScene(m_mapId, null);
-            // 障碍数据
-            SceneBarrierCsv csv = CsvManager.Inst.GetCsv<SceneBarrierCsv>((int)eAllCSV.eAC_SceneBarrier);
-            List<SceneBarrierCsvData> list = new List<SceneBarrierCsvData>();
-            csv.GetData(ref list, m_mapId);
-            Debug.Log("障碍数量：" + list.Count);
-            for(int i = 0; i < list.Count; i ++)
-            {
-                SceneBarrierCsvData data = list[i];
-                if(data.shapeType == 1)
-                {
-                    float dir = data.vDir.y;
-                    Vector2 scale = new Vector2(data.vScale.x, data.vScale.z);
-                    OBB obb = new OBB(data.vPos.ToVector2(), scale, dir);
-                    m_listBarrier.Add(obb);
-                }
-                else if(data.shapeType == 2)
-                {
-                    Sphere obb = new Sphere();
-                    obb.c = data.vPos.ToVector2();
-                    obb.r = data.vScale.x * 0.5f;
-                    m_listBarrier.Add(obb);
-                }
-            }
+
         }
 
         public void ExecuteFrame()
@@ -54,34 +33,85 @@ namespace Roma
         }
 
 
-        // 圆形在当前地图位置是否能走
-        public bool CanMove(Vector2 pos, float r)
-        {
-            for(int i = 0 ; i < CMapMgr.m_map.m_listBarrier.Count; i ++)
-            {
-                object obj = CMapMgr.m_map.m_listBarrier[i];
-                
-                Sphere s = new Sphere();
-                s.c = pos;
-                s.r = r;
-                Vector2 point = Vector2.zero;
-                if(obj is OBB && Collide.bSphereOBB(s, (OBB)obj, ref point))
-                {
-                    return false;
-                }
-                else if(obj is Sphere && Collide.bSphereSphere(s, (Sphere)obj))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
+        /// <summary>
+        /// 静态 包含障碍 包含空气墙
+        /// </summary>
         public bool bCanMove(int x, int y)
         {
             return !SceneManager.Inst.Isblock(x, y);
         }
 
+        /// <summary>
+        /// 用于子弹，包含障碍 不包含空气墙
+        /// </summary>
+        public bool IsblockNotAirWal(int x, int y)
+        {
+            return SceneManager.Inst.IsblockNotAirWal(x, y);
+        }
+
+        /// <summary>
+        /// 动态,可以支持动态寻路
+        /// </summary>
+        public bool CanArrive(CCreature c, int x, int y)
+        {
+            return !SceneManager.Inst.Isblock(x, y);
+        }
+
+        public bool GetPath(CCreature curCreature, Vector2 startPos, Vector2 targetPos, ref List<Vector2> path)
+        {
+            int maxRoute = 1024;
+            if (curCreature.IsMaster())
+            {
+                maxRoute = 512 * 512;
+            }
+            path.Clear();
+            bool result = m_aStar.FindPath(this, curCreature, ref startPos, ref targetPos, ref path, maxRoute);
+            return result;
+        }
+
+
+        public Vector2 GetRandomPos(float x, float y, float range)
+        {
+            int resultNum = 0;
+
+            int irange = (int)(range);
+            int srange = irange * irange;
+            int sign = 1;
+            int filter = 0;
+
+            while (resultNum != 1)
+            {
+                int idivx = resultNum + UnityEngine.Random.Range(-irange, irange) + sign * filter;
+                int idivy = resultNum + UnityEngine.Random.Range(-irange, irange) - sign * filter;
+                if (idivx == 0 || idivy == 0)
+                {
+                    filter++;
+                    continue;
+                }
+
+                int ix = idivx % irange;
+                int iy = idivy % irange;
+
+                Vector2 bv = new Vector2(x + ix, y + iy);
+                if (bCanMove((int)bv.x, (int)bv.y))
+                {
+                    filter = 0;
+                    resultNum = 1;
+                    return new Vector2((int)bv.x, (int)bv.y);
+                }
+                else if (filter > srange)
+                {
+                    resultNum = 1;
+                    return new Vector2(x, y);
+                }
+                else
+                {
+                    filter++;
+                    sign = -sign;
+                }
+            }
+            return Vector3.zero;
+        }
         public void Destroy()
         {
 

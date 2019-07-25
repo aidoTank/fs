@@ -484,7 +484,7 @@ namespace Roma
             m_entityInfo.m_vPos = pos;
             if (null != m_transform)
             {
-                Debug.Log(m_transform.name + " pos:" + pos);
+                //Debug.Log(m_transform.name + " pos:" + pos);
                 m_transform.position = pos;
             }
         }

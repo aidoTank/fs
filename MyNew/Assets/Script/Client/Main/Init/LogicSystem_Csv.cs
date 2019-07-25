@@ -49,7 +49,6 @@ namespace Roma
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Dns, "域名表", new DnsCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_GameText, "游戏文本表", new GameTextCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Scene, "地图表", new SceneCsv());
-            csvMgr.AddCSVCreate((int)eAllCSV.eAC_SceneBarrier, "地图障碍表", new SceneBarrierCsv());
 
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Player, "角色表", new PlayerCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Skill, "技能主表", new SkillCsv());

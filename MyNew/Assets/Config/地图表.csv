@@ -1,5 +1,5 @@
-编号,地图名称,资源id,静态碰撞
-MapID,MapName,ResId,StaticData
-int,string,int,int
-1,测试地图1,101,102
-2,测试2,201,202
+编号,地图名称,资源id,碰撞对象,障碍数据,背景音乐,复活点
+MapID,MapName,ResId,Collider,StaticData,Bgm,BirthPos
+int,string,int,int,int,int,string
+1,测试地图1,101,102,103,,
+2,测试2,101,102,103,,
