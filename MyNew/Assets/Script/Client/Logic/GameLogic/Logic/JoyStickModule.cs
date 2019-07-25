@@ -49,18 +49,18 @@ namespace Roma
         {
             OnLoadSelect();
 
-            SkillCsv skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill);
-            SkillCsvData skill0 = skillInfo.GetData(0);
-            SkillCsvData skill1 = skillInfo.GetData(1);
-            SkillCsvData skill2 = skillInfo.GetData(2);
-            SkillCsvData skill3 = skillInfo.GetData(3);
-            SkillCsvData skill4 = skillInfo.GetData(5);
+            //SkillCsv skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill);
+            //SkillCsvData skill0 = skillInfo.GetData(0);
+            //SkillCsvData skill1 = skillInfo.GetData(1);
+            //SkillCsvData skill2 = skillInfo.GetData(2);
+            //SkillCsvData skill3 = skillInfo.GetData(3);
+            //SkillCsvData skill4 = skillInfo.GetData(5);
 
-            m_ui.SetIcon(0, skill0.icon, false);
-            m_ui.SetIcon(1, skill1.icon, false);
-            m_ui.SetIcon(2, skill2.icon, false);
-            m_ui.SetIcon(3, skill3.icon, false);
-            m_ui.SetIcon(4, skill4.icon, false);
+            //m_ui.SetIcon(0, skill0.icon, false);
+            //m_ui.SetIcon(1, skill1.icon, false);
+            //m_ui.SetIcon(2, skill2.icon, false);
+            //m_ui.SetIcon(3, skill3.icon, false);
+            //m_ui.SetIcon(4, skill4.icon, false);
         }
 
         private void OnLoadSelect()
@@ -85,6 +85,12 @@ namespace Roma
                 CancelSkill();
             });
         }
+
+        public void SetIcon(int index, int icon)
+        {
+            m_ui.SetIcon(index, icon, false);
+        }
+
 
         public override void UpdateUI(float time, float fdTime)
         {
@@ -197,7 +203,15 @@ namespace Roma
             m_curSkillJoyStick = jsEvent;
             CCreature master = CCreatureMgr.GetMaster();
 
-            if(jsEvent == eJoyStickEvent.Drag)
+            CSkillInfo sInfo = m_master.GetSkillByIndex(index);
+            //if (sInfo == null || !sInfo.IsCanUse())
+            //{
+            //    Debug.Log(index + " 不可用" + jsEvent);
+            //    return;
+            //}
+
+
+            if (jsEvent == eJoyStickEvent.Drag)
             {
                 m_curSkillDir = new Vector3(m_delta.x, 0 , m_delta.y);
                 m_curSkillDir.Normalize();
@@ -206,12 +220,13 @@ namespace Roma
             if(jsEvent == eJoyStickEvent.Down)
             {
                 m_bSkillCancel = false;
+
+                skillInfo = sInfo.m_skillInfo;
+
+
                 m_ui.m_cancelBtn.SetActiveNew(true);
                 m_ui.SetColor(index, SKLL_BLUE);
                 
-                if(index ==4)
-                    index = 5;
-                skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill).GetData(index);
 
                 m_skillChose.gameObject.SetActiveNew(true);
                 m_skillCenter.gameObject.SetActiveNew(true);
@@ -278,7 +293,7 @@ namespace Roma
                 if (!m_bSkillCancel)
                 {
                     m_bSkillCancel = true;
-                    //Debug.Log("发送技能：" + skillInfo.id  + "dir:" + m_curSkillDir + " pos:" + m_curSkilPos);
+                    Debug.Log("发送技能：" + skillInfo.id  + "dir:" + m_curSkillDir + " pos:" + m_curSkilPos);
                     CmdFspSendSkill cmd = new CmdFspSendSkill();
                     cmd.m_casterUid = (int)m_master.GetUid();
                     cmd.m_skillId = skillInfo.id;

@@ -12,6 +12,8 @@ namespace Roma
         NPC,                // NPC
         Monster,            // 怪物
         Skill,
+
+        BuffTrigger,
     }
     public class CThing
     {

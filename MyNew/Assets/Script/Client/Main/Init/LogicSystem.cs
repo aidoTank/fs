@@ -47,6 +47,11 @@ namespace Roma
             SceneManager.Inst = new SceneManager();
             SingletonManager.Inst.AddSingleton(SingleName.m_Scene, SceneManager.Inst);
 
+            SoundManager.Inst = new SoundManager();
+            SingletonManager.Inst.AddSingleton("sound", SoundManager.Inst);
+
+            ShaderManager.Inst = new ShaderManager();
+            SingletonManager.Inst.AddSingleton("shader", ShaderManager.Inst);
 
             CameraMgr.Inst = new CameraMgr();
             SingletonManager.Inst.AddSingleton("cam", CameraMgr.Inst);
@@ -58,6 +63,11 @@ namespace Roma
             SingletonManager.Inst.AddSingleton("timeMgr", TimeMgr.Inst);
 
             SingletonManager.Inst.Init();
+
+            SoundManager.Inst.SetMute(SoundType.eBG, false);
+            SoundManager.Inst.SetMute(SoundType.eSceneEffect, false);
+            SoundManager.Inst.SetMute(SoundType.eUI, false);
+            SoundManager.Inst.SetMute(SoundType.eSpeak, false);
         }
 
 

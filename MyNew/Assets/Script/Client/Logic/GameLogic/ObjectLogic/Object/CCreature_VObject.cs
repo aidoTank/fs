@@ -113,7 +113,7 @@ namespace Roma
             CmdUIHead hp = new CmdUIHead();
             hp.type = 3;
             hp.curHp = GetPropNum(eCreatureProp.CurHp);
-            hp.maxHp = GetPropNum(eCreatureProp.MaxHp);
+            hp.maxHp = GetPropNum(eCreatureProp.Hp);
             m_vCreature.PushCommand(hp);
         }
 

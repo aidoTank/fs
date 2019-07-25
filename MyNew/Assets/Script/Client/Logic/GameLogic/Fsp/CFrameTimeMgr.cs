@@ -36,6 +36,27 @@ public class CFrameTimeMgr :  Singleton
         return m_startId;
     }
 
+    public void RemoveEvent(int hid)
+    {
+        CFrameEvent fEvent;
+        if (m_timeEvent.TryGetValue(hid, out fEvent))
+        {
+            fEvent.endEvent = null;
+            fEvent = null;
+            m_timeEvent.Remove(hid);
+        }
+    }
+
+    public CFrameEvent GetEvent(int hid)
+    {
+        CFrameEvent fEvent;
+        if (m_timeEvent.TryGetValue(hid, out fEvent))
+        {
+            return fEvent;
+        }
+        return null;
+    }
+
     /// <summary>
     /// 清除events
     /// </summary>

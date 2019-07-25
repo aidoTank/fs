@@ -106,8 +106,9 @@ namespace Roma
             
             CFrameTimeMgr.Inst.FixedUpdate();
             CCreatureMgr.ExecuteFrame(frameId);
-            //CPlayerMgr.ExecuteFrame(frameId);      
-            //CSkillMgr.ExecuteFrame(frameId);
+            CSkillMgr.ExecuteFrame(frameId);
+            CBuffMgr.ExecuteFrame(frameId);
+            CBuffTriggerMgr.ExecuteFrame(frameId);
         }
 
         /// <summary>

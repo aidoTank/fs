@@ -17,15 +17,15 @@ namespace Roma
         public virtual void SetPublicPropList()
         {
             SetPropNum(eCreatureProp.Lv, 1);
-            SetPropNum(eCreatureProp.Force, m_csv.force);
-            SetPropNum(eCreatureProp.Agility, m_csv.agility);
-            SetPropNum(eCreatureProp.Brain, m_csv.brain);
-            SetPropNum(eCreatureProp.InitAtk, m_csv.atk);
-            SetPropNum(eCreatureProp.InitArmor, m_csv.armor);
-            SetPropNum(eCreatureProp.InitMoveSpeed, m_csv.moveSpeed);
+            SetPropNum(eCreatureProp.Force, m_csvData.force);
+            SetPropNum(eCreatureProp.Agility, m_csvData.agility);
+            SetPropNum(eCreatureProp.Brain, m_csvData.brain);
+            SetPropNum(eCreatureProp.InitAtk, m_csvData.atk);
+            SetPropNum(eCreatureProp.InitArmor, m_csvData.armor);
+            //SetPropNum(eCreatureProp.InitMoveSpeed, m_csvData.moveSpeed);
 
             UpdateMaxHp();
-            SetPropNum(eCreatureProp.CurHp, GetPropNum(eCreatureProp.MaxHp));
+            SetPropNum(eCreatureProp.CurHp, GetPropNum(eCreatureProp.Hp));
             UpdateArmor();
             UpdateMaxMp();
             SetPropNum(eCreatureProp.CurMp, GetPropNum(eCreatureProp.MaxMp));
@@ -36,7 +36,7 @@ namespace Roma
 
         public void UpdateMaxHp()
         {
-            SetPropNum(eCreatureProp.MaxHp, 
+            SetPropNum(eCreatureProp.Hp, 
             GetPropNum(eCreatureProp.Force) * 20);
         }
 

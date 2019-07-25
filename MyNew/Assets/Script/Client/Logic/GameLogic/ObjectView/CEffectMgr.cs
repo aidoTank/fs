@@ -68,7 +68,7 @@ namespace Roma
 
             //if (GameManager.Instance.m_speedUpInLoading)
             //    return;
-            if (m_effectData == null)
+            if (m_effectData == null || m_ent == null)
                 return;
             int soundHid = SoundManager.Inst.PlaySound(m_effectData.soundId, m_ent.GetPos());
             m_soundEnt = EntityManager.Inst.GetEnity(soundHid);

@@ -25,9 +25,9 @@ namespace Roma
                 case eVOjectType.Creature:
                     obj = new VObject();
                 break;
-                //case eVOjectType.SkillTrigger:
-                //    obj = new VTrigger();
-                //    break;
+                case eVOjectType.SkillTrigger:
+                    obj = new VTrigger();
+                    break;
             }
             obj.m_id = m_uid++;
             Add(obj.m_id, obj);

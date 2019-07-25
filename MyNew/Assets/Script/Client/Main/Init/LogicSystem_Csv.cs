@@ -16,11 +16,13 @@ namespace Roma
         eAC_Dns,
         eAC_GameText,
         eAC_Scene,
-        eAC_SceneBarrier,
 
         eAC_Player,
         eAC_Skill,
         eAC_SkillStep,
+        eAC_SkillData,
+        eAC_SkillBuff,
+        eAc_BuffTrigger,
     }
 
     public partial class LogicSystem
@@ -53,6 +55,9 @@ namespace Roma
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Player, "角色表", new PlayerCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Skill, "技能主表", new SkillCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_SkillStep, "技能子表", new SkillStepCsv());
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_SkillData, "技能数据表", new SkillDataCsv());
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_SkillBuff, "技能buff表", new SkillBuffCsv());
+            csvMgr.AddCSVCreate((int)eAllCSV.eAc_BuffTrigger, "技能buff触发器表", new BuffTriggerCsv());
 
             InitLuaCsv(ref csvMgr);
         }

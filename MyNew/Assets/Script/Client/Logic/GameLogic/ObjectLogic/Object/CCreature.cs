@@ -24,7 +24,7 @@ namespace Roma
         public virtual bool Create(string name, Vector2d pos, Vector2d dir)
         {
             PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
-            m_csv = playerCsv.GetData(1);
+            m_csvData = playerCsv.GetData(1);
 
             SetPublicPropList();
 
@@ -58,7 +58,7 @@ namespace Roma
                 }
             };
 
-            UpdateVO_Create(m_csv.ModelResId, 5, eVOjectType.Creature);
+            UpdateVO_Create(m_csvData.ModelResId, 5, eVOjectType.Creature);
             UpdateVO_ShowHeadName(name);
             UpdateVO_ShowHeadLv();
             UpdateVO_ShowHeadHp();
@@ -148,7 +148,7 @@ namespace Roma
             if (cmd.GetCmdType() == CmdFspEnum.eFspSendSkill)
             {
                 m_cmdFspSendSkill = cmd as CmdFspSendSkill;
-                //EnterSkill();
+                EnterSkill();
             }
 
             // 属于四种独立状态
@@ -179,7 +179,7 @@ namespace Roma
                     m_ai.EnterFrame();
                 
             }
-
+            ExecuteFrameSkill();
             if (IsDie())
                 return;
 
@@ -233,11 +233,9 @@ namespace Roma
            // UpdateUI_AutoAi(bRun);
         }
 
-
-        public CmdFspSendSkill m_cmdFspSendSkill;
-
         // 属性
-        public PlayerCsvData m_csv;
+   
+        public CreatureCsvData m_csvData;
 
         public bool m_bActive = true; // 非主角时，是否处于激活状态
         private Circle collider;

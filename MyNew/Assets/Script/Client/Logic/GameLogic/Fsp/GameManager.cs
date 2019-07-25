@@ -77,7 +77,12 @@ namespace Roma
                     CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
                     master.Create(playerData[i].ToString(), new Vector2d(130, 100), FPCollide.GetVector(-220));
 
-                    master.StartAi(true);
+                   // master.StartAi(true);
+
+                    master.AddSkill(0, 107100, 1);
+                    master.AddSkill(1, 112100, 1);
+
+                    master.UpdateUI_Skill();
                 }
                 else
                 {
@@ -150,6 +155,24 @@ namespace Roma
         public FspManager GetFspManager()
         {
             return m_fspMgr;
+        }
+
+        private System.Random m_rand = null;
+        public System.Random m_clientRand = new System.Random();
+        public void SetRandSeed(int nRandSeed)
+        {
+            //Debuger.LogWarning(string.Format("[{0}]GameManager::SetRandSeed::nRandSeed:{1}", GameManager.Instance.Context.currentFrameIndex, nRandSeed));
+            m_rand = new System.Random(nRandSeed);
+        }
+
+        /// <summary>
+        /// 获取随机数,只适用于帧同步的逻辑；本地表现层，模拟玩家的AI则不能使用
+        /// </summary>
+        public int GetRand(int nMin, int nMax, int from = 500)
+        {
+            int val = m_rand.Next(nMin, nMax);
+            //Debuger.LogWarning("CGameManger", "GetRand", "当前帧：" + curFrame + " 来自：from:" + from);
+            return val;
         }
     }
 }

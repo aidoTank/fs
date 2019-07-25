@@ -19,58 +19,82 @@ namespace Roma
 		dieDelay,
 	}
 
-	public class PlayerCsvData
-	{
-		/// <summary>
-		/// id
-		/// </summary>
-		public int Id;
+    public class CreatureCsvData
+    {
+        /// <summary>
+        /// id
+        /// </summary>
+        public int Id;
 
-		/// <summary>
-		/// 名字
-		/// </summary>
-		public string Name;
+        public string languageId;
+        /// <summary>
+        /// 名字
+        /// </summary>
+        public string Name
+        {
+           get
+           {
+                // 通过多语言id,查询名称
+                //string languageText = LanguageCsv.GetText(languageId);
+                //return languageText;
+                return "";
+           }
+            
+        }
 
-		/// <summary>
-		/// 图标
-		/// </summary>
-		public int icon;
 
-		/// <summary>
-		/// 模型资源id
-		/// </summary>
-		public int ModelResId;
-		public int headHeight;
+        /// <summary>
+        /// 图标
+        /// </summary>
+        public int Icon;
 
-		/// <summary>
-		/// 力量
-		/// </summary>
-		public int force;
+        /// <summary>
+        /// 模型资源id
+        /// </summary>
+        public int ModelResId;
+        public float ModelScale;
+        public float HeadHeight;
 
-		/// <summary>
-		/// 敏捷
-		/// </summary>
-		public int agility;
+        /// <summary>
+        /// 移动速度
+        /// </summary>
+        public float moveSpeed;
+        public int dieDelay;
+        public int dieSound;
+        public int dieEffect;
+        public int speakId;
 
-		/// <summary>
-		/// 智力
-		/// </summary>
-		public int brain;
+        /// <summary>
+        /// 力量
+        /// </summary>
+        public int force;
 
-		public int atk;
+        /// <summary>
+        /// 敏捷
+        /// </summary>
+        public int agility;
 
-		/// <summary>
-		/// 护甲
-		/// </summary>
-		public int armor;
+        /// <summary>
+        /// 智力
+        /// </summary>
+        public int brain;
 
-		/// <summary>
-		/// 移动速度
-		/// </summary>
-		public int moveSpeed;
+        public int atk;
 
-	
-		public int dieDelay;
+        /// <summary>
+        /// 护甲
+        /// </summary>
+        public int armor;
+    }
+
+
+    public class PlayerCsvData : CreatureCsvData
+    {
+
+
+
+
+
 
 	}
 
@@ -87,10 +111,10 @@ namespace Roma
 			{
 				PlayerCsvData data = new PlayerCsvData();
 				data.Id = m_csv.GetIntData(i, (int)ePlayerCsv.Id);
-				data.Name = m_csv.GetData(i, (int)ePlayerCsv.Name);
-				data.icon = m_csv.GetIntData(i, (int)ePlayerCsv.icon);
+				//data.Name = m_csv.GetData(i, (int)ePlayerCsv.Name);
+				data.Icon = m_csv.GetIntData(i, (int)ePlayerCsv.icon);
 				data.ModelResId = m_csv.GetIntData(i, (int)ePlayerCsv.ModelResId);
-				data.headHeight = m_csv.GetIntData(i, (int)ePlayerCsv.headHeight);
+				data.HeadHeight = m_csv.GetIntData(i, (int)ePlayerCsv.headHeight);
 
 				data.force = m_csv.GetIntData(i, (int)ePlayerCsv.force);
 				data.agility = m_csv.GetIntData(i, (int)ePlayerCsv.agility);

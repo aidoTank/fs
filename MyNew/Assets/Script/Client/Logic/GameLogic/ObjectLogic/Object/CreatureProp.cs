@@ -18,7 +18,7 @@ namespace Roma
         InitMoveSpeed, // 初始移速
 
         // 二级属性
-        MaxHp,      // 力量*20
+        Hp,      // 力量*20
         CurHp,
         Armor,      // 默认+敏捷*0.17
         MaxMp,      // 智力*12

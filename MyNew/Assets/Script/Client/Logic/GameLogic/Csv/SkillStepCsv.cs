@@ -6,22 +6,22 @@ namespace Roma
 	{
 		id,
 		name,
-		step,
 		animaName,
 		effectId,
 		bindPoint,
 		startTime,
-		speed,
+        ForwardAnimaId,
+        BackAnimaId,
 	}
 
 
-	public enum eSkillStepType
-	{
-		Caster = 1,
-        Hit = 2,
-        Fly = 3,
-        FlyHit = 4,
-	}
+	//public enum eSkillStepType
+	//{
+	//	Caster = 1,
+ //       Hit = 2,
+ //       Fly = 3,
+ //       FlyHit = 4,
+	//}
 
 	public class SkillStepCsvData
 	{
@@ -36,14 +36,9 @@ namespace Roma
 		public string name;
 
 		/// <summary>
-		/// 技能阶段 1释放 2受击 3飞行 4飞行自爆
-		/// </summary>
-		public int step;
-
-		/// <summary>
 		/// 动作名
 		/// </summary>
-		public string animaName;
+		public int animaName;
 
 		/// <summary>
 		/// 特效id
@@ -59,12 +54,8 @@ namespace Roma
 		/// 特效开始时间
 		/// </summary>
 		public int startTime;
-
-		/// <summary>
-		/// 弹道速度
-		/// </summary>
-		public int speed;
-
+        public int forwardAnimaId;
+        public int backAnimaId;
 	}
 
 	public class SkillStepCsv : CsvExWrapper
@@ -76,18 +67,19 @@ namespace Roma
 
 		protected override void _Load()
 		{
-			for (int i = 0; i < m_csv.GetRows(); i++)
+            m_dicData.Clear();
+            for (int i = 0; i < m_csv.GetRows(); i++)
 			{
 				SkillStepCsvData data = new SkillStepCsvData();
 				data.id = m_csv.GetIntData(i, (int)eSkillStepCsv.id);
 				data.name = m_csv.GetData(i, (int)eSkillStepCsv.name);
-				data.step = m_csv.GetIntData(i, (int)eSkillStepCsv.step);
-				data.animaName = m_csv.GetData(i, (int)eSkillStepCsv.animaName);
+				data.animaName = m_csv.GetIntData(i, (int)eSkillStepCsv.animaName);
 				data.effectId = m_csv.GetIntData(i, (int)eSkillStepCsv.effectId);
 				data.bindPoint = m_csv.GetData(i, (int)eSkillStepCsv.bindPoint);
 				data.startTime = m_csv.GetIntData(i, (int)eSkillStepCsv.startTime);
-				data.speed = m_csv.GetIntData(i, (int)eSkillStepCsv.speed);
-				m_dicData.Add(data);
+                data.forwardAnimaId = m_csv.GetIntData(i, (int)eSkillStepCsv.ForwardAnimaId);
+                data.backAnimaId = m_csv.GetIntData(i, (int)eSkillStepCsv.BackAnimaId);
+                m_dicData.Add(data);
 			}
 		}
 
@@ -96,43 +88,7 @@ namespace Roma
         {
             foreach (SkillStepCsvData item in m_dicData)
             {
-                if (item.id == skillId && item.step == (int)eSkillStepType.Caster)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-
-        public SkillStepCsvData GetHitData(int skillId)
-        {
-            foreach (SkillStepCsvData item in m_dicData)
-            {
-                if (item.id == skillId && item.step == (int)eSkillStepType.Hit)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-
-        public void GetFlyData(ref List<SkillStepCsvData> list, int skillId)
-        {
-            list.Clear();
-            foreach (SkillStepCsvData item in m_dicData)
-            {
-                if (item.id == skillId && item.step == (int)eSkillStepType.Fly)
-                {
-                    list.Add(item);
-                }
-            }
-        }
-
-        public SkillStepCsvData GetFlyHitData(int skillId)
-        {
-            foreach (SkillStepCsvData item in m_dicData)
-            {
-                if (item.id == skillId && item.step == (int)eSkillStepType.FlyHit)
+                if (item.id == skillId)
                 {
                     return item;
                 }
