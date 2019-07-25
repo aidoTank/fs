@@ -1,6 +1,11 @@
 ,技能名称,CD类型 0时间 1攻击蓄能,CD,施法时BUFF参数说明,施法时BUFF参数值,击中BUFF说明,击中敌方时触发BUFF（选取BUFF表中类型11的BUFF）,受击BUFF说明,受到伤害时触发BUFF（选取BUFF表中类型12的BUFF）
 id,name,cdType,cd,CasterBuffDesc,CasterBuffValue,atkbuffDesc,atkbuff,hitbuffDesc,hitbuff
 int,string,int,int,string,string,string,string,string,string
+1100,火女普攻,0,6000,伤害,1100,,,,
+1200,火女晕技能,0,6000,伤害,1200,,,,
+1300,火女晕技能2,0,6000,伤害,1300,,,,
+1400,火女晕技能3,0,6000,伤害,1400,,,,
+,,,,,,,,,
 ,,,,,,,,,
 100,测试机枪（按下抬起）,0,0,施法时生效(自己),100,,,,
 200,新火炮,,,施法时生效,200,,,,
@@ -11,6 +16,7 @@ int,string,int,int,string,string,string,string,string,string
 1004,测试碰撞激光,,,,10041,,,,
 1005,测试连环闪电,,,,10052,,,,
 1006,测试施法霸体,,,,3006,,,,
+,,,,,,,,,
 ,,,,,,,,,
 100101,闪避突袭,0,3000,施法时生效(自己),40000,,,,
 101101,1阶机枪普攻,0,0,自身减速+子弹生成器+烟雾,1010001_1011011_1011012,,,,
