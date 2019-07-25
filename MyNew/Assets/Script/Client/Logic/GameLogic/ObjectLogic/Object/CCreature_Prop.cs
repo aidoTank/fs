@@ -14,69 +14,144 @@ namespace Roma
         public static Dictionary<int, Action<CCreature, int, int>> m_dicPlayerData;
         public int[] m_arrProp;
 
-        public virtual void SetPublicPropList()
-        {
-            SetPropNum(eCreatureProp.Lv, 1);
-            SetPropNum(eCreatureProp.Force, m_csvData.force);
-            SetPropNum(eCreatureProp.Agility, m_csvData.agility);
-            SetPropNum(eCreatureProp.Brain, m_csvData.brain);
-            SetPropNum(eCreatureProp.InitAtk, m_csvData.atk);
-            SetPropNum(eCreatureProp.InitArmor, m_csvData.armor);
-            //SetPropNum(eCreatureProp.InitMoveSpeed, m_csvData.moveSpeed);
 
-            UpdateMaxHp();
-            SetPropNum(eCreatureProp.CurHp, GetPropNum(eCreatureProp.Hp));
-            UpdateArmor();
-            UpdateMaxMp();
-            SetPropNum(eCreatureProp.CurMp, GetPropNum(eCreatureProp.MaxMp));
-            UpdateAspd();
-            UpdateAtk();
+        public virtual void InitPublicPropList()
+        {
+            if (IsPlayer() || IsMaster())
+            {
+                SetPropNum(eCreatureProp.Lv, 1);
+                UpdateProp();
+            }
             UpdateMoveSpeed();
+            SetPropNum(eCreatureProp.CurHp, GetPropNum(eCreatureProp.Hp));
         }
 
-        public void UpdateMaxHp()
+        public int GetPlayerPropVal(int baseVal, float growVal, int lv)
         {
-            SetPropNum(eCreatureProp.Hp, 
-            GetPropNum(eCreatureProp.Force) * 20);
+            double preVal = baseVal;
+            for (int i = 1; i <= lv; i++)
+            {
+                double d = (baseVal * growVal * i);
+                preVal = preVal + d;
+            }
+            return (int)Math.Ceiling(preVal);
         }
 
-        public void UpdateArmor()
+        /// <summary>
+        /// 等级，装备，BUFF改变时更新属性
+        /// 并不改变UI
+        /// </summary>
+        public virtual void UpdateProp()
         {
-            SetPropNum(eCreatureProp.Armor, 
-            (int)((float)GetPropNum(eCreatureProp.InitArmor) +
-            (float)GetPropNum(eCreatureProp.Agility) * 0.17f));     
+            UpdateMaxHp();
+            UpdateAp();
+            UpdateDp();
+            UpdateCritChance();
+            UpdateCritDamage();
         }
 
-        public void UpdateMaxMp()
+        public virtual void UpdateMaxHp()
         {
-            SetPropNum(eCreatureProp.MaxMp, 
-            GetPropNum(eCreatureProp.Brain) * 12);
+            if (IsPlayer() || IsMaster())
+            {
+                PlayerCsvData pCsv = (PlayerCsvData)m_csvData;
+                int lv = GetPropNum(eCreatureProp.Lv);
+                int maxHp = GetPlayerPropVal(pCsv.BaseHp, pCsv.HpGrow, lv);
+                //maxHp += GetEquipHp();
+                SetPropNum(eCreatureProp.Hp, maxHp);
+            }
+            UpdataFightingVal();
         }
 
-        public void UpdateAspd()
+        /// <summary>
+        /// 用于显示界面上的主武器攻击数值
+        /// 更新攻击,自身属性 + 装备 + BUFF
+        /// </summary>
+        public virtual void UpdateAp()
         {
-            SetPropNum(eCreatureProp.Aspd, 
-            100 * 1000 +
-            GetPropNum(eCreatureProp.Agility));
+            if (IsPlayer() || IsMaster())
+            {
+                PlayerCsvData pCsv = (PlayerCsvData)m_csvData;
+                int lv = GetPropNum(eCreatureProp.Lv);
+                int maxAp = GetPlayerPropVal(pCsv.BaseAp, pCsv.ApGrow, lv);
+                //maxAp += GetEquipAp(eEquipType.HandRight);      // 主手装备面板
+                maxAp += GetBuffAp(maxAp);
+                SetPropNum(eCreatureProp.Ap, maxAp);
+            }
+            UpdataFightingVal();
         }
 
-        public void UpdateAtk()
+        /// <summary>
+        /// 更新防御 自身属性 + 装备 + BUFF
+        /// </summary>
+        public virtual void UpdateDp()
         {
-            SetPropNum(eCreatureProp.Atk, 
-            GetPropNum(eCreatureProp.InitAtk) +
-            GetPropNum(eCreatureProp.Agility));
+            if (IsPlayer() || IsMaster())
+            {
+                PlayerCsvData pCsv = (PlayerCsvData)m_csvData;
+                int lv = GetPropNum(eCreatureProp.Lv);
+                int maxDp = GetPlayerPropVal(pCsv.BaseDp, pCsv.DpGrow, lv);
+                //maxDp += GetEquipDp();
+                maxDp += GetBuffDp(maxDp);
+                SetPropNum(eCreatureProp.Dp, maxDp);
+            }
+            UpdataFightingVal();
+        }
+
+        public virtual void UpdateCritChance()
+        {
+            if (IsPlayer() || IsMaster())
+            {
+                PlayerCsvData pCsv = (PlayerCsvData)m_csvData;
+                float cc = pCsv.CritChance;
+                //cc += GetEquipCritChance();
+                cc *= 1000;
+                SetPropNum(eCreatureProp.CritChance, (int)cc);
+            }
+            UpdataFightingVal();
+        }
+
+        public virtual void UpdateCritDamage()
+        {
+            if (IsPlayer() || IsMaster())
+            {
+                PlayerCsvData pCsv = (PlayerCsvData)m_csvData;
+                float cc = pCsv.CritDamage;
+                //cc += GetEquipCritDamage();
+                cc *= 1000;
+                SetPropNum(eCreatureProp.CritDamage, (int)cc);
+            }
+            UpdataFightingVal();
         }
 
         public void UpdateMoveSpeed()
         {
-            SetPropNum(eCreatureProp.MoveSpeed, 
-            GetPropNum(eCreatureProp.InitMoveSpeed));
+            float speed = m_csvData.moveSpeed;
+            speed += GetBuffSpeed(speed);
+            SetSpeed(new FixedPoint(speed));
         }
+
+        public virtual void UpdataFightingVal()
+        {
+            if (IsPlayer() || IsMaster())
+            {
+                int cc = GetFightingVal(GetPropNum(eCreatureProp.Hp), GetPropNum(eCreatureProp.Ap), GetPropNum(eCreatureProp.Dp), GetPropNum(eCreatureProp.CritChance), GetPropNum(eCreatureProp.CritDamage));
+                SetPropNum(eCreatureProp.Fighting, (int)cc);
+            }
+            UpdataUI_FightingVal();
+        }
+
 
         public virtual void SetPropNum(eCreatureProp propType, int newV)
         {
+            if (m_arrProp == null)
+            {
+                //Debug.LogError("找不到属性，检测是不是UID重复时被移除的类：" + m_uId);
+                return;
+            }
+
             int index = (int)propType;
-            if(index > 0 && index < m_arrProp.Length)
+            if (index < m_arrProp.Length)
             {
                 int oldV = m_arrProp[index];
                 m_arrProp[index] = newV;
@@ -91,7 +166,7 @@ namespace Roma
         public virtual void AddPropNum(eCreatureProp propType, int addV)
         {
             int index = (int)propType;
-            if(index > 0 && index < m_arrProp.Length)
+            if (index < m_arrProp.Length)
             {
                 int oldV = m_arrProp[index];
                 int newV = oldV + addV;
@@ -103,11 +178,13 @@ namespace Roma
                 Debug.LogError("属性索引越界" + index);
             }
         }
- 
+
         public virtual int GetPropNum(eCreatureProp propType)
         {
+            if (m_arrProp == null)
+                return 0;
             int index = (int)propType;
-            if(index > 0 && index < m_arrProp.Length)
+            if (index < m_arrProp.Length)
             {
                 return m_arrProp[index];
             }
@@ -119,15 +196,44 @@ namespace Roma
         }
 
         public virtual void ApplyAttrs(eCreatureProp propType, int newV, int oldV)
-        { 
+        {
             int index = (int)propType;
             Action<CCreature, int, int> changeAction;
-            if(m_dicPlayerData.TryGetValue(index, out changeAction))
+            if (m_dicPlayerData.TryGetValue(index, out changeAction))
             {
                 changeAction(this, newV, oldV);
             }
         }
+
+        public bool bMaxLv()
+        {
+            PlayerExpCsv playerCsv = CsvManager.Inst.GetCsv<PlayerExpCsv>((int)eAllCSV.eAC_PlayerExp);
+            int lv = GetPropNum(eCreatureProp.Lv);
+            if (lv >= playerCsv.m_maxLv.Level)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 获得战力值 生命，攻击，防御，暴击率 暴击伤害倍率
+        /// </summary>
+        public int GetFightingVal(int hp, int ap, int dp, float CritChance, float CritDamage)
+        {
+            double val = 0;
+            if (ap <= 0 && dp <= 0)
+            {
+                val = hp + ap * 2 + dp;
+            }
+            else
+            {
+                val = hp + ap * 2 + dp + ap * ap / (ap + 1 * dp) * (CritChance / 1000) * (CritDamage / 1000);
+            }
+            return (int)Math.Ceiling(val);
+        }
     }
+
 
 
 }

@@ -18,6 +18,7 @@ namespace Roma
         eAC_Scene,
 
         eAC_Player,
+        eAC_PlayerExp,
         eAC_Skill,
         eAC_SkillStep,
         eAC_SkillData,
@@ -53,6 +54,7 @@ namespace Roma
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Scene, "地图表", new SceneCsv());
 
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Player, "角色表", new PlayerCsv());
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_PlayerExp, "玩家经验表", new PlayerExpCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_Skill, "技能主表", new SkillCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_SkillStep, "技能子表", new SkillStepCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_SkillData, "技能数据表", new SkillDataCsv());

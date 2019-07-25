@@ -113,67 +113,67 @@ namespace Roma
         {
             if (m_triggerData.ShapeType == (int)eBuffTriggerShapeType.Circle)
             {
-                //Sphere tSphere = new Sphere();
-                //tSphere.c = GetPos();
-                //tSphere.r = m_triggerData.Length;
+                Sphere tSphere = new Sphere();
+                tSphere.c = GetPos().ToVector2();
+                tSphere.r = m_triggerData.Length;
 
-                //List<long> list = CCreatureMgr.GetCreatureList();
-                //for (int i = 0; i < list.Count; i++)
-                //{
-                //    CCreature creature = CCreatureMgr.Get(list[i]);
-                //    if (m_caster.bCamp(creature) || creature.IsDie())
-                //        continue;
+                List<long> list = CCreatureMgr.GetCreatureList();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    CCreature creature = CCreatureMgr.Get(list[i]);
+                    if (m_caster.bCamp(creature) || creature.IsDie())
+                        continue;
 
-                //    Sphere playerS = new Sphere();
-                //    playerS.c = creature.GetPos();
-                //    playerS.r = creature.GetR();
+                    Sphere playerS = new Sphere();
+                    playerS.c = creature.GetPos().ToVector2();
+                    playerS.r = creature.GetR().value;
 
-                //    if (Collide.bSphereSphere(tSphere, playerS))
-                //    {
-                //        OnHitAddBuff(m_caster, creature);
-                //    }
-                //}
+                    if (Collide.bSphereSphere(tSphere, playerS))
+                    {
+                        OnHitAddBuff(m_caster, creature);
+                    }
+                }
             }
             else if (m_triggerData.ShapeType == (int)eBuffTriggerShapeType.Sector)
             {
-                //List<long> list = CCreatureMgr.GetCreatureList();
-                //for (int i = 0; i < list.Count; i++)
-                //{
-                //    CCreature creature = CCreatureMgr.Get(list[i]);
-                //    if (m_caster.bCamp(creature) || creature.IsDie())
-                //        continue;
+                List<long> list = CCreatureMgr.GetCreatureList();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    CCreature creature = CCreatureMgr.Get(list[i]);
+                    if (m_caster.bCamp(creature) || creature.IsDie())
+                        continue;
 
-                //    Sphere playerS = new Sphere();
-                //    playerS.c = creature.GetPos();
-                //    playerS.r = creature.GetR();
+                    Sphere playerS = new Sphere();
+                    playerS.c = creature.GetPos().ToVector2();
+                    playerS.r = creature.GetR().value;
 
-                //    if (Collide.bSectorInside(GetPos(), GetDir(), m_triggerData.Width, m_triggerData.Length, creature.GetPos()))
-                //    {
-                //        OnHitAddBuff(m_caster, creature);
-                //    }
-                //}
+                    if (Collide.bSectorInside(GetPos().ToVector2(), GetDir().ToVector2(), m_triggerData.Width, m_triggerData.Length, creature.GetPos().ToVector2()))
+                    {
+                        OnHitAddBuff(m_caster, creature);
+                    }
+                }
             }
             else if (m_triggerData.ShapeType == (int)eBuffTriggerShapeType.Rect)
             {
-                //List<long> list = CCreatureMgr.GetCreatureList();
-                //for (int i = 0; i < list.Count; i++)
-                //{
-                //    CCreature creature = CCreatureMgr.Get(list[i]);
-                //    if (m_caster.bCamp(creature) || creature.IsDie())
-                //        continue;
+                List<long> list = CCreatureMgr.GetCreatureList();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    CCreature creature = CCreatureMgr.Get(list[i]);
+                    if (m_caster.bCamp(creature) || creature.IsDie())
+                        continue;
 
-                //    Sphere playerS = new Sphere();
-                //    playerS.c = creature.GetPos();
-                //    playerS.r = creature.GetR();
+                    Sphere playerS = new Sphere();
+                    playerS.c = creature.GetPos().ToVector2();
+                    playerS.r = creature.GetR().value;
 
-                //    Vector2 pos = GetPos() + m_caster.GetDir().normalized * m_triggerData.Length * 0.5f;
-                //    float angle = Collide.GetAngle(m_caster.GetDir());
-                //    OBB obb = new OBB(pos, new Vector2(m_triggerData.Width, m_triggerData.Length), angle);
-                //    if (Collide.bSphereOBB(playerS, obb))
-                //    {
-                //        OnHitAddBuff(m_caster, creature);
-                //    }
-                //}
+                    Vector2 pos = GetPos().ToVector2() + m_caster.GetDir().normalized.ToVector2() * m_triggerData.Length * 0.5f;
+                    float angle = Collide.GetAngle(m_caster.GetDir().ToVector2());
+                    OBB obb = new OBB(pos, new Vector2(m_triggerData.Width, m_triggerData.Length), angle);
+                    if (Collide.bSphereOBB(playerS, obb))
+                    {
+                        OnHitAddBuff(m_caster, creature);
+                    }
+                }
             }
 
             // 静态碰撞

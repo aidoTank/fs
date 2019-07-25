@@ -37,10 +37,10 @@ namespace Roma
             //    info.m_speakId = m_csvData.speakId;
             //    info.m_dieEffect = m_csvData.dieEffect;
             //}
-            //if (string.IsNullOrEmpty(m_name))
-            //    info.m_showHead = false;
-            //else
-            //    info.m_showHead = true;
+            if (string.IsNullOrEmpty(m_name))
+                info.m_showHead = false;
+            else
+                info.m_showHead = true;
             m_vCreature.Create(info);
         }
 

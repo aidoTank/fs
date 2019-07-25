@@ -19,6 +19,7 @@ namespace Roma
         eLM_PanelJoyStick = 6,
         eLM_PanelBattle = 7,
         eLM_PanelHead = 8,
+        eLM_PanelHud = 9,
     }
 
     public class LayoutMgr : Singleton
@@ -38,6 +39,7 @@ namespace Roma
             {(int)LogicModuleIndex.eLM_PanelJoyStick, JoyStickModule.CreateLogicModule},
             {(int)LogicModuleIndex.eLM_PanelBattle, BattleModule.CreateLogicModule},
             {(int)LogicModuleIndex.eLM_PanelHead, HeadModule.CreateLogicModule},
+            {(int)LogicModuleIndex.eLM_PanelHud,HudModule.CreateLogicModule},
         };
 
 
@@ -116,6 +118,7 @@ namespace Roma
             //(int)LogicModuleIndex.eLM_PanelLogin,
             //(int)LogicModuleIndex.eLM_PanelLoadingGameMelee,
             (int)LogicModuleIndex.eLM_PanelHead,
+            (int)LogicModuleIndex.eLM_PanelHud,
             //(int)LogicModuleIndex.eLM_PanelJoyStick,
         };
        

@@ -130,6 +130,31 @@ namespace Roma
             return pos;
         }
 
+        public static Vector2 GetUIPos(Vector3 wPos)
+        {
+            Vector2 pos = Vector2.zero;
+            if (CameraMgr.Inst.m_cam != null)
+            {
+                pos = CameraMgr.Inst.m_cam.WorldToScreenPoint(wPos);
+            }
+            if (pos != Vector2.zero)
+            {
+                float x = (pos.x - GUIManager.m_screenHalf.x) * GUIManager.GetWidthScale();
+                float y = (pos.y - GUIManager.m_screenHalf.y) * GUIManager.GetHeightScale();
+
+                //if (x < GUIManager.m_screenRect.x ||
+                //    x > GUIManager.m_screenRect.y ||
+                //    y < GUIManager.m_screenRect.z ||
+                //    y > GUIManager.m_screenRect.w
+                //   )
+                //{
+                //    return Vector2.zero;
+                //}
+                return new Vector2(x, y);
+            }
+            return Vector2.zero;
+
+        }
 
         public static GUIManager Inst;
 

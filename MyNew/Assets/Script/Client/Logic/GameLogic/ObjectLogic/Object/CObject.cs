@@ -25,7 +25,7 @@ namespace Roma
         public Vector2d m_curPos;
         public Vector2d m_dir;
         public float m_scale =1;
-        public FixedPoint m_speed =  new FixedPoint(10);
+        public FixedPoint m_speed = new FixedPoint(10);
 
         public CmdFspMove m_cmdFspMove;
         // 用于状态BUFF控制的是否能移动
@@ -36,7 +36,7 @@ namespace Roma
         public bool m_logicSkillRotationEnabled = false;
 
         /// <summary>
-        /// 逻辑平滑
+        /// 逻辑方向平滑
         /// </summary>
         private float m_rotateCurTime;
         private float m_rotateMaxTime = 0.5f;
@@ -51,10 +51,10 @@ namespace Roma
             return (VObject)m_vCreature;
         }
 
-        //public VTrigger GetVTrigger()
-        //{
-        //    return (VTrigger)m_vCreature;
-        //}
+        public VTrigger GetVTrigger()
+        {
+            return (VTrigger)m_vCreature;
+        }
 
         public virtual bool Create(int csvId, string name, Vector2 pos, Vector2 dir, float scale = 1)
         {
@@ -129,7 +129,7 @@ namespace Roma
             SetDir(moveDir);  // 技能前摇时，移动时，模型表现方向失效，比如机枪移动时射击
             SetSpeed(GetSpeed());
 
-            Debug.Log("无障碍移动");
+            //Debug.Log("无障碍移动");
             m_vCreature.SetBarrier(false);
         }
 

@@ -62,7 +62,8 @@ namespace Roma
             HeadModule head = (HeadModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelHead);
             head.SetVisible(true);
 
-            
+
+            SetRandSeed(10);
             CMap map = CMapMgr.Create(1);
             map.Create();
 
@@ -81,7 +82,8 @@ namespace Roma
 
                     master.AddSkill(0, 107100, 1);
                     master.AddSkill(1, 112100, 1);
-
+                    master.AddSkill(2, 117100, 1);
+                    master.AddSkill(3, 600100, 1);
                     master.UpdateUI_Skill();
                 }
                 else
@@ -92,12 +94,15 @@ namespace Roma
                 }
             }
 
+            CCreature test1 = CCreatureMgr.Create(EThingType.Player, 1000);
+            test1.Create("测试1", new Vector2d(130, 100), FPCollide.GetVector(-220));
+
             //for(int i = 0; i < 6; i ++)
             //{
             //    CCreature p1 = CCreatureMgr.Create(EThingType.Player, i);
             //    p1.Create("测试：" + i, new Vector2d(4 + i * 5, 8), FPCollide.GetVector(60));
             //}
-    
+
             m_bRunning = true;
         }
 

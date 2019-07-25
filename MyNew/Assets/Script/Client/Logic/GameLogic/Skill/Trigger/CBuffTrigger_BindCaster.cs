@@ -26,8 +26,8 @@ namespace Roma
             if (m_vCreature != null)
                 m_vCreature.m_bMoveing = true;
 
-            //startPos = m_caster.GetPos();
-            //startDir = m_caster.GetDir();
+            startPos = m_caster.GetPos().ToVector2();
+            startDir = m_caster.GetDir().ToVector2();
         }
 
         public override void _UpdatePos()

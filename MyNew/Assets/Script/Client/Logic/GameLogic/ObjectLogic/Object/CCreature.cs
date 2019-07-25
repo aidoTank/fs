@@ -26,7 +26,7 @@ namespace Roma
             PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
             m_csvData = playerCsv.GetData(1);
 
-            SetPublicPropList();
+            InitPublicPropList();
 
             // 数据
             SetPos(pos);
@@ -59,22 +59,13 @@ namespace Roma
             };
 
             UpdateVO_Create(m_csvData.ModelResId, 5, eVOjectType.Creature);
+            UpdateVO_ShowHead(true);
             UpdateVO_ShowHeadName(name);
             UpdateVO_ShowHeadLv();
             UpdateVO_ShowHeadHp();
             return true;
         }
 
-
-
-        public bool IsDie()
-        {
-            if(GetPropNum(eCreatureProp.CurHp) <= 0)
-                return true;
-            return false;
-        }
-
-    
         /// <summary>
         /// 指令对象转消息内容并发送
         /// </summary>
@@ -175,9 +166,7 @@ namespace Roma
 
             if (m_ai != null)
             {
-              
-                    m_ai.EnterFrame();
-                
+                m_ai.EnterFrame();
             }
             ExecuteFrameSkill();
             if (IsDie())
@@ -205,15 +194,143 @@ namespace Roma
             }
         }
 
+        /// <summary>
+        /// 复活，用于角色死亡刷新，BUFF刷新
+        /// </summary>
+        public virtual void OnRevive()
+        {
+            if (collider != null)
+                collider.active = true;
+
+            if (IsMaster())
+            {
+                m_bornPoint = SceneManager.Inst.GetSceneData().bornPoint.ToVector2();
+                CFrameTimeMgr.Inst.RegisterEvent(2800, () =>
+                {
+                    m_logicMoveEnabled = true;
+                    m_logicSkillEnabled = true;
+                    PushCommand(CmdFspStopMove.Inst);
+                });
+            }
+            else
+            {
+                m_logicMoveEnabled = true;
+                m_logicSkillEnabled = true;
+                PushCommand(CmdFspStopMove.Inst);
+            }
+
+            SetPropNum(eCreatureProp.CurHp, GetPropNum(eCreatureProp.Hp));
+            //SetPos(m_bornPoint.ToVector2d(), true);
+            SetState(eBuffState.Show, true);
+            UpdateVO_ShowLife(true);
+            UpdateVO_ShowHead(true);
+            UpdateVO_ShowFootHalo();
+        }
+
+        /// <summary>
+        /// 保持统一，死亡复活时不对表现层进行销毁和创建
+        /// </summary>
+        public virtual void OnDie()
+        {
+            if (IsMaster())
+            {
+                StartAi(false);
+            }
+            DestoryDownUpSkill();
+            if (m_curSkill != null)
+                m_curSkill.Destory();
+            ClearBuff();
+            ClearTrigger();
+            StopAutoMove();
+            PushCommand(CmdFspStopMove.Inst);
+            if (collider != null)
+                collider.active = false;
+
+            // 如果是坐骑
+            //if (GetMaster() != null)
+            //{
+            //    GetMaster().DownRide();
+            //}
+            //// 如果是主人
+            //if (GetRide() != null)
+            //{
+            //    DownRide();
+            //}
+            m_logicMoveEnabled = false;
+            m_logicSkillEnabled = false;
+      
+            // 逻辑层死亡
+            CFrameTimeMgr.Inst.RegisterEvent(m_csvData.dieDelay, () =>
+            {
+
+                CFrameTimeMgr.Inst.RegisterEvent(m_refreshTime, () =>
+                {
+                    OnRevive();
+                });
+                SetState(eBuffState.Show, false);
+            });
+            // 播放动作
+            UpdateVO_ShowLife(false);
+            UpdateVO_ShowHead(false);
+        }
+
+        // 切场景时才会真正销毁，也要移除事件监听
         public override void Destory()
         {
-            m_destroy = true;
-            if(m_vCreature != null)
+            // 当前可能运行的技能，BUFF，触发器
+            DestoryDownUpSkill();
+            if (m_curSkill != null)
+                m_curSkill.Destory();
+            ClearBuff();
+            ClearTrigger();
+
+
+            if (m_arrProp != null)
+                m_arrProp = null;
+            if (m_buffList != null)
             {
-                m_vCreature.Destory();
-                m_vCreature = null;
+                m_buffList.Clear();
+                m_buffList = null;
             }
+            if (m_dicSkill != null)
+            {
+                // 清除技能，附带的被动BUFF
+                foreach (KeyValuePair<int, CSkillInfo> item in m_dicSkill)
+                {
+                    if (item.Value != null)
+                        item.Value.Destoty();
+                }
+                m_dicSkill.Clear();
+                m_dicSkill = null;
+            }
+            if (m_listTrigger != null)
+            {
+                m_listTrigger.Clear();
+                m_listTrigger = null;
+            }
+ 
+            if (m_ai != null)
+            {
+                m_ai.Destroy();
+                m_ai = null;
+            }
+            //if (m_aoiNode != null)
+            //{
+            //    AOIMgr.Inst.Leave(m_aoiNode);
+            //    m_aoiNode = null;
+            //}
+            PhysicsManager.Inst.Remove(collider);
+            collider = null;
+            base.Destory();
         }
+
+        public bool IsDie()
+        {
+            if (GetPropNum(eCreatureProp.CurHp) <= 0)
+                return true;
+            return false;
+        }
+
 
 
         public void StartAi(bool bRun)
@@ -234,8 +351,10 @@ namespace Roma
         }
 
         // 属性
-   
+        public string m_name = "null";
         public CreatureCsvData m_csvData;
+        public Vector2 m_bornPoint;
+        public int m_refreshTime;
 
         public bool m_bActive = true; // 非主角时，是否处于激活状态
         private Circle collider;

@@ -54,10 +54,10 @@ namespace Roma
             }
 
             // 一定时间后设置逻辑位置
-            //CFrameTimeMgr.Inst.RegisterEvent(m_triggerData.ContinuanceTime - 100, () =>
-            //{
-            //    SetPos(m_skillPos, true);
-            //});
+            CFrameTimeMgr.Inst.RegisterEvent(m_triggerData.ContinuanceTime - 100, () =>
+            {
+                SetPos(m_skillPos.ToVector2d(), true);
+            });
         }
 
         public override void ExecuteFrame(int frameId)

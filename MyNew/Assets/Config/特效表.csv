@@ -337,6 +337,8 @@ int,int,string,float,int,int,string
 21493,21493,fx_monster_1_death,2.2,,,人狼战士死亡特效
 21494,21494,fx_monster_2_death,1.7,,,机械犬死亡特效
 ,,,,,,
+21500,21500,fx_jiangluo,5.5,,,角色降落特效
+,,,,,,
 22000,22000,fx_jineng_cd,0.3,,,CD充能
 ,,,,,,
 22010,22010,fx_ui_changtai,0,,,炼化圈常态
@@ -369,6 +371,8 @@ int,int,string,float,int,int,string
 ,,,,,,
 22050,22050,fx_ui_login01,0,,,login界面常驻特效
 22051,22051,fx_ui_login01_ziti,0,,,login界面 星途字体特效
+22052,22052,fx_ui_login03,0,,,login界面2常驻女
+22053,22053,fx_ui_login02,,,,login界面2常驻男
 ,,,,,,
 22060,22060,fx_juese_denglu,0,,,角色登录界面特效
 ,,,,,,
@@ -382,5 +386,10 @@ int,int,string,float,int,int,string
 22085,22085,fx_baoxiang_lv,0,,,宝箱界面绿色箱子常驻特效
 22086,22086,fx_baoxiang_lan,0,,,宝箱界面蓝色箱子常驻特效
 22087,22087,fx_baoxiang_xiaokuang,0,,,宝箱小格子特效
+,,,,,,
+22090,22090,fx_ui_wroldmap_02,0,,,世界地图背景岩浆
+22091,22091,fx_ui_wroldmap_03,0,,,世界地图背景绿色银河
+22092,22092,fx_ui_wroldmap_04,0,,,世界地图背景白色银河
+22093,22093,fx_ui_wroldmap_05,0,,,世界地图背景紫色银河
 ,,,,,,
 50000,5,fx_null,710,52025,,地狱犬撕咬空特效

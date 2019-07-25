@@ -166,35 +166,24 @@ namespace Roma
             m_caster.OnCreateAtkBuff(m_skillIndex, m_rec);
             m_rec.OnCreateHitBuff(m_caster);
 
-            int ap = 0;
-            if(m_caster.IsMaster())   // 通过不同装备获取不同的攻击力
-            {
-                ap = GetPlayerAp();
-            }
-            else
-            {
-                //ap = m_caster.GetPropNum(eCreatureProp.Ap);
-            }
-
             bool bCrit = false;
 
             //伤害 = 攻击 * 攻击 /（攻击 + k * 防御）*（0.9 / 1.1）
             int k = 1;
-            //int ap = m_caster.GetPropNum(eCreatureProp.Ap);
-            int dp = 0;
-            //int dp = m_rec.GetPropNum(eCreatureProp.Dp);
+            int ap = m_caster.GetPropNum(eCreatureProp.Ap);
+            int dp = m_rec.GetPropNum(eCreatureProp.Dp);
             // 玩家普攻伤害
             int hurtVal = (int)Math.Ceiling((float)ap * ap / (ap + k * dp));
             // 技能伤害
             hurtVal = (int)Math.Ceiling(hurtVal * (1 + skillVal * 0.01));
             // 计算暴击
-            //float CritChance = m_caster.GetPropNum(eCreatureProp.CritChance);
-            //if (GameManager.Inst.GetRand(0, 100) <= CritChance * 0.1f)
-            //{
-            //    bCrit = true;
-            //    float CritDamage = m_caster.GetPropNum(eCreatureProp.CritDamage);
-            //    hurtVal = (int)Math.Ceiling((float)hurtVal * (1 + CritDamage * 0.001f));
-            //}
+            float CritChance = m_caster.GetPropNum(eCreatureProp.CritChance);
+            if (GameManager.Inst.GetRand(0, 100) <= CritChance * 0.1f)
+            {
+                bCrit = true;
+                float CritDamage = m_caster.GetPropNum(eCreatureProp.CritDamage);
+                hurtVal = (int)Math.Ceiling((float)hurtVal * (1 + CritDamage * 0.001f));
+            }
             // 连击累加
             int comboNum = m_caster.GetComboNum();
             if (comboNum > 300)
@@ -307,9 +296,9 @@ namespace Roma
                 type = eHUDType.FIGHT_ADDBLOOD;
             }
 
-            //HudModule hud = (HudModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelHud);
-            //hud.SetVisible(true);
-            //hud.SetHUD(type, hitVal.ToString(), target);
+            HudModule hud = (HudModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelHud);
+            hud.SetVisible(true);
+            hud.SetHUD(type, hitVal.ToString(), target);
 
             return;
             if (target.m_vCreature == null)

@@ -8,16 +8,25 @@ namespace Roma
 		Name,
 		icon,
 		ModelResId,
-		headHeight,
+        ModelScale,
+        headHeight,
+        moveSpeed,
+        dieDelay,
 
-		force,
-		agility,
-		brain,
-		atk,
-		armor,
-		moveSpeed,
-		dieDelay,
-	}
+        dieSound,    // 暂不读
+        speakId,    // 暂不读
+
+        BaseHp,
+        BaseAp,
+        BaseDp,
+
+        HpGrow,
+        ApGrow,
+        DpGrow,
+
+        CritChance,
+        CritDamage,
+    }
 
     public class CreatureCsvData
     {
@@ -39,7 +48,6 @@ namespace Roma
                 //return languageText;
                 return "";
            }
-            
         }
 
 
@@ -60,6 +68,7 @@ namespace Roma
         /// </summary>
         public float moveSpeed;
         public int dieDelay;
+
         public int dieSound;
         public int dieEffect;
         public int speakId;
@@ -91,12 +100,40 @@ namespace Roma
     public class PlayerCsvData : CreatureCsvData
     {
 
+        public int BaseHp;
+        /// <summary>
+        /// 基础攻击
+        /// </summary>
+        public int BaseAp;
+        /// <summary>
+        /// 基础防御
+        /// </summary>
+        public int BaseDp;
+
+        /// <summary>
+        /// 血量成长系数
+        /// </summary>
+        public float HpGrow;
+        /// <summary>
+        /// 攻击成长系数
+        /// </summary>
+        public float ApGrow;
+        /// <summary>
+        /// 防御成长系数
+        /// </summary>
+        public float DpGrow;
+
+        /// <summary>
+        /// 暴击率
+        /// </summary>
+        public float CritChance;
+        /// <summary>
+        /// 暴击伤害
+        /// </summary>
+        public float CritDamage;
 
 
-
-
-
-	}
+    }
 
 	public class PlayerCsv : CsvExWrapper
 	{
@@ -114,16 +151,24 @@ namespace Roma
 				//data.Name = m_csv.GetData(i, (int)ePlayerCsv.Name);
 				data.Icon = m_csv.GetIntData(i, (int)ePlayerCsv.icon);
 				data.ModelResId = m_csv.GetIntData(i, (int)ePlayerCsv.ModelResId);
-				data.HeadHeight = m_csv.GetIntData(i, (int)ePlayerCsv.headHeight);
+                data.ModelScale = m_csv.GetFloatData(i, (int)ePlayerCsv.ModelScale);
+                data.HeadHeight = m_csv.GetIntData(i, (int)ePlayerCsv.headHeight);
 
-				data.force = m_csv.GetIntData(i, (int)ePlayerCsv.force);
-				data.agility = m_csv.GetIntData(i, (int)ePlayerCsv.agility);
-				data.brain = m_csv.GetIntData(i, (int)ePlayerCsv.brain);
-				data.atk = m_csv.GetIntData(i, (int)ePlayerCsv.atk);
-				data.armor = m_csv.GetIntData(i, (int)ePlayerCsv.armor);
-				data.moveSpeed = m_csv.GetIntData(i, (int)ePlayerCsv.moveSpeed);
-				data.dieDelay = m_csv.GetIntData(i, (int)ePlayerCsv.dieDelay);
-				m_dicData.Add(data.Id, data);
+                data.moveSpeed = m_csv.GetIntData(i, (int)ePlayerCsv.moveSpeed);
+                data.dieDelay = m_csv.GetIntData(i, (int)ePlayerCsv.dieDelay);
+
+                data.BaseHp = m_csv.GetIntData(i, (int)ePlayerCsv.BaseHp);
+                data.BaseAp = m_csv.GetIntData(i, (int)ePlayerCsv.BaseAp);
+                data.BaseDp = m_csv.GetIntData(i, (int)ePlayerCsv.BaseDp);
+
+                data.HpGrow = m_csv.GetFloatData(i, (int)ePlayerCsv.HpGrow);
+                data.ApGrow = m_csv.GetFloatData(i, (int)ePlayerCsv.ApGrow);
+                data.DpGrow = m_csv.GetFloatData(i, (int)ePlayerCsv.DpGrow);
+
+                data.CritChance = m_csv.GetFloatData(i, (int)ePlayerCsv.CritChance);
+                data.CritDamage = m_csv.GetFloatData(i, (int)ePlayerCsv.CritDamage);
+
+                m_dicData.Add(data.Id, data);
 			}
 		}
 

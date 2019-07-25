@@ -87,10 +87,10 @@ namespace Roma
             {
                 eType = eEntityType.eBattleEntity;
             }
-            //else if(this is VTrigger)
-            //{
-            //    eType = eEntityType.eEffectEntity;
-            //}
+            else if (this is VTrigger)
+            {
+                eType = eEntityType.eEffectEntity;
+            }
 
             int hid = EntityManager.Inst.CreateEntity(eType, info, CreateEnd);
             SetDir(baseInfo.m_dir);
@@ -173,7 +173,7 @@ namespace Roma
         {
             if (param.time != 0)
             {
-                //m_ent.SetCurve(m_curveParam.endPos, m_curveParam.time, m_curveParam.heigh);
+                m_ent.SetCurve(m_curveParam.endPos, m_curveParam.time, m_curveParam.heigh);
                 m_curveParam = param;
             }
         }
@@ -238,7 +238,7 @@ namespace Roma
             Vector3 result = logicPos;
             if(moveInfo.m_isBarrier)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
             {
-                Debug.Log("遇到障碍");
+                //Debug.Log("遇到障碍");
                 Vector3 offsetMove = curPos - logicPos;
                 float tempDis = offsetMove.magnitude;
                 if(tempDis != 0.0f)

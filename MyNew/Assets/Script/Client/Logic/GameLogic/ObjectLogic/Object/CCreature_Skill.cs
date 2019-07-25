@@ -475,8 +475,12 @@ namespace Roma
         /// <returns></returns>
         public bool bCamp(CCreature target)
         {
+
             if (GetUid() == target.GetUid())
                 return true;
+
+            return false;
+
             if (IsPlayer() && target.IsMonster())   // 玩家对怪物
             {
                 return false;

@@ -142,7 +142,7 @@ namespace Roma
                 if (m_master != null)
                 {
                     m_master.SendFspCmd(new CmdFspStopMove());
-                    Debug.Log("停止移动。。。。。。。。。。。。。。。。。。。。。");
+                    //Debug.Log("停止移动。。。。。。。。。。。。。。。。。。。。。");
                 }
             }
             else
@@ -186,7 +186,7 @@ namespace Roma
                 Vector2d _dir = dir.ToVector2d();
                 CmdFspMove cmd = new CmdFspMove(ref _dir);
                 m_master.SendFspCmd(cmd);
-                Debug.Log("发送移动。。。。。。。。。。。。。。。。。。。。。");
+                //Debug.Log("发送移动。。。。。。。。。。。。。。。。。。。。。");
                                 
                 m_preMoveDir = dir;
                 m_isFirstJoyStick = false;
