@@ -116,8 +116,13 @@ namespace Roma
             }
             if (!m_skillInfo.bMove)
             {
-                //cc.PushCommand(CmdFspStopMove.Inst);
                 cc.m_logicMoveEnabled = bTrue;
+                // 释放技能不能移动时
+                VBase v = cc.m_vCreature;
+                if(v != null)
+                {
+                    v.SetMove(bTrue);
+                }
             }
             // 重置遥感，一般在按下移动，并技能释放完之后，还需继续移动
             if (bTrue)

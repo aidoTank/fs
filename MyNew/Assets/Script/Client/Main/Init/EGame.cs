@@ -25,7 +25,7 @@ namespace Roma
         //public const long clientFrameScLongTime = (long)((double)clientFrameScTime * FixedMath.One);        //客户端帧率时间(秒)
         public const int clientFrameMsTime = 33;        //客户端帧率时间(毫秒)
         public const int serverTimeout = 15000;          //服务器判断客户端的超时
-        public const int clientFrameRateMultiple = 1;   //客户端和服务器端的帧率倍数
+        public const int clientFrameRateMultiple = 4;   //客户端和服务器端的帧率倍数
         public const bool enableSpeedUp = true;         //  是否可以加速
         public const int defaultSpeed = 1;  //默认的数量
         public const int frameBufferSize = 0; //需要缓存的帧数

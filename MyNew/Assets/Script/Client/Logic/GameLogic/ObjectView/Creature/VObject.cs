@@ -187,16 +187,16 @@ namespace Roma
                 case CmdFspEnum.eFspStopMove:
 
                     m_state = cmd.GetCmdType();
-                    m_bMoveing = false;
-                    Debug.Log("设置停止");
+                    SetMove(false);
+                    //Debug.Log("设置停止");
                     ((BattleEntity)GetEnt()).SetPriority(0);
                     ResetState();
                     break;
                 case CmdFspEnum.eFspMove:
                 case CmdFspEnum.eFspAutoMove:
                     m_state = cmd.GetCmdType();
-                    m_bMoveing = true;
-                    Debug.Log("设置移动");
+                    SetMove(true);
+                    //Debug.Log("设置移动");
                     ResetState();
                     break;
                 case CmdFspEnum.eUIHead:
@@ -301,7 +301,7 @@ namespace Roma
                     }
                     else
                     {
-                        m_bMoveing = false;
+                        SetMove(false);
                         ent.PlayAnima(SMtCreatureAnima.ANIMA_DIE);
                         SoundManager.Inst.PlaySound(m_baseInfo.m_dieSound, ent.GetPos());
                         CEffectMgr.Create(m_baseInfo.m_dieEffect, GetEnt(), SBindPont.ORIGIN);

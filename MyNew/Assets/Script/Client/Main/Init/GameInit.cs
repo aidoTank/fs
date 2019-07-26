@@ -107,8 +107,8 @@ namespace Roma
             pInfo.iType = ResType.ManifestResource;
             ResourceFactory.Inst.LoadResource(pInfo, OnManifestLoaded);
 
-            LogicSystem.Inst.GetMapLoadProcess().strCurInfo = "正在加载主配置：";
-            LogicSystem.Inst.GetMapLoadProcess().fPercent = 0.1f;
+            SceneManager.Inst.GetMapLoadProcess().strCurInfo = "正在加载主配置：";
+            SceneManager.Inst.GetMapLoadProcess().fPercent = 0.1f;
         }
 
         private void OnManifestLoaded(Resource res)
@@ -153,8 +153,8 @@ namespace Roma
             resInfo.iType = ResType.CsvListResource;
             ResourceFactory.Inst.LoadResource(resInfo, OnCsvInfoLoaded);
 
-            LogicSystem.Inst.GetMapLoadProcess().strCurInfo = "正在加载配置表：";
-            LogicSystem.Inst.GetMapLoadProcess().fPercent = 0.2f;
+            SceneManager.Inst.GetMapLoadProcess().strCurInfo = "正在加载配置表：";
+            SceneManager.Inst.GetMapLoadProcess().fPercent = 0.2f;
         }
 
         private static string m_resCsvPath = Application.dataPath + "/Config/";
@@ -188,8 +188,8 @@ namespace Roma
             }
             else
             {
-                LogicSystem.Inst.GetMapLoadProcess().strCurInfo = "正在加载常用界面：";
-                LogicSystem.Inst.GetMapLoadProcess().fPercent = 0.3f;
+                SceneManager.Inst.GetMapLoadProcess().strCurInfo = "正在加载常用界面：";
+                SceneManager.Inst.GetMapLoadProcess().fPercent = 0.3f;
                 m_curItmPct = 0.6f;
                 LayoutMgr.Inst.OnLoadFristUI(OnInitFristUIEnd);
             }
@@ -206,8 +206,8 @@ namespace Roma
                 LogicSystem.Inst.LuaInit(luas);
             }
 
-            LogicSystem.Inst.GetMapLoadProcess().strCurInfo = "正在加载常用界面：";
-            LogicSystem.Inst.GetMapLoadProcess().fPercent = 0.3f;
+            SceneManager.Inst.GetMapLoadProcess().strCurInfo = "正在加载常用界面：";
+            SceneManager.Inst.GetMapLoadProcess().fPercent = 0.3f;
             m_curItmPct = 0.6f;
             LayoutMgr.Inst.OnLoadFristUI(OnInitFristUIEnd);
         }
@@ -265,13 +265,13 @@ namespace Roma
             if (isFirstLoading)
             {
                 // 加载进度
-                float pro = LogicSystem.Inst.GetMapLoadProcess().fPercent;
+                float pro = SceneManager.Inst.GetMapLoadProcess().fPercent;
                 if (m_maxItemNum != 0 && m_curItemNum != m_maxItemNum)
                 {
-                    pro = LogicSystem.Inst.GetMapLoadProcess().fPercent + ((float)m_curItemNum / (float)m_maxItemNum) * m_curItmPct;
+                    pro = SceneManager.Inst.GetMapLoadProcess().fPercent + ((float)m_curItemNum / (float)m_maxItemNum) * m_curItmPct;
                 }
                 m_panelInit.SetProgress(pro);
-                m_panelInit.SetText(LogicSystem.Inst.GetMapLoadProcess().strCurInfo + (pro * 100).ToString("F2") + "%");
+                m_panelInit.SetText(SceneManager.Inst.GetMapLoadProcess().strCurInfo + (pro * 100).ToString("F2") + "%");
             }
             return true;
         }

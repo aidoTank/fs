@@ -56,7 +56,7 @@ namespace Roma
             SetDir(moveDir.ToVector2d());
             if (m_vCreature != null)
             {
-                m_vCreature.m_bMoveing = true;
+                m_vCreature.SetMove(true);
                 m_vCreature.SetPos(nextPos.ToVector3() + Vector3.up * m_triggerData.vBulletDeltaPos.y);  // 单独设置Y
             }
         }

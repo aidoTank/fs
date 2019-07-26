@@ -76,21 +76,30 @@ namespace Roma
                     EGame.m_uin = playerData[i];
                     Debug.Log("客户端主角:" + EGame.m_openid);
                     CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
-                    master.Create(1, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(-220));
-
-                   // master.StartAi(true);
-
-                    master.AddSkill(0, 1100, 1);
-                    master.AddSkill(1, 1200, 1);
-                    master.AddSkill(2, 1300, 1);
-                    master.AddSkill(3, 1400, 1);
+                    master.Create(2, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(-220));
+                    master.AddSkill(0, 2100, 1);
+                    master.AddSkill(1, 2200, 1);
+                    master.AddSkill(2, 2300, 1);
+                    master.AddSkill(3, 2400, 1);
                     master.UpdateUI_Skill();
+
+                    //master.Create(1, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(-220));
+                    //master.AddSkill(0, 1100, 1);
+                    //master.AddSkill(1, 1200, 1);
+                    //master.AddSkill(2, 1300, 1);
+                    //master.AddSkill(3, 1400, 1);
+                    //master.UpdateUI_Skill();
                 }
                 else
                 {
                     Debug.Log("客户端玩家:" + playerData[i]);
                     CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
-                    master.Create(1, playerData[i].ToString(), new Vector2d(8, 8), FPCollide.GetVector(60));
+                    master.Create(1, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(60));
+
+                    master.AddSkill(0, 1100, 1);
+                    master.AddSkill(1, 1200, 1);
+                    master.AddSkill(2, 1300, 1);
+                    master.AddSkill(3, 1400, 1);
                 }
             }
 
@@ -100,7 +109,7 @@ namespace Roma
             {
                 CCreature test1 = CCreatureMgr.Create(EThingType.Player, 1000 + i);
                 test1.Create(2, "测试1", new Vector2d(50 + i * 2, 60), FPCollide.GetVector(-220));
-                test1.StartAi(true);
+                //test1.StartAi(true);
             }
 
             m_bRunning = true;
@@ -114,7 +123,7 @@ namespace Roma
             if (m_bSendLoaded)
                 return;
             // 进度完成，直接再发送一次
-            if (LogicSystem.Inst.GetMapLoadProcess().fPercent >= 1.0f)
+            if (SceneManager.Inst.GetMapLoadProcess().fPercent >= 1.0f)
             {
                 m_bSendLoaded = true;
                 m_sendProgressTime = 1;
@@ -129,7 +138,7 @@ namespace Roma
             {
                 m_sendProgressTime = 0;
                 FspMsgLoadProgress msg = (FspMsgLoadProgress)NetManager.Inst.GetMessage(eNetMessageID.FspMsgLoadProgress);
-                msg.m_progress = LogicSystem.Inst.GetMapLoadProcess().fPercent;
+                msg.m_progress = SceneManager.Inst.GetMapLoadProcess().fPercent;
                 FspNetRunTime.Inst.SendMessage(msg);
             }
         }

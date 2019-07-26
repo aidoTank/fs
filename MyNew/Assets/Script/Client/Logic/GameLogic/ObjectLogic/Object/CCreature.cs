@@ -49,11 +49,12 @@ namespace Roma
             collider.m_updatePosEvent = (newPos, newDir) => {
 
                 SetPos(newPos);
-                SetSpeed(GetSpeed());
+                //SetDir(newDir);
+                //SetSpeed(GetSpeed());
 
                 if (m_vCreature != null)
                 {
-                    m_vCreature.m_bMoveing = true;
+                    m_vCreature.SetMove(true);
                     m_vCreature.SetBarrier(true);
                 }
             };

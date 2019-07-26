@@ -29,13 +29,16 @@ namespace Roma
     public struct OBB
     {
         public Vector2 center;
-        public Vector2[] u; // 表示世界坐标中x,y的轴方向向量
+        public Vector2[] u;                  // 表示世界坐标中x,y的轴方向向量
         public Vector2 e;                    // 矩形长宽的一半
+
+        private float ang;
 
         public OBB(Vector2 pos, Vector2 size, float angle)
         {
             center = pos;
             e = size * 0.5f;
+            ang = angle;
 
             u = new Vector2[2];
             float rad = angle * Mathf.Deg2Rad;
@@ -46,6 +49,48 @@ namespace Roma
         public Vector2 GetDir()
         {
             return u[0];
+        }
+
+        public Vector2[] GetVert()
+        {
+            // 先求矩形坐标系中四个点位置
+            Vector2 v1 = new Vector2(-e.x, e.y);
+            Vector2 v2 = new Vector2(e.x, e.y);
+            Vector2 v3 = new Vector2(e.x, -e.y);
+            Vector2 v4 = new Vector2(-e.x, -e.y);
+
+            v1 = center + Collide.Rotate(v1, ang);
+            v2 = center + Collide.Rotate(v2, ang);
+            v3 = center + Collide.Rotate(v3, ang);
+            v4 = center + Collide.Rotate(v4, ang);
+
+            Vector2[] list = new Vector2[4];
+            list[0] = v1;
+            list[1] = v2;
+            list[2] = v3;
+            list[3] = v4;
+            return list;
+        }
+
+        public Vector2d[] GetVert2d()
+        {
+            // 先求矩形坐标系中四个点位置
+            Vector2 v1 = new Vector2(-e.x, e.y);
+            Vector2 v2 = new Vector2(e.x, e.y);
+            Vector2 v3 = new Vector2(e.x, -e.y);
+            Vector2 v4 = new Vector2(-e.x, -e.y);
+
+            v1 = center + Collide.Rotate(v1, ang);
+            v2 = center + Collide.Rotate(v2, ang);
+            v3 = center + Collide.Rotate(v3, ang);
+            v4 = center + Collide.Rotate(v4, ang);
+
+            Vector2d[] list = new Vector2d[4];
+            list[0] = v1.ToVector2d();
+            list[1] = v2.ToVector2d();
+            list[2] = v3.ToVector2d();
+            list[3] = v4.ToVector2d();
+            return list;
         }
     }
 

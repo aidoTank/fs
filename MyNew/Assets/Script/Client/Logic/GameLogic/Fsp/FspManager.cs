@@ -44,10 +44,15 @@ namespace Roma
 
             if(!m_bStartCtl)
                 return;
-                
-            int speed = m_frameCtrl.GetFrameSpeed(m_curFrameIndex);
+
+            // 简化版的追帧
+            int speed = m_frameCtrl.m_NewestFrameId - m_curFrameIndex;
+            // 差帧非常多时，8倍速度，减少同一帧的计算量
+            speed = speed > 100 ? 8 : 2;
+               
+            //int speed = m_frameCtrl.GetFrameSpeed(m_curFrameIndex);
             //Debug.Log("speed:"+speed);
-            while(speed > 0)
+            while (speed > 0)
             {
                 if(m_curFrameIndex < m_clientNewFrameIndex)
                 {
@@ -79,11 +84,11 @@ namespace Roma
         // 添加一帧的指令列表
         public void AddServerFrameUnit(FspFrame frame)
         {
-            if(frame.frameId <= 0)
-            {
-                ExecuteFrame(0, frame);
-                return;
-            }
+            //if(frame.frameId <= 0)
+            //{
+            //    ExecuteFrame(0, frame);
+            //    return;
+            //}
 
             m_clientNewFrameIndex = frame.frameId;
             m_dicFrame.Add(frame.frameId, frame);

@@ -78,7 +78,7 @@ namespace Roma
             }
             else if (m_logicMoveEnabled && cmd.GetCmdType() == CmdFspEnum.eFspMove)
             {
-                Debug.Log("进入移动");
+                //Debug.Log("进入移动");
                 //m_cmdFspMove = cmd as CmdFspMove;
                 EnterMove();
                 m_vCreature.PushCommand(cmd);

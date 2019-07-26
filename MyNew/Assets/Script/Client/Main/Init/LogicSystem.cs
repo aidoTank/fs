@@ -119,12 +119,12 @@ namespace Roma
 
         public static LogicSystem Inst = null;
 
-        private LoadProcess m_mapLoadProcess = new LoadProcess();
+        //private LoadProcess m_mapLoadProcess = new LoadProcess();
 
-        public LoadProcess GetMapLoadProcess()
-        {
-            return m_mapLoadProcess;
-        }
+        //public LoadProcess GetMapLoadProcess()
+        //{
+        //    return m_mapLoadProcess;
+        //}
     }
 
 }

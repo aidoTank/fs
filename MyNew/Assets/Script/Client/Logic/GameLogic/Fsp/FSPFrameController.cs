@@ -3,10 +3,10 @@ namespace Roma
     public class FSPFrameController
     {
         //缓冲控制
-        private int m_NewestFrameId; //接收消息时候最新的桢
+        public int m_NewestFrameId; //接收消息时候最新的桢
         private int m_BuffSize = 0;  //需要缓存的帧数
         private bool m_IsInBuffing = false;  //是否再缓存状态
-        private int m_ClientFrameRateMultiple = 2;   //客户端服务器的帧率比
+        private int m_ClientFrameRateMultiple = 1;   //客户端服务器的帧率比
 
         //加速控制
         private bool m_EnableSpeedUp = true;   //是否可以加速

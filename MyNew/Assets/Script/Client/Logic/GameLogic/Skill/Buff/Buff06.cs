@@ -69,7 +69,7 @@ namespace Roma
             // 通知表现层移动
             if (m_rec.m_vCreature != null)
             {
-                m_rec.m_vCreature.m_bMoveing = true;
+                m_rec.m_vCreature.SetMove(true);
                 // 击退是否带高度          
                 if (m_rec != m_caster)   // 属于被打击退
                 {
@@ -96,6 +96,7 @@ namespace Roma
             if (m_rec.m_vCreature != null)
             {
                 m_rec.m_vCreature.m_bRotate = true;
+                m_rec.m_vCreature.SetMove(false);
             }
 
             base.Destroy();

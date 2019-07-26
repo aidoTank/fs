@@ -38,20 +38,10 @@ namespace Roma
         {
             // 修正起始位置startPos
             startPos = startPos + startDir.normalized * m_triggerData.vBulletDeltaPos.z;
-            // 距离为0时，表示为发射方向上的偏移
-            if(m_triggerData.disDelta == 0)
-            {
-                // 修正结束位置m_skillPos
-                float dis = Vector2.Distance(startPos, m_skillPos);
-                Vector2 dir = Collide.Rotate(startDir, m_triggerData.dirDelta);
-                m_skillPos = startPos + dir.normalized * dis;
-            }
-            else
-            {
-                // 有距离时，表示为终点位置的偏移
-                Vector2 dir = Collide.Rotate(startDir, m_triggerData.dirDelta);
-                m_skillPos = m_skillPos + dir.normalized * m_triggerData.disDelta;
-            }
+
+            // 修正结束位置
+            Vector2 dir = Collide.Rotate(startDir, m_triggerData.dirDelta);
+            m_skillPos = m_skillPos + dir.normalized * m_triggerData.disDelta;
 
             // 一定时间后设置逻辑位置
             CFrameTimeMgr.Inst.RegisterEvent(m_triggerData.ContinuanceTime - 100, () =>

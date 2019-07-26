@@ -35,7 +35,9 @@ namespace Roma
                 GetCaster().SetSpeed(new FixedPoint(m_skillInfo.flySpeed));
                 VBase vo = GetCaster().m_vCreature;
                 if (vo != null)
-                    vo.m_bMoveing = true;
+                {
+                    vo.SetMove(true);
+                }
             }
         }
 
@@ -69,7 +71,7 @@ namespace Roma
             if(vo != null)
             {
                 vo.PushCommand(new CmdFspStopMove());
-                vo.m_bMoveing = false;
+                vo.SetMove(false);
             }
    
             base.Destory();

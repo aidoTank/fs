@@ -20,14 +20,18 @@ namespace Roma
 
         public override void InitPos(ref Vector2 startPos, ref Vector2 startDir)
         {
+            startPos = m_caster.GetPos().ToVector2();
+            startDir = m_caster.GetDir().ToVector2();
+
             SetPos(m_caster.GetPos(), true);
             SetDir(m_caster.GetDir());
             SetSpeed(m_caster.GetSpeed());
             if (m_vCreature != null)
-                m_vCreature.m_bMoveing = true;
+            {
+                m_vCreature.SetMove(true);
+            }
 
-            startPos = m_caster.GetPos().ToVector2();
-            startDir = m_caster.GetDir().ToVector2();
+
         }
 
         public override void _UpdatePos()
@@ -36,7 +40,9 @@ namespace Roma
             SetDir(m_caster.GetDir());
             SetSpeed(m_caster.GetSpeed());
             if (m_vCreature != null)
-                m_vCreature.m_bMoveing = true;
+            {
+                m_vCreature.SetMove(true);
+            }
         }
 
 

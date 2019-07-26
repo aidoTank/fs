@@ -109,8 +109,8 @@ namespace Roma
                 {
                     Debug.logger.logEnabled = m_client.m_bDebug;
                     Application.runInBackground = true;
-                    QualitySettings.vSyncCount = 1;
-                    Application.targetFrameRate = 120;
+                    //QualitySettings.vSyncCount = 1;
+                    Application.targetFrameRate = 60;
                 }
                 else if (Application.platform == RuntimePlatform.Android)
                 {
@@ -160,6 +160,11 @@ namespace Roma
 
         private void Start()
         {
+            //OBB o1 = new OBB(Vector2.zero, new Vector2(2, 2), 45);
+            //Vector2 v1, v2, v3, v4;
+            //o1.GetVert(out v1, out v2, out v3, out v4);
+            //Debug.Log(" " + v1 + " " + v2 + " " + v3 + " " + v4);
+
             GlobleConfig.SetPlatformPrefix(Client.m_prefix);
             //Handheld.PlayFullScreenMovie("first_movie.mov", Color.black, FullScreenMovieControlMode.CancelOnInput);
             Inst();

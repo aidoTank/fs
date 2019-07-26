@@ -231,14 +231,14 @@ namespace Roma
                 }
                 // 扩展参数
                 string posParam = m_csv.GetData(i, (int)eBuffTriggerCsv.DirDelta);
-                string[] strParam = posParam.Split('|');
-                if(strParam.Length == 1)
+                string[] strParam = posParam.Split('_');
+                if(strParam.Length == 1)                  // 方向
                 {
                     int h = 0;
                     int.TryParse(strParam[0], out h);
                     data.dirDelta = h;
                 }
-                else if(strParam.Length == 2)
+                else if(strParam.Length == 2)            // 方向+位置
                 {
                     int h = 0;
                     int.TryParse(strParam[0], out h);

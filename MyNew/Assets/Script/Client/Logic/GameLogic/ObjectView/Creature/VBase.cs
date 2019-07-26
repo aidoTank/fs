@@ -25,7 +25,8 @@ namespace Roma
 
     public struct MtBaseMoveInfo
     {
-        public bool m_teleport;
+        //public bool m_teleport;
+        public bool m_bMove;
         public Vector3 m_pos;
         public Vector3 m_dir;   // 单位方向
         public float m_speed;
@@ -54,7 +55,7 @@ namespace Roma
         public int m_id;
         public Entity m_ent;
         public MtBaseMoveInfo m_moveInfo;
-        public bool m_bMoveing;
+        //public bool m_bMoveing;
         public bool m_destroy;
         // 外观是否旋转
         // 如果是普攻机枪状态，则玩家方向不会跟随移动方向改变
@@ -149,6 +150,11 @@ namespace Roma
             }
         }
 
+        public virtual void SetMove(bool bMoveing)
+        {
+            m_moveInfo.m_bMove = bMoveing;
+        }
+
         public virtual void SetBarrier(bool isBarrier)
         {
             m_moveInfo.m_isBarrier = isBarrier;
@@ -186,7 +192,7 @@ namespace Roma
 
             _UpdateRotate(time, fdTime);
 
-            if (m_bMoveing || m_moveInfo.LerpStep > 0)
+            if (m_moveInfo.m_bMove || m_moveInfo.LerpStep > 0)
             {
                 Entity ent = m_ent as Entity;
                 _UpdateMove(time, fdTime, ref ent, m_moveInfo);
@@ -236,13 +242,14 @@ namespace Roma
             Vector3 viewPos = curPos + dir * dist;
 
             Vector3 result = logicPos;
-            if(true)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
+            if(m_moveInfo.m_isBarrier)   // 正常的帧同步在遇到障碍边界时，直接处理平滑，而纯单机的也走这里
             {
                 //Debug.Log("遇到障碍");
                 Vector3 offsetMove = curPos - logicPos;
                 float tempDis = offsetMove.magnitude;
                 if(tempDis != 0.0f)
                 {
+                    //Debug.Log("dist / tempDis:" + dist / tempDis);
                     result = Vector3.Lerp(curPos, logicPos, dist / tempDis);
                 }
                 moveInfo.RepairFramesMin = 1;

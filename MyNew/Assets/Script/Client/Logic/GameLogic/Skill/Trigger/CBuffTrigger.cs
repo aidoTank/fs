@@ -26,7 +26,8 @@ namespace Roma
         public BuffTriggerCsvData m_triggerData;
         public int m_curIntervalTime;
 
-        public bool m_bStartCheck;
+        public bool m_bStartCheck;  // 开始检测
+        public Polygon m_polygon;   // 参与碰撞的形状
 
         public CBuffTrigger(long id)
             : base(id)
@@ -79,7 +80,20 @@ namespace Roma
                     Trigger();
                 });
             }
-            return true;
+
+           if (m_triggerData.ShapeType == (int)eBuffTriggerShapeType.Rect)
+           {
+                float angle = Collide.GetAngle(GetDir().ToVector2());
+                OBB obb = new OBB(pos, new Vector2(m_triggerData.Width, m_triggerData.Length), angle);
+                m_polygon = new Polygon();
+
+                m_polygon.c = pos.ToVector2d();
+                m_polygon.isObstacle = true;
+                m_polygon.bAirWall = false;
+                m_polygon.Init(obb.GetVert2d());
+                PhysicsManager.Inst.Add(m_polygon);
+            }
+           return true;
         }
 
         public virtual void InitPos(ref Vector2 startPos, ref Vector2 startDir)
@@ -120,6 +134,10 @@ namespace Roma
             if (m_triggerData != null && m_triggerData.bAutoTrigger)
             {
                 OnHitAddBuff(m_caster, null);
+            }
+            if(m_polygon != null)
+            {
+                PhysicsManager.Inst.Remove(m_polygon);
             }
         }
 
@@ -183,8 +201,8 @@ namespace Roma
                     playerS.c = creature.GetPos().ToVector2();
                     playerS.r = creature.GetR().value;
 
-                    Vector2 pos = GetPos().ToVector2() + m_caster.GetDir().normalized.ToVector2() * m_triggerData.Length * 0.5f;
-                    float angle = Collide.GetAngle(m_caster.GetDir().ToVector2());
+                    Vector2 pos = GetPos().ToVector2();
+                    float angle = Collide.GetAngle(GetDir().ToVector2());
                     OBB obb = new OBB(pos, new Vector2(m_triggerData.Width, m_triggerData.Length), angle);
                     if (Collide.bSphereOBB(playerS, obb))
                     {
