@@ -32,15 +32,16 @@ namespace Roma
         {
             if(go == m_ui.m_hero1)
             {
-
+                m_heroIndex = 1;
             }
             else if(go == m_ui.m_hero2)
             {
-
+                m_heroIndex = 2;
             }
             else if(go == m_ui.m_btnReady)
             {
                 FspMsgReady msg = (FspMsgReady)NetManager.Inst.GetMessage(eNetMessageID.FspMsgReady);
+                msg.m_heroIndex = m_heroIndex;
                 FspNetRunTime.Inst.SendMessage(msg);
             }
         }
@@ -56,6 +57,7 @@ namespace Roma
         }
 
         public UIPanelSelectHero m_ui;
+        private int m_heroIndex = 1;
 
         // 此处临时写的
         public int[] m_joinInfo;

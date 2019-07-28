@@ -234,6 +234,7 @@ namespace Roma
         public Vector3 _UpdateMove(float fTime, float fdTime, ref Entity ent, MtBaseMoveInfo moveInfo)
         {
             // 表现层每帧增加距离
+            //Debug.Log("fdTime:" + fdTime);
             float dist = moveInfo.m_speed * fdTime;
             Vector3 dir = moveInfo.m_dir;
             Vector3 logicPos = moveInfo.m_pos;
@@ -299,6 +300,13 @@ namespace Roma
                 }
                 else
                 {
+                    if (offsetVecLen < 1.5f)
+                    {
+                        Vector3 estimPos = logicPos + dir;       // 逻辑估计的目标位置
+                        result = Vector3.Lerp(curPos, estimPos, FSPParam.clientFrameScTime);
+                    }
+                    else
+                    {
                     //Debug.Log("3.差值非常大时");
                     //卡住了暂时保持原位
                     if (GameManager.Inst.GetFspManager().GetCurFrameIndex() == moveInfo.FrameBlockIndex)
@@ -310,6 +318,7 @@ namespace Roma
                     {
                         //超出最大偏差，直接拉扯
                         moveInfo.RepairFramesMin = 1;
+                    }
                     }
                 }
             }

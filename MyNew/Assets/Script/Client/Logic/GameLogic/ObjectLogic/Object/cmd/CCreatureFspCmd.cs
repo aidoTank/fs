@@ -68,10 +68,15 @@ namespace Roma
 
     public class CmdFspAutoMove : IFspCmdType
     {
-        public List<Vector2> m_moveList = new List<Vector2>();
+        public Vector2d m_pos;
         public CmdFspAutoMove()
         {
             cmdenum = CmdFspEnum.eFspAutoMove;
+        }
+        public CmdFspAutoMove(ref Vector2d pos)
+        {
+            cmdenum = CmdFspEnum.eFspAutoMove;
+            m_pos = pos;
         }
     }
 

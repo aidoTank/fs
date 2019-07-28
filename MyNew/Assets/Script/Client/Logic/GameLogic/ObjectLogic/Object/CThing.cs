@@ -49,7 +49,7 @@ namespace Roma
         public bool IsMaster()
         {
             //return m_type == EThingType.Master;
-            return m_uId == EGame.m_uin;
+            return m_uId == EGame.m_uid;
         }
 
         public bool IsPlayer()

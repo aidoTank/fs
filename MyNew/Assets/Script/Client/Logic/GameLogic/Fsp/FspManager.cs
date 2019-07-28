@@ -46,11 +46,11 @@ namespace Roma
                 return;
 
             // 简化版的追帧
-            int speed = m_frameCtrl.m_NewestFrameId - m_curFrameIndex;
+            //int speed = m_frameCtrl.m_NewestFrameId - m_curFrameIndex;
             // 差帧非常多时，8倍速度，减少同一帧的计算量
-            speed = speed > 100 ? 8 : 2;
+            //speed = speed > 100 ? 8 : speed;
                
-            //int speed = m_frameCtrl.GetFrameSpeed(m_curFrameIndex);
+            int speed = m_frameCtrl.GetFrameSpeed(m_curFrameIndex);
             //Debug.Log("speed:"+speed);
             while (speed > 0)
             {
@@ -84,11 +84,11 @@ namespace Roma
         // 添加一帧的指令列表
         public void AddServerFrameUnit(FspFrame frame)
         {
-            //if(frame.frameId <= 0)
-            //{
-            //    ExecuteFrame(0, frame);
-            //    return;
-            //}
+            if(frame.frameId <= 0)
+            {
+                ExecuteFrame(0, frame);
+                return;
+            }
 
             m_clientNewFrameIndex = frame.frameId;
             m_dicFrame.Add(frame.frameId, frame);
@@ -135,9 +135,13 @@ namespace Roma
                 break;
                 case CmdFspEnum.eFspMove:
                     //Debug.Log(uid + " 客户端调用移动命令 " + cmd.args[0] + " " + cmd.args[1]);
-                    Vector2d v = new Vector2d(cmd.args[0], cmd.args[1]) * new FixedPoint(0.01f);
+                    Vector2d v = new Vector2d(cmd.args[0] * 0.01f, cmd.args[1] * 0.01f);
                     logicCmd = new CmdFspMove(ref v);
                 break;
+                case CmdFspEnum.eFspAutoMove:
+                    Vector2d v1 = new Vector2d(cmd.args[0] * 0.01f, cmd.args[1] * 0.01f);
+                    logicCmd = new CmdFspAutoMove(ref v1);
+                    break;
                 case CmdFspEnum.eFspSendSkill:
                     //Debug.Log(uid + " 客户端调用技能 " + cmd.args[0] + " " + cmd.args[1]);
                     

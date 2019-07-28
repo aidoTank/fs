@@ -19,7 +19,7 @@ public class FspMsgReady : NetMessage
     public override void ToByte(ref LusuoStream ls)
     {
         eno = 0;
-        SetByte<int>(0, ref ls);
+        SetByte<int>(m_heroIndex, ref ls);
     }
 
     public override void OnRecv()
@@ -33,7 +33,7 @@ public class FspMsgReady : NetMessage
             //selectHero.OnRecvJoinInfo(joinRoom);
         }
     }
-
+    public int m_heroIndex;
     //public CG_CreateRoom m_joinRoom = new CG_CreateRoom();
 }
 

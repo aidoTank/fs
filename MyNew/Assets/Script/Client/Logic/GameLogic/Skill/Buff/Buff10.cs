@@ -76,15 +76,15 @@ namespace Roma
             switch (m_buffData.ParamValue1)
             {
                 case (int)eBuffState.stun:
-                    Debug.Log("移除 晕眩");
+                    //Debug.Log("移除 晕眩");
                     ResetMove(m_rec);
                     ResetSkill(m_rec);
                     break;
                 case (int)eBuffState.silent:
-                    Debug.Log("移除 沉默");
+                    //Debug.Log("移除 沉默");
                     break;
                 case (int)eBuffState.God:
-                    Debug.Log("移除 无敌");
+                    //Debug.Log("移除 无敌");
                     break;
                 case (int)eBuffState.unmove: // 禁锢
                     ResetMove(m_rec);

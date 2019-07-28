@@ -152,7 +152,7 @@ namespace Roma
                     m_loadProcess = m_res.GetDownLoadProcess();
                 }
             }
-            //_UpdateHight(fDTime);
+            _UpdateHight(fDTime);
             //_UpdateFllow(fDTime);
         }
 

@@ -97,6 +97,14 @@ namespace Roma
                     key.args[1] = (int)(moveCmd.m_dir.y * 100);
                     msg.m_frameData.vkeys.Add(key);
                 break;
+                case CmdFspEnum.eFspAutoMove:
+                    CmdFspAutoMove amoveCmd = cmd as CmdFspAutoMove;
+                    key.args = new int[2];
+                    key.args[0] = (int)(amoveCmd.m_pos.x * 100);
+                    key.args[1] = (int)(amoveCmd.m_pos.y * 100);
+                    Debug.Log("send :" + key.args[0] + "  "+ key.args[1]);
+                    msg.m_frameData.vkeys.Add(key);
+                    break;
                 case CmdFspEnum.eFspSendSkill:
                     CmdFspSendSkill skill = cmd as CmdFspSendSkill;
                     key.args = new int[7];
@@ -144,8 +152,9 @@ namespace Roma
             }
 
             // 属于四种独立状态
-            if (m_logicMoveEnabled && cmd.GetCmdType() == CmdFspEnum.eFspAutoMove)
+            if (m_logicMoveEnabled && !m_bMovePathing && cmd.GetCmdType() == CmdFspEnum.eFspAutoMove)
             {
+                m_cmdFspAutoMove = cmd as CmdFspAutoMove;
                 EnterAutoMove();
                 m_vCreature.PushCommand(cmd);
             }
@@ -361,5 +370,6 @@ namespace Roma
         private Circle collider;
 
         public CCreatureAI m_ai;
+        public eAIType m_aiType = eAIType.Client;
     }
 }

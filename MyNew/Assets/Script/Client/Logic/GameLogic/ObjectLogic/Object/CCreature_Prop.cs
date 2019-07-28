@@ -21,6 +21,13 @@ namespace Roma
             {
                 SetPropNum(eCreatureProp.Lv, 1);
                 UpdateProp();
+
+                PlayerCsvData pCsv = (PlayerCsvData)m_csvData;
+                for (int i = 0; i < pCsv.SkillList.Length; i ++)
+                {
+                    AddSkill(i, pCsv.SkillList[i], 1);
+                }
+                UpdateUI_Skill();
             }
             UpdateMoveSpeed();
             SetPropNum(eCreatureProp.CurHp, GetPropNum(eCreatureProp.Hp));

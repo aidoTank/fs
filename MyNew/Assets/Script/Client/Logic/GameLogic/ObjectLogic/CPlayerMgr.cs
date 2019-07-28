@@ -25,7 +25,7 @@ namespace Roma
         public static CCreature GetMaster()
         {
             //return s_masterCreature;
-            return Get(EGame.m_uin);
+            return Get(EGame.m_uid);
         }
 
         public static CCreature Create(EThingType type, long uid)

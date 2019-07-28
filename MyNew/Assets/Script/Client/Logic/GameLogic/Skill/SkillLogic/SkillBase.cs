@@ -144,8 +144,8 @@ namespace Roma
             {
                 cc.PushCommand(CmdFspStopMove.Inst);
                 // 如果在释放技能时，操作了移动，技能释放结束修改方向
-                if(cc.m_cmdFspMove != null)
-                    cc.SetDir(GetCaster().m_cmdFspMove.m_dir);
+                //if (cc.m_cmdFspMove != null)
+                //    cc.SetDir(GetCaster().m_cmdFspMove.m_dir);
             }
 
             // 销毁表现层

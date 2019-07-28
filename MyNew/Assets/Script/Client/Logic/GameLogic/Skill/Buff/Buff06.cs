@@ -39,7 +39,7 @@ namespace Roma
                 return;
 
 
-            int speed = GetVal1() * -1;
+            int speed = GetVal1();
             int dirDelta = 1;
             if (speed > 0)             // 配置的方向
             {

@@ -19,8 +19,18 @@ namespace Roma
             {
                 //Vector2 pPos = m_creature.m_bornPoint;
                 Vector2 pPos = m_creature.GetPos().ToVector2();
-                Vector2 end = CMapMgr.m_map.GetRandomPos(pPos.x, pPos.y, 10);
-                m_creature.GoTo(end);
+                Vector2 end = CMapMgr.m_map.GetRandomPos(pPos.x, pPos.y, 10, m_creature.m_aiType);
+                
+                CmdFspAutoMove cmd = new CmdFspAutoMove();
+                cmd.m_pos = end.ToVector2d();
+                if(m_creature.m_aiType == eAIType.Player)
+                {
+                    m_creature.SendFspCmd(cmd);
+                }
+                else
+                {
+                    m_creature.PushCommand(cmd);
+                }
             }
             return BtResult.Running;
         }

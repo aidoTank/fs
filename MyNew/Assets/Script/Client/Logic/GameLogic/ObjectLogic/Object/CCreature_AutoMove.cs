@@ -71,21 +71,18 @@ namespace Roma
                 m_cmdFspAutoMove = new CmdFspAutoMove();
         }
 
-        public void GoTo(Vector2 end, Action moveEnd = null)
-        {
-            InitAutoMoveParam();
-            if (IsDie())
-                return;
-
-            CMapMgr.m_map.GetPath(this, GetPos().ToVector2(), end, ref m_cmdFspAutoMove.m_moveList);
-            PushCommand(m_cmdFspAutoMove);
-            m_moveEnd = moveEnd;
-        }
+       
 
         public void EnterAutoMove()
         {
+            InitAutoMoveParam();
+            Debug.Log("最终:" + m_cmdFspAutoMove.m_pos.ToVector2());
+            List<Vector2> m_movePath = new List<Vector2>();
+            CMapMgr.m_map.GetPath(this, GetPos().ToVector2(), m_cmdFspAutoMove.m_pos.ToVector2(), ref m_movePath);
+            //m_moveEnd = moveEnd;
+ 
             float divSpeed = 1 / GetSpeed().value;
-            StartAutoMove(ref m_cmdFspAutoMove.m_moveList, divSpeed);
+            StartAutoMove(ref m_movePath, divSpeed);
         }
 
         public void TickAutoMove()

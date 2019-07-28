@@ -26,10 +26,10 @@ namespace Roma
             SetPos(m_caster.GetPos(), true);
             SetDir(m_caster.GetDir());
             SetSpeed(m_caster.GetSpeed());
-            if (m_vCreature != null)
-            {
-                m_vCreature.SetMove(true);
-            }
+            //if (m_vCreature != null)
+            //{
+            //    m_vCreature.SetMove(true);
+            //}
 
 
         }
@@ -39,10 +39,10 @@ namespace Roma
             SetPos(m_caster.GetPos(), true);
             SetDir(m_caster.GetDir());
             SetSpeed(m_caster.GetSpeed());
-            if (m_vCreature != null)
-            {
-                m_vCreature.SetMove(true);
-            }
+            //if (m_vCreature != null)
+            //{
+            //    m_vCreature.SetMove(true);
+            //}
         }
 
 

@@ -26,6 +26,8 @@ namespace Roma
 
         CritChance,
         CritDamage,
+
+        Skill,
     }
 
     public class CreatureCsvData
@@ -132,6 +134,7 @@ namespace Roma
         /// </summary>
         public float CritDamage;
 
+        public int[] SkillList;
 
     }
 
@@ -167,6 +170,8 @@ namespace Roma
 
                 data.CritChance = m_csv.GetFloatData(i, (int)ePlayerCsv.CritChance);
                 data.CritDamage = m_csv.GetFloatData(i, (int)ePlayerCsv.CritDamage);
+
+                data.SkillList = StringHelper.GetIntList(m_csv.GetData(i, (int)ePlayerCsv.Skill));
 
                 m_dicData.Add(data.Id, data);
 			}

@@ -1,5 +1,5 @@
-id,名字,图标,模型资源id,缩放比例,头顶高度,移动速度,消失延迟,死亡音效,角色说话id,基础生命 角色属性值=基础属性+基础属性*成长系数*等级,基础攻击,基础防御,生命成长,攻击成长,防御成长,暴击率,暴击伤害,刷新时间
-Id,Name,icon,ModelResId,ModelScale,headHeight,moveSpeed,dieDelay,dieSound,speakId,BaseHp,BaseAp,BaseDp,HpGrow,ApGrow,DpGrow,CritChance,CritDamage,RefreshTime
-int,string,int,int,float,float,int,int,int,int,int,int,int,float,float,float,float,float,int
-1,名字1,11001,70001,2,2.6,5,2000,51014,1,200,48,20,0.06,0.05,0.04,0.25,0.5,5000
-2,名字2,11001,70002,2,2.6,5,2000,51013,2,200,48,20,0.06,0.05,0.04,0.25,0.5,5000
+id,名字,图标,模型资源id,缩放比例,头顶高度,移动速度,消失延迟,死亡音效,角色说话id,基础生命 角色属性值=基础属性+基础属性*成长系数*等级,基础攻击,基础防御,生命成长,攻击成长,防御成长,暴击率,暴击伤害,SkillData
+Id,Name,icon,ModelResId,ModelScale,headHeight,moveSpeed,dieDelay,dieSound,speakId,BaseHp,BaseAp,BaseDp,HpGrow,ApGrow,DpGrow,CritChance,CritDamage,SkillData
+int,string,int,int,float,float,int,int,int,int,int,int,int,float,float,float,float,float,string
+1,名字1,11001,70001,2,2.6,5,2000,51014,1,200,48,20,0.06,0.05,0.04,0.25,0.5,1100_1200_1300_1400
+2,名字2,11001,70002,2,2.6,5,2000,51013,2,200,48,20,0.06,0.05,0.04,0.25,0.5,2100_2200_2300_2400

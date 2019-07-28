@@ -70,7 +70,7 @@ namespace Roma
         }
 
 
-        public Vector2 GetRandomPos(float x, float y, float range)
+        public Vector2 GetRandomPos(float x, float y, float range, eAIType aiType = eAIType.Player)
         {
             int resultNum = 0;
 
@@ -81,8 +81,18 @@ namespace Roma
 
             while (resultNum != 1)
             {
-                int idivx = resultNum + UnityEngine.Random.Range(-irange, irange) + sign * filter;
-                int idivy = resultNum + UnityEngine.Random.Range(-irange, irange) - sign * filter;
+                int idivx = 0;
+                int idivy = 0;
+                if (aiType == eAIType.Player)
+                {
+                    idivx = resultNum + GameManager.Inst.GetClientRand(-irange, irange) + sign * filter;
+                    idivy = resultNum + GameManager.Inst.GetClientRand(-irange, irange) - sign * filter;
+                }
+                else
+                {
+                    idivx = resultNum + GameManager.Inst.GetRand(-irange, irange) + sign * filter;
+                    idivy = resultNum + GameManager.Inst.GetRand(-irange, irange) - sign * filter;
+                }
                 if (idivx == 0 || idivy == 0)
                 {
                     filter++;

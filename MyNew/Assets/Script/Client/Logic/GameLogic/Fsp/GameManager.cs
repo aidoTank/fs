@@ -70,39 +70,25 @@ namespace Roma
 
             for(int i = 0; i < playerData.Length; i ++)
             {
-             
-                if(EGame.m_openid.Equals(playerData[i].ToString()))
+                int uid = playerData[i];
+                if (EGame.m_openid.Equals(uid.ToString()))
                 {
-                    EGame.m_uin = playerData[i];
-                    Debug.Log("客户端主角:" + EGame.m_openid);
-                    CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
-                    master.Create(2, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(-220));
-                    master.AddSkill(0, 2100, 1);
-                    master.AddSkill(1, 2200, 1);
-                    master.AddSkill(2, 2300, 1);
-                    master.AddSkill(3, 2400, 1);
-                    master.UpdateUI_Skill();
-
-                    //master.Create(1, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(-220));
-                    //master.AddSkill(0, 1100, 1);
-                    //master.AddSkill(1, 1200, 1);
-                    //master.AddSkill(2, 1300, 1);
-                    //master.AddSkill(3, 1400, 1);
-                    //master.UpdateUI_Skill();
+                    EGame.m_uid = uid;
+                    Debug.Log("客户端主角:" + uid);
+                    CCreature master = CCreatureMgr.Create(EThingType.Player, uid);
+                    master.Create(uid, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(-220));
+                    master.m_aiType = eAIType.Player;
+                    master.StartAi(true);
                 }
                 else
                 {
-                    Debug.Log("客户端玩家:" + playerData[i]);
-                    CCreature master = CCreatureMgr.Create(EThingType.Player, playerData[i]);
-                    master.Create(1, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(60));
-
-                    master.AddSkill(0, 1100, 1);
-                    master.AddSkill(1, 1200, 1);
-                    master.AddSkill(2, 1300, 1);
-                    master.AddSkill(3, 1400, 1);
+                    Debug.Log("客户端玩家:" + uid);
+                    CCreature player = CCreatureMgr.Create(EThingType.Player, uid);
+                    player.Create(uid, uid.ToString(), new Vector2d(60, 60), FPCollide.GetVector(60));
+                    player.m_aiType = eAIType.Player;
+                    player.StartAi(true);
                 }
             }
-
 
 
             for (int i = 0; i < 6; i++)
@@ -185,6 +171,13 @@ namespace Roma
         public int GetRand(int nMin, int nMax, int from = 500)
         {
             int val = m_rand.Next(nMin, nMax);
+            //Debuger.LogWarning("CGameManger", "GetRand", "当前帧：" + curFrame + " 来自：from:" + from);
+            return val;
+        }
+
+        public int GetClientRand(int nMin, int nMax, int from = 500)
+        {
+            int val = m_clientRand.Next(nMin, nMax);
             //Debuger.LogWarning("CGameManger", "GetRand", "当前帧：" + curFrame + " 来自：from:" + from);
             return val;
         }
