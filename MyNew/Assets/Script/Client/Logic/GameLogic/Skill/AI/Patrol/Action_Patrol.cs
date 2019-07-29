@@ -15,7 +15,7 @@ namespace Roma
         public override BtResult Execute()
         {
             //// 休闲时，继续巡逻
-            if (m_creature.GetLogicState().GetCmdType() == CmdFspEnum.eFspStopMove || !m_creature.m_bMovePathing)
+            if (m_creature.GetLogicState().GetCmdType() == CmdFspEnum.eFspStopMove)
             {
                 //Vector2 pPos = m_creature.m_bornPoint;
                 Vector2 pPos = m_creature.GetPos().ToVector2();

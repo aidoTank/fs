@@ -99,7 +99,6 @@ namespace Roma
         public void SetStopMove(CCreature rec)
         {
             rec.m_logicMoveEnabled = false;
-            rec.StopAutoMove();
             rec.PushCommand(CmdFspStopMove.Inst);
             //CCreature ride = rec.GetRide();
             //if (ride != null)

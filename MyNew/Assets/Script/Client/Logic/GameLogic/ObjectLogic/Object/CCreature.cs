@@ -7,10 +7,12 @@ using UnityEngine;
 
 namespace Roma
 {
-    // 优化一下类的层级
     /// <summary>
     /// 角色的创建由管理器创建
     /// 销毁由自身死亡状态时，自己调用管理器销毁
+    /// 
+    /// 1.角色层有必要使用状态机管理待机，移动，自动寻路等比较常用状态，通过切换状态来调用相关心跳，避免类的臃肿
+    /// 2.如果是角色常住的功能，可以采用组件式模式，比如属性信息，技能信息，BUFF信息，装备等等，避免类的臃肿
     /// </summary>
     public partial class CCreature : CObject
     {
@@ -18,6 +20,8 @@ namespace Roma
             : base(id)
         {
             m_arrProp = new int[(int)eCreatureProp.Max];
+
+            m_stateMgr = new FSMMgr(this);
         }
 
 
@@ -123,6 +127,7 @@ namespace Roma
             }
             FspNetRunTime.Inst.SendMessage(msg);
         }
+
         public void SetLogicState(IFspCmdType state)
         {
             m_logicState = state;
@@ -151,29 +156,36 @@ namespace Roma
                 EnterSkill();
             }
 
-            // 属于四种独立状态
-            if (m_logicMoveEnabled && !m_bMovePathing && cmd.GetCmdType() == CmdFspEnum.eFspAutoMove)
+            if(m_logicMoveEnabled && 
+                cmd.GetCmdType() == CmdFspEnum.eFspStopMove ||
+                cmd.GetCmdType() == CmdFspEnum.eFspMove ||
+                cmd.GetCmdType() == CmdFspEnum.eFspAutoMove)
             {
-                m_cmdFspAutoMove = cmd as CmdFspAutoMove;
-                EnterAutoMove();
+                m_stateMgr.ChangeState((int)cmd.GetCmdType(), cmd);
                 m_vCreature.PushCommand(cmd);
             }
-            base.PushCommand(cmd);
 
-            if (m_logicMoveEnabled &&
-                (cmd.GetCmdType() == CmdFspEnum.eFspAutoMove ||
-                cmd.GetCmdType() == CmdFspEnum.eFspMove ||
-                cmd.GetCmdType() == CmdFspEnum.eFspStopMove) ||
-                cmd.GetCmdType() == CmdFspEnum.eFspRotation)
-            {
-                SetLogicState(cmd);
-            }
+            // 属于四种独立状态
+            //if (m_logicMoveEnabled && !m_bMovePathing && cmd.GetCmdType() == CmdFspEnum.eFspAutoMove)
+            //{
+            //    m_cmdFspAutoMove = cmd as CmdFspAutoMove;
+            //    EnterAutoMove();
+            //    m_vCreature.PushCommand(cmd);
+            //}
+            //base.PushCommand(cmd);
+
+            //if (m_logicMoveEnabled &&
+            //    (cmd.GetCmdType() == CmdFspEnum.eFspAutoMove ||
+            //    cmd.GetCmdType() == CmdFspEnum.eFspMove ||
+            //    cmd.GetCmdType() == CmdFspEnum.eFspStopMove) ||
+            //    cmd.GetCmdType() == CmdFspEnum.eFspRotation)
+            //{
+            //    SetLogicState(cmd);
+            //}
         }
 
         public override void ExecuteFrame(int frameId)
         {
-            //ExecuteFrameSkill();
-
             if (m_ai != null)
             {
                 m_ai.EnterFrame();
@@ -183,11 +195,13 @@ namespace Roma
                 return;
 
             // 独立状态
-            if (m_logicMoveEnabled && m_logicState.GetCmdType() == CmdFspEnum.eFspAutoMove)
-            {
-                TickAutoMove();
-            }
-            base.ExecuteFrame(frameId);
+            //if (m_logicMoveEnabled && m_logicState.GetCmdType() == CmdFspEnum.eFspAutoMove)
+            //{
+            //    TickAutoMove();
+            //}
+            //base.ExecuteFrame(frameId);
+
+            m_stateMgr.ExecuteFrame(frameId);
 
             if (collider == null)
                 return;
@@ -251,7 +265,7 @@ namespace Roma
                 m_curSkill.Destory();
             ClearBuff();
             ClearTrigger();
-            StopAutoMove();
+            //StopAutoMove();
             PushCommand(CmdFspStopMove.Inst);
             if (collider != null)
                 collider.active = false;
