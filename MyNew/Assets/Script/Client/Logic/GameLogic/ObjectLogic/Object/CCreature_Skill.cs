@@ -370,21 +370,21 @@ namespace Roma
             {
                 case (int)eSkillType.None:
                     VSkillBase nSkill = new VSkillBase();
-                    nSkill.PushCommand(m_cmdFspSendSkill);
+                    //nSkill.PushCommand(m_cmdFspSendSkill);
 
                     m_curSkill = CSkillMgr.Create(eSkillType.None, nSkill);
                     m_curSkill.PushCommand(m_cmdFspSendSkill);
                     break;
                 case (int)eSkillType.Near:
                     VSkillNear vSkill = new VSkillNear();
-                    vSkill.PushCommand(m_cmdFspSendSkill);
+                    //vSkill.PushCommand(m_cmdFspSendSkill);
 
                     m_curSkill = (SkillNear)CSkillMgr.Create(eSkillType.Near, vSkill);
                     m_curSkill.PushCommand(m_cmdFspSendSkill);
                     break;
                 case (int)eSkillType.Jump:
                     VSkillBase vjump = new VSkillBase();
-                    vjump.PushCommand(m_cmdFspSendSkill);
+                    //vjump.PushCommand(m_cmdFspSendSkill);
 
                     m_curSkill = (SkillJump)CSkillMgr.Create(eSkillType.Jump, vjump);
                     m_curSkill.PushCommand(m_cmdFspSendSkill);
@@ -392,7 +392,7 @@ namespace Roma
                 case (int)eSkillType.Down_Up:
 
                     VSkillDownUp vDp = new VSkillDownUp();
-                    vDp.PushCommand(m_cmdFspSendSkill);
+                    //vDp.PushCommand(m_cmdFspSendSkill);
 
                     m_curSkill = (SkillDownUp)CSkillMgr.Create(eSkillType.Down_Up, vDp);
                     m_curSkill.PushCommand(m_cmdFspSendSkill);

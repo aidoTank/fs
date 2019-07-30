@@ -35,6 +35,8 @@ namespace Roma
                 case CmdFspEnum.eFspSendSkill:
                     m_curSkillCmd = cmd as CmdFspSendSkill;
                     Start();
+
+                    m_vSkill.PushCommand(cmd);
                     break;
             }
         }
@@ -116,7 +118,8 @@ namespace Roma
             }
             if (!m_skillInfo.bMove)
             {
-                cc.m_logicMoveEnabled = bTrue;
+                cc.PushCommand(CmdFspStopMove.Inst);
+                cc.SetLogicMoveEnabled(bTrue);
                 // 释放技能不能移动时
                 VBase v = cc.m_vCreature;
                 if(v != null)

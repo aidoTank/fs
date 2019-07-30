@@ -127,19 +127,6 @@ namespace Roma
             }
             FspNetRunTime.Inst.SendMessage(msg);
         }
-
-        public void SetLogicState(IFspCmdType state)
-        {
-            m_logicState = state;
-        }
-
-        public IFspCmdType GetLogicState()
-        {
-            if (m_logicState == null)
-                return CmdFspStopMove.Inst;
-            return m_logicState;
-        }
-
      
 
         /// <summary>
@@ -157,31 +144,13 @@ namespace Roma
             }
 
             if(m_logicMoveEnabled && 
-                cmd.GetCmdType() == CmdFspEnum.eFspStopMove ||
+                (cmd.GetCmdType() == CmdFspEnum.eFspStopMove ||
                 cmd.GetCmdType() == CmdFspEnum.eFspMove ||
-                cmd.GetCmdType() == CmdFspEnum.eFspAutoMove)
+                cmd.GetCmdType() == CmdFspEnum.eFspAutoMove))
             {
                 m_stateMgr.ChangeState((int)cmd.GetCmdType(), cmd);
                 m_vCreature.PushCommand(cmd);
             }
-
-            // 属于四种独立状态
-            //if (m_logicMoveEnabled && !m_bMovePathing && cmd.GetCmdType() == CmdFspEnum.eFspAutoMove)
-            //{
-            //    m_cmdFspAutoMove = cmd as CmdFspAutoMove;
-            //    EnterAutoMove();
-            //    m_vCreature.PushCommand(cmd);
-            //}
-            //base.PushCommand(cmd);
-
-            //if (m_logicMoveEnabled &&
-            //    (cmd.GetCmdType() == CmdFspEnum.eFspAutoMove ||
-            //    cmd.GetCmdType() == CmdFspEnum.eFspMove ||
-            //    cmd.GetCmdType() == CmdFspEnum.eFspStopMove) ||
-            //    cmd.GetCmdType() == CmdFspEnum.eFspRotation)
-            //{
-            //    SetLogicState(cmd);
-            //}
         }
 
         public override void ExecuteFrame(int frameId)
@@ -231,14 +200,14 @@ namespace Roma
                 m_bornPoint = SceneManager.Inst.GetSceneData().bornPoint.ToVector2();
                 CFrameTimeMgr.Inst.RegisterEvent(2800, () =>
                 {
-                    m_logicMoveEnabled = true;
+                    SetLogicMoveEnabled(true);
                     m_logicSkillEnabled = true;
                     PushCommand(CmdFspStopMove.Inst);
                 });
             }
             else
             {
-                m_logicMoveEnabled = true;
+                SetLogicMoveEnabled(true);
                 m_logicSkillEnabled = true;
                 PushCommand(CmdFspStopMove.Inst);
             }
@@ -270,17 +239,7 @@ namespace Roma
             if (collider != null)
                 collider.active = false;
 
-            // 如果是坐骑
-            //if (GetMaster() != null)
-            //{
-            //    GetMaster().DownRide();
-            //}
-            //// 如果是主人
-            //if (GetRide() != null)
-            //{
-            //    DownRide();
-            //}
-            m_logicMoveEnabled = false;
+            SetLogicMoveEnabled(false);
             m_logicSkillEnabled = false;
       
             // 逻辑层死亡

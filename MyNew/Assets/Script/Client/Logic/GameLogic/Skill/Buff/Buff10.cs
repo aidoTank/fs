@@ -98,7 +98,7 @@ namespace Roma
 
         public void SetStopMove(CCreature rec)
         {
-            rec.m_logicMoveEnabled = false;
+            rec.SetLogicMoveEnabled(false);
             rec.PushCommand(CmdFspStopMove.Inst);
             //CCreature ride = rec.GetRide();
             //if (ride != null)
@@ -124,7 +124,7 @@ namespace Roma
             // 解除BUFF状态时，如果没有晕眩，禁锢，则重置遥感，让遥感继续生效
             if (!rec.bStateBuff(eBuffState.stun) && !rec.bStateBuff(eBuffState.unmove) && !rec.bStateBuff(eBuffState.sleep))
             {
-                rec.m_logicMoveEnabled = true;
+                rec.SetLogicMoveEnabled(true);
                 rec.UpdateUI_ResetJoyStick(true);
             }
 
@@ -133,7 +133,7 @@ namespace Roma
             {
                 if (!rec.bStateBuff(eBuffState.stun) && !rec.bStateBuff(eBuffState.unmove) && !rec.bStateBuff(eBuffState.sleep))
                 {
-                    rec.m_logicMoveEnabled = true;
+                    rec.SetLogicMoveEnabled(true);
                     rec.UpdateUI_ResetJoyStick(true);
                 }
             }

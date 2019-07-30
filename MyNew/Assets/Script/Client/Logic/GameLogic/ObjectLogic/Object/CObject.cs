@@ -36,6 +36,12 @@ namespace Roma
         // 技能是否能旋转
         public bool m_logicSkillRotationEnabled = false;
 
+        public void SetLogicMoveEnabled(bool bTrue)
+        {
+            Debug.Log("SetLogicMoveEnabled:" + bTrue);
+            m_logicMoveEnabled = bTrue;
+        }
+
         /// <summary>
         /// 逻辑方向平滑
         /// </summary>
