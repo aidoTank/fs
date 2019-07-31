@@ -12,8 +12,17 @@ namespace Roma
 
     public class Action_Patrol : AIAction_
     {
+
+        private int m_curIntervalTime;
+
         public override BtResult Execute()
         {
+            m_curIntervalTime -= FSPParam.clientFrameMsTime;
+            if (m_curIntervalTime > 0)
+            {
+                return BtResult.Running;
+            }
+
             //// 休闲时，继续巡逻
             if (m_creature.m_stateMgr.GetCurState() == StateID.eFspStopMove)
             {
@@ -32,6 +41,7 @@ namespace Roma
                 {
                     m_creature.PushCommand(cmd);
                 }
+                m_curIntervalTime = 30 * FSPParam.clientFrameMsTime;
             }
             return BtResult.Running;
         }

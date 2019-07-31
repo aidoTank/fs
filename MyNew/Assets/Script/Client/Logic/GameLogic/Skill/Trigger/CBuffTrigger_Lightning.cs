@@ -21,7 +21,7 @@ namespace Roma
         {
         }
 
-        public override bool Create(int csvId, string name, Vector2 pos, Vector2 dir, float scale = 1)
+        public override bool Create(int csvId, string name, Vector2d pos, Vector2d dir, float scale = 1)
         {
             if (m_rec == null)
             {
@@ -46,7 +46,7 @@ namespace Roma
             return true;
         }
 
-        public override void InitPos(ref Vector2 startPos, ref Vector2 startDir)
+        public override void InitPos(ref Vector2d startPos, ref Vector2d startDir)
         {
             // modified starting point
             //startPos = m_rec.GetPos();

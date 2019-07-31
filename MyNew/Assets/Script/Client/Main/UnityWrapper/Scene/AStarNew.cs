@@ -96,7 +96,7 @@ namespace Roma
         }
 
         // 开始寻路 开始点、结束点、结果路径列表、最大搜索节点数
-        public bool FindPath(CMap map, CCreature cc, ref Vector2 startPt, ref Vector2 endPos, ref List<Vector2> paths, int maxRoute)
+        public bool FindPath(CMap map, CCreature cc, Vector2 startPt, Vector2 endPos,  ref List<Vector2> paths, int maxRoute)
         {
             // 如果检测到是能走的直线，就取最后一个点为目的地
             // 如果检测到不是能走的直线，取靠近目标点最近的并且能走的点，作为寻路的目标点

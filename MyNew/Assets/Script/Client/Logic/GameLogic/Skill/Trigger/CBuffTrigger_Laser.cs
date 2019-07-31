@@ -21,7 +21,7 @@ namespace Roma
 
         }
 
-        public override bool Create(int csvId, string name, Vector2 pos, Vector2 dir, float scale = 1)
+        public override bool Create(int csvId, string name, Vector2d pos, Vector2d dir, float scale = 1)
         {
             base.Create(csvId, name, pos, dir, scale);
             return true;

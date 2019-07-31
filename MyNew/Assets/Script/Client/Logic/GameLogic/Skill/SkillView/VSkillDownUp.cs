@@ -19,7 +19,7 @@ namespace Roma
             if (m_casterObject.m_state == CmdFspEnum.eFspMove || m_casterObject.m_state == CmdFspEnum.eFspAutoMove)
             {
                 // 施法方向和移动方向一致时
-                float dot = Vector2.Dot(cmd.m_dir, m_casterObject.m_moveInfo.m_dir.ToVector2());
+                float dot = Vector2.Dot(cmd.m_dir.ToVector2(), m_casterObject.m_moveInfo.m_dir.ToVector2());
                 if(dot > 0)
                 {
                     animaId = m_casterData.forwardAnimaId;

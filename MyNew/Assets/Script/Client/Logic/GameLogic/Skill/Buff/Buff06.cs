@@ -10,7 +10,7 @@ namespace Roma
     /// </summary>
     public class Buff06 : BuffBase
     {
-        private Vector2 m_recDir;
+        private Vector2d m_recDir;
         private bool m_bBack;
 
         public Buff06(int uid, SkillBuffCsvData data)
@@ -25,7 +25,7 @@ namespace Roma
 
             if (m_rec == null)
                 return;
-            m_recDir = m_rec.GetDir().ToVector2();
+            m_recDir = m_rec.GetDir();
             // 击退表现层，不做转向效果
             if (m_rec.m_vCreature != null)
             {
@@ -53,17 +53,17 @@ namespace Roma
             }
             speed = Mathf.Abs(speed);   // 配置的速度
 
-            Vector2 moveDir = m_recDir * dirDelta; // 最终角色方向
+            Vector2d moveDir = m_recDir * dirDelta; // 最终角色方向
             if (m_rec != m_caster)   // 属于被打击退
             {
-                moveDir = m_rec.GetPos().ToVector2() - m_skillPos;
-                moveDir = (m_rec.GetPos() - m_caster.GetPos()).ToVector2();
+                moveDir = m_rec.GetPos() - m_skillPos;
+                moveDir = m_rec.GetPos() - m_caster.GetPos();
             }
             // 逻辑层移动位置
             moveDir.Normalize();
-            Vector2 nextPos = m_rec.GetPos().ToVector2() + moveDir * FSPParam.clientFrameScTime * speed;
-            m_rec.SetPos(nextPos.ToVector2d());
-            m_rec.SetDir(moveDir.ToVector2d());
+            Vector2d nextPos = m_rec.GetPos() + moveDir * new FixedPoint(FSPParam.clientFrameScTime) * speed;
+            m_rec.SetPos(nextPos);
+            m_rec.SetDir(moveDir);
             m_rec.SetSpeed(new FixedPoint(speed));
 
             // 通知表现层移动

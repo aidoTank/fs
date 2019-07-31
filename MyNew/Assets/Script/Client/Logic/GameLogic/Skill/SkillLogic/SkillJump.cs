@@ -16,30 +16,30 @@ namespace Roma
         }
 
 
-        public override void ExecuteFrame(int frameId)
-        {
-            base.ExecuteFrame(frameId);
-            if(m_bJump)
-            {
-                Vector2 moveDir = m_curSkillCmd.m_dir.normalized;
-                Vector2 nextPos = GetCaster().GetPos().ToVector2() + moveDir * FSPParam.clientFrameScTime * m_skillInfo.flySpeed;
+        //public override void ExecuteFrame(int frameId)
+        //{
+        //    base.ExecuteFrame(frameId);
+        //    if(m_bJump)
+        //    {
+        //        Vector2d moveDir = m_curSkillCmd.m_dir.normalized;
+        //        Vector2d nextPos = GetCaster().GetPos().ToVector2() + moveDir * FSPParam.clientFrameScTime * m_skillInfo.flySpeed;
 
-                if (PhysicsManager.Inst.Isblock((int)nextPos.x, (int)nextPos.y))
-                {
-                    nextPos = GetCaster().GetPos().ToVector2();
-                    return;
-                }
+        //        if (PhysicsManager.Inst.Isblock((int)nextPos.x, (int)nextPos.y))
+        //        {
+        //            nextPos = GetCaster().GetPos().ToVector2();
+        //            return;
+        //        }
 
-                GetCaster().SetPos(nextPos.ToVector2d());
-                GetCaster().SetDir(moveDir.ToVector2d());
-                GetCaster().SetSpeed(new FixedPoint(m_skillInfo.flySpeed));
-                VBase vo = GetCaster().m_vCreature;
-                if (vo != null)
-                {
-                    vo.SetMove(true);
-                }
-            }
-        }
+        //        GetCaster().SetPos(nextPos.ToVector2d());
+        //        GetCaster().SetDir(moveDir.ToVector2d());
+        //        GetCaster().SetSpeed(new FixedPoint(m_skillInfo.flySpeed));
+        //        VBase vo = GetCaster().m_vCreature;
+        //        if (vo != null)
+        //        {
+        //            vo.SetMove(true);
+        //        }
+        //    }
+        //}
 
         public override void Launch()
         {

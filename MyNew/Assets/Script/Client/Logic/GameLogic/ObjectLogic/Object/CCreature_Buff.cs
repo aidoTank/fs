@@ -86,21 +86,6 @@ namespace Roma
         }
 
         /// <summary>
-        /// 通过BUFF逻辑ID获取
-        /// </summary>
-        //public BuffBase GetBuffByType(int type)
-        //{
-        //    for (int i = 0; i < m_buffList.Count; i++)
-        //    {
-        //        if (m_buffList[i].m_buffData.logicId == type)
-        //        {
-        //            return m_buffList[i];
-        //        }
-        //    }
-        //    return null;
-        //}
-
-        /// <summary>
         /// 通过配置id获取
         /// </summary>
         public BuffBase GetBuffByCsvId(int id)
@@ -148,8 +133,8 @@ namespace Roma
                 BuffBase buff = m_buffList[i];
                 if (buff.GetBuffType() == eBuffType.dp)
                 {
-                    float pct = buff.GetVal1() * 0.01f;
-                    newVal += (int)(cur * pct);
+                    FixedPoint pct = buff.GetVal1() * new FixedPoint(0.01f);
+                    newVal += (int)(pct * cur).value;
                 }
             }
             return newVal;
@@ -168,8 +153,8 @@ namespace Roma
                 BuffBase buff = m_buffList[i];
                 if(buff.GetBuffType() == eBuffType.atk)
                 {
-                    float pct = buff.GetVal1() * 0.01f;
-                    newVal += (int)(cur * pct);
+                    FixedPoint pct = buff.GetVal1() * new FixedPoint(0.01f);
+                    newVal += (int)(cur * pct).value;
                 }
             }
             return newVal;
@@ -178,17 +163,17 @@ namespace Roma
         /// <summary>
         /// 通过BUFF的攻击增减
         /// </summary>
-        public float GetBuffSpeed(float cur)
+        public FixedPoint GetBuffSpeed(FixedPoint cur)
         {
             if (m_buffList == null)
-                return 0;
-            float newVal = 0;
+                return FixedPoint.N_0;
+            FixedPoint newVal = FixedPoint.N_0;
             for (int i = 0; i < m_buffList.Count; i++)
             {
                 BuffBase buff = m_buffList[i];
                 if (buff.GetBuffType() == eBuffType.speed)
                 {
-                    float pct = buff.GetVal1() * 0.01f;
+                    FixedPoint pct = buff.GetVal1() * new FixedPoint(0.01f);
                     newVal += cur * pct;
                 }
             }

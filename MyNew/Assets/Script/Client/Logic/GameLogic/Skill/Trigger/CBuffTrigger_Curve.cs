@@ -18,7 +18,7 @@ namespace Roma
 
         }
 
-        public override bool Create(int csvId, string name, Vector2 pos, Vector2 dir, float scale = 1)
+        public override bool Create(int csvId, string name, Vector2d pos, Vector2d dir, float scale = 1)
         {
             base.Create(csvId, name, pos, dir, scale);
 
@@ -34,19 +34,19 @@ namespace Roma
             return true;
         }
 
-        public override void InitPos(ref Vector2 startPos, ref Vector2 startDir)
+        public override void InitPos(ref Vector2d startPos, ref Vector2d startDir)
         {
             // 修正起始位置startPos
-            startPos = startPos + startDir.normalized * m_triggerData.vBulletDeltaPos.z;
+            startPos = startPos + startDir.normalized * new FixedPoint(m_triggerData.vBulletDeltaPos.z);
 
             // 修正结束位置
-            Vector2 dir = Collide.Rotate(startDir, m_triggerData.dirDelta);
+            Vector2d dir = FPCollide.Rotate(startDir, m_triggerData.dirDelta);
             m_skillPos = m_skillPos + dir.normalized * m_triggerData.disDelta;
 
             // 一定时间后设置逻辑位置
             CFrameTimeMgr.Inst.RegisterEvent(m_triggerData.ContinuanceTime - 100, () =>
             {
-                SetPos(m_skillPos.ToVector2d(), true);
+                SetPos(m_skillPos, true);
             });
         }
 

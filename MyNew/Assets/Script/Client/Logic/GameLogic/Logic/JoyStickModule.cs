@@ -123,6 +123,11 @@ namespace Roma
         #region 移动相关
         private void OnMoveEvent(eJoyStickEvent jsEvent, MoveJoyStick move)
         {
+            if(m_master != null && m_master.m_ai != null)
+            {
+                if (m_master.m_ai.IsRun())
+                    return;
+            }
             if (jsEvent == eJoyStickEvent.Up)
             {
                 OnMove(true, move.m_delta);
@@ -302,8 +307,8 @@ namespace Roma
                     CmdFspSendSkill cmd = new CmdFspSendSkill();
                     cmd.m_casterUid = (int)m_master.GetUid();
                     cmd.m_skillId = skillInfo.id;
-                    cmd.m_dir = new Vector2(m_curSkillDir.x, m_curSkillDir.z);
-                    cmd.m_endPos = new Vector2(m_curSkilPos.x, m_curSkilPos.z);
+                    cmd.m_dir = (new Vector2(m_curSkillDir.x, m_curSkillDir.z)).ToVector2d();
+                    cmd.m_endPos = (new Vector2(m_curSkilPos.x, m_curSkilPos.z)).ToVector2d();
                     master.SendFspCmd(cmd);
                 }
                 // 还原指示器

@@ -56,7 +56,7 @@ namespace Roma
 
             m_bLaunching = true;
             // 同步施法者方向
-            GetCaster().SetDir(m_curSkillCmd.m_dir.ToVector2d());
+            GetCaster().SetDir(m_curSkillCmd.m_dir);
 
             // 注册最长生命周期
             if(m_skillInfo.lifeTime != 0)
@@ -183,14 +183,14 @@ namespace Roma
             int[] selfBuffList = dataInfo.casterSelfBuffList;
             if (target == null)
                 target = caster;
-            AddBuff(caster, target, selfBuffList, caster.GetPos().ToVector2(), m_curSkillCmd.m_endPos, m_curSkillCmd.m_dir, m_curSkillCmd.m_skillIndex);
+            AddBuff(caster, target, selfBuffList, caster.GetPos(), m_curSkillCmd.m_endPos, m_curSkillCmd.m_dir, m_curSkillCmd.m_skillIndex);
         }
 
         /// <summary>
         /// 1.支持玩家身上的BUFF
         /// 2.支持创建基于位置的触发器BUFF
         /// </summary>
-        public static void AddBuff(CCreature caster, CCreature receiver, int[] buffList, Vector2 startPos, Vector2 skillPos, Vector2 dir, int skillIndex = 0, object obj = null)
+        public static void AddBuff(CCreature caster, CCreature receiver, int[] buffList, Vector2d startPos, Vector2d skillPos, Vector2d dir, int skillIndex = 0, object obj = null)
         {
             for (int i = 0; i < buffList.Length; i++)
             {
@@ -200,7 +200,7 @@ namespace Roma
             }
         }
 
-        public static BuffBase AddBuff(CCreature caster, CCreature receiver, int buffId, Vector2 startPos, Vector2 skillPos, Vector2 dir, int skillIndex = 0, object obj = null)
+        public static BuffBase AddBuff(CCreature caster, CCreature receiver, int buffId, Vector2d startPos, Vector2d skillPos, Vector2d dir, int skillIndex = 0, object obj = null)
         {
             // 接受者无敌时
             if (receiver != null)

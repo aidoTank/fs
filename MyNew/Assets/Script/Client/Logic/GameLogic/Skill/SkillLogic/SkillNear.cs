@@ -26,8 +26,8 @@ namespace Roma
             //base.Launch();
             //Debug.Log("近战击中，计算伤害");
             // 检测，播放受击动作
-            Vector2 pos = CCreatureMgr.Get(m_curSkillCmd.m_casterUid).GetPos().ToVector2();
-            Vector2 dir = m_curSkillCmd.m_dir;
+            Vector2d pos = CCreatureMgr.Get(m_curSkillCmd.m_casterUid).GetPos();
+            Vector2d dir = m_curSkillCmd.m_dir;
 
             List<long> list = CCreatureMgr.GetCreatureList();
             for (int i = 0; i < list.Count; i++)
@@ -36,8 +36,14 @@ namespace Roma
                 if (GetCaster().bCamp(creature) || creature.IsDie())
                     continue;
 
-                Vector2 focusPos = creature.GetPos().ToVector2();
-                if(Collide.bSectorInside(pos, dir, m_skillInfo.width, m_skillInfo.length, focusPos))
+                Vector2d focusPos = creature.GetPos();
+                FPSector sec = new FPSector();
+                sec.pos = pos;
+                sec.dir = dir;
+                sec.angle = new FixedPoint(m_skillInfo.width);
+                sec.r = new FixedPoint(m_skillInfo.length);
+
+                if (FPCollide.bSectorInside(sec, focusPos))
                 {
                     //Debug.Log("近战检测:" + item.GetUid());
                     //OnHit(creature, i++);

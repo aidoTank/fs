@@ -92,10 +92,10 @@ namespace Roma
             obj.UpdateProp();
             int maxHp = obj.GetPropNum(eCreatureProp.Hp);
             // 主角升级才回满血
-            if (obj.IsMaster())
-            {
-                obj.SetPropNum(eCreatureProp.CurHp, maxHp);
-            }
+            //if (obj.IsMaster())
+            //{
+            //    obj.SetPropNum(eCreatureProp.CurHp, maxHp);
+            //}
 
             // 表现层
             obj.UpdateVO_ShowHeadLv();

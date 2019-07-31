@@ -19,16 +19,16 @@ namespace Roma
 
         }
 
-        public override void InitPos(ref Vector2 startPos, ref Vector2 startDir)
+        public override void InitPos(ref Vector2d startPos, ref Vector2d startDir)
         {
             // 如果技能位置是0，则起点为施法者位置
-            if(m_skillPos == Vector2.zero)
+            if(m_skillPos == Vector2d.zero)
             {
                 m_skillPos = startPos;
             }
 
             // 有距离时，表示为终点位置的偏移
-            Vector2 dir = Collide.Rotate(startDir, m_triggerData.dirDelta);
+            Vector2d dir = FPCollide.Rotate(startDir, m_triggerData.dirDelta);
             startDir = dir;
             startPos = m_skillPos + dir.normalized * m_triggerData.disDelta;
         }

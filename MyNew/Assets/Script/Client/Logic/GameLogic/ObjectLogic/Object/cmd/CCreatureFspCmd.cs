@@ -112,9 +112,9 @@ namespace Roma
         //public int m_skillLv = 1;
 
         public long m_targetId;
-        public Vector2 m_dir;
-        public Vector2 m_startPos;
-        public Vector2 m_endPos;
+        public Vector2d m_dir;
+        public Vector2d m_startPos;
+        public Vector2d m_endPos;
 
 
 

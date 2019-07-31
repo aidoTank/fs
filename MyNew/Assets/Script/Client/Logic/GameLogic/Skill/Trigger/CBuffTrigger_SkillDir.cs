@@ -20,40 +20,40 @@ namespace Roma
 
         }
 
-        public override void InitPos(ref Vector2 startPos, ref Vector2 startDir)
+        public override void InitPos(ref Vector2d startPos, ref Vector2d startDir)
         {
             // 修正起始位置XZ
             Vector3 deltaPos = m_triggerData.vBulletDeltaPos;
             float randomDir = m_triggerData.iCurveHeight;
 
-            Vector2 vL = Collide.Rotate(startDir.normalized, 90) * deltaPos.x; // 左右偏移
-            Vector2 vF = startDir.normalized * deltaPos.z;                     // 前后偏移
-            startPos = m_caster.GetPos().ToVector2() + vL + vF;
+            Vector2d vL = FPCollide.Rotate(startDir.normalized, 90) * new FixedPoint(deltaPos.x); // 左右偏移
+            Vector2d vF = startDir.normalized * new FixedPoint(deltaPos.z);                     // 前后偏移
+            startPos = m_caster.GetPos() + vL + vF;
             // 随机方向
-            if (randomDir != 0)
-            {
-                int dirDelta = (int)randomDir;
-                float random = GameManager.Inst.GetRand(-dirDelta, dirDelta + 1, 0);
-                startDir = Collide.Rotate(startDir.normalized, (int)random);
-            }
+            //if (randomDir != 0)
+            //{
+            //    int dirDelta = (int)randomDir;
+            //    float random = GameManager.Inst.GetRand(-dirDelta, dirDelta + 1, 0);
+            //    startDir = FPCollide.Rotate(startDir.normalized, (int)random);
+            //}
 
             // 修正起始方向
             if (m_triggerData.dirDelta != 0)
             {
-                startDir = Collide.Rotate(startDir, m_triggerData.dirDelta);
+                startDir = FPCollide.Rotate(startDir, m_triggerData.dirDelta);
             }
         }
 
         public override void _UpdatePos()
         {
-            Vector2 moveDir = GetDir().ToVector2();
-            float delta = FSPParam.clientFrameScTime * GetSpeed().value;
-            Vector2 nextPos = m_curPos.ToVector2() + moveDir * delta;
+            Vector2d moveDir = GetDir();
+            FixedPoint delta = new FixedPoint(FSPParam.clientFrameScTime) * GetSpeed();
+            Vector2d nextPos = m_curPos + moveDir * delta;
 
             //Debug.Log("nextPos:" + nextPos);
 
-            SetPos(nextPos.ToVector2d());
-            SetDir(moveDir.ToVector2d());
+            SetPos(nextPos);
+            SetDir(moveDir);
             if (m_vCreature != null)
             {
                 m_vCreature.SetMove(true);

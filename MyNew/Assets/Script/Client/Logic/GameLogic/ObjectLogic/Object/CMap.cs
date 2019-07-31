@@ -57,15 +57,21 @@ namespace Roma
             return !SceneManager.Inst.Isblock(x, y);
         }
 
-        public bool GetPath(CCreature curCreature, Vector2 startPos, Vector2 targetPos, ref List<Vector2> path)
+        public bool GetPath(CCreature curCreature, Vector2d startPos, Vector2d targetPos, ref List<Vector2d> path)
         {
             int maxRoute = 1024;
-            if (curCreature.IsMaster())
-            {
-                maxRoute = 512 * 512;
-            }
+            //if (curCreature.IsMaster())
+            //{
+            //    maxRoute = 512 * 512;
+            //}
             path.Clear();
-            bool result = m_aStar.FindPath(this, curCreature, ref startPos, ref targetPos, ref path, maxRoute);
+            // 寻路算法，没有涉及小数的计算
+            List<Vector2> list = new List<Vector2>();
+            bool result = m_aStar.FindPath(this, curCreature, startPos.ToVector2(), targetPos.ToVector2(),ref list, maxRoute);
+            for(int i = 0; i < list.Count; i ++)
+            {
+                path.Add(list[i].ToVector2d());
+            }
             return result;
         }
 

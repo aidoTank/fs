@@ -20,7 +20,7 @@ namespace Roma
         public CCreature m_caster;
         public CCreature m_rec; 
         public int m_skillIndex;
-        public Vector2 m_skillPos;
+        public Vector2d m_skillPos;
         public object m_extendParam;
 
         public BuffTriggerCsvData m_triggerData;
@@ -35,7 +35,7 @@ namespace Roma
             m_type = EThingType.BuffTrigger;
         }
 
-        public override bool Create(int csvId, string name, Vector2 pos, Vector2 dir, float scale = 1)
+        public override bool Create(int csvId, string name, Vector2d pos, Vector2d dir, float scale = 1)
         {
             // 通过不同类型，读取不同配置表
             BuffTriggerCsv buffCsv = CsvManager.Inst.GetCsv<BuffTriggerCsv>((int)eAllCSV.eAc_BuffTrigger);
@@ -56,8 +56,8 @@ namespace Roma
                 m_vCreature.Create(info);
             }
 
-            SetPos(pos.ToVector2d());
-            SetDir(dir.ToVector2d());
+            SetPos(pos);
+            SetDir(dir);
             SetScale(scale);
             SetSpeed(new FixedPoint(m_triggerData.FlySpeed));
 
@@ -83,11 +83,11 @@ namespace Roma
 
            if (m_triggerData.ShapeType == (int)eBuffTriggerShapeType.Rect)
            {
-                float angle = Collide.GetAngle(GetDir().ToVector2());
-                OBB obb = new OBB(pos, new Vector2(m_triggerData.Width, m_triggerData.Length), angle);
+                int angle = (int)FPCollide.GetAngle(GetDir()).value;
+                FPObb obb = new FPObb(pos, new Vector2d(m_triggerData.Width, m_triggerData.Length), angle);
                 m_polygon = new Polygon();
 
-                m_polygon.c = pos.ToVector2d();
+                m_polygon.c = pos;
                 m_polygon.isObstacle = true;
                 m_polygon.bAirWall = false;
                 m_polygon.Init(obb.GetVert2d());
@@ -96,7 +96,7 @@ namespace Roma
            return true;
         }
 
-        public virtual void InitPos(ref Vector2 startPos, ref Vector2 startDir)
+        public virtual void InitPos(ref Vector2d startPos, ref Vector2d startDir)
         {
 
         }
@@ -148,9 +148,9 @@ namespace Roma
         {
             if (m_triggerData.ShapeType == (int)eBuffTriggerShapeType.Circle)
             {
-                Sphere tSphere = new Sphere();
-                tSphere.c = GetPos().ToVector2();
-                tSphere.r = m_triggerData.Length;
+                FPSphere tSphere = new FPSphere();
+                tSphere.c = GetPos();
+                tSphere.r = new FixedPoint(m_triggerData.Length);
 
                 List<long> list = CCreatureMgr.GetCreatureList();
                 for (int i = 0; i < list.Count; i++)
@@ -159,11 +159,11 @@ namespace Roma
                     if (m_caster.bCamp(creature) || creature.IsDie())
                         continue;
 
-                    Sphere playerS = new Sphere();
-                    playerS.c = creature.GetPos().ToVector2();
-                    playerS.r = creature.GetR().value;
+                    FPSphere playerS = new FPSphere();
+                    playerS.c = creature.GetPos();
+                    playerS.r = creature.GetR();
 
-                    if (Collide.bSphereSphere(tSphere, playerS))
+                    if (FPCollide.bSphereSphere(tSphere, playerS))
                     {
                         OnHitAddBuff(m_caster, creature);
                     }
@@ -178,11 +178,17 @@ namespace Roma
                     if (m_caster.bCamp(creature) || creature.IsDie())
                         continue;
 
-                    Sphere playerS = new Sphere();
-                    playerS.c = creature.GetPos().ToVector2();
-                    playerS.r = creature.GetR().value;
+                    FPSphere playerS = new FPSphere();
+                    playerS.c = creature.GetPos();
+                    playerS.r = creature.GetR();
 
-                    if (Collide.bSectorInside(GetPos().ToVector2(), GetDir().ToVector2(), m_triggerData.Width, m_triggerData.Length, creature.GetPos().ToVector2()))
+                    FPSector sec = new FPSector();
+                    sec.pos = GetPos();
+                    sec.dir = GetDir();
+                    sec.angle = new FixedPoint(m_triggerData.Width);
+                    sec.r = new FixedPoint(m_triggerData.Length);
+
+                    if (FPCollide.bSectorInside(sec, creature.GetPos()))
                     {
                         OnHitAddBuff(m_caster, creature);
                     }
@@ -197,14 +203,14 @@ namespace Roma
                     if (m_caster.bCamp(creature) || creature.IsDie())
                         continue;
 
-                    Sphere playerS = new Sphere();
-                    playerS.c = creature.GetPos().ToVector2();
-                    playerS.r = creature.GetR().value;
+                    FPSphere playerS = new FPSphere();
+                    playerS.c = creature.GetPos();
+                    playerS.r = creature.GetR();
 
-                    Vector2 pos = GetPos().ToVector2();
-                    float angle = Collide.GetAngle(GetDir().ToVector2());
-                    OBB obb = new OBB(pos, new Vector2(m_triggerData.Width, m_triggerData.Length), angle);
-                    if (Collide.bSphereOBB(playerS, obb))
+                    Vector2d pos = GetPos();
+                    int angle = (int)FPCollide.GetAngle(GetDir()).value;
+                    FPObb obb = new FPObb(pos, new Vector2d(m_triggerData.Width, m_triggerData.Length), angle);
+                    if (FPCollide.bSphereOBB(playerS, obb))
                     {
                         OnHitAddBuff(m_caster, creature);
                     }
@@ -214,7 +220,7 @@ namespace Roma
             // 静态碰撞
             if (m_triggerData.PosType == (int)eBuffTriggerPosType.CasterStartPos_SkillDir)
             {
-                if (CMapMgr.m_map.IsblockNotAirWal((int)m_curPos.x, (int)m_curPos.y))
+                if (CMapMgr.m_map.IsblockNotAirWal((int)m_curPos.x.value, (int)m_curPos.y.value))
                 {
                     Destory();
                     return;
@@ -234,11 +240,11 @@ namespace Roma
         {
             // 给自己加
             int[] selfBuffList = m_triggerData.selfBuffList;
-            SkillBase.AddBuff(caster, receiver, selfBuffList, GetPos().ToVector2(), GetPos().ToVector2(), GetDir().ToVector2(), m_skillIndex, obj);
+            SkillBase.AddBuff(caster, receiver, selfBuffList, GetPos(), GetPos(), GetDir(), m_skillIndex, obj);
 
             // 给目标加
             int[] targetBuffList = m_triggerData.targetBuffList;
-            SkillBase.AddBuff(caster, receiver, targetBuffList, GetPos().ToVector2(), GetPos().ToVector2(), GetDir().ToVector2(), m_skillIndex, obj);
+            SkillBase.AddBuff(caster, receiver, targetBuffList, GetPos(), GetPos(), GetDir(), m_skillIndex, obj);
 
             if(m_triggerData.bBullet)  // 如果是子弹，碰撞就调用父类的销毁
             {

@@ -195,22 +195,10 @@ namespace Roma
             if (collider != null)
                 collider.active = true;
 
-            if (IsMaster())
-            {
-                m_bornPoint = SceneManager.Inst.GetSceneData().bornPoint.ToVector2();
-                CFrameTimeMgr.Inst.RegisterEvent(2800, () =>
-                {
-                    SetLogicMoveEnabled(true);
-                    m_logicSkillEnabled = true;
-                    PushCommand(CmdFspStopMove.Inst);
-                });
-            }
-            else
-            {
-                SetLogicMoveEnabled(true);
-                m_logicSkillEnabled = true;
-                PushCommand(CmdFspStopMove.Inst);
-            }
+            SetLogicMoveEnabled(true);
+            m_logicSkillEnabled = true;
+            PushCommand(CmdFspStopMove.Inst);
+
 
             SetPropNum(eCreatureProp.CurHp, GetPropNum(eCreatureProp.Hp));
             //SetPos(m_bornPoint.ToVector2d(), true);
@@ -245,7 +233,6 @@ namespace Roma
             // 逻辑层死亡
             CFrameTimeMgr.Inst.RegisterEvent(m_csvData.dieDelay, () =>
             {
-
                 CFrameTimeMgr.Inst.RegisterEvent(m_refreshTime, () =>
                 {
                     OnRevive();

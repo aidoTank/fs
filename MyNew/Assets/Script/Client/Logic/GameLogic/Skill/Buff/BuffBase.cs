@@ -17,14 +17,14 @@ namespace Roma
         public CCreature m_rec;    // 纯位置的BUFF，是没有接受者的，比如触发器BUFF
         public int m_triUid;
 
-        public Vector2 m_startPos;
+        public Vector2d m_startPos;
         public int m_skillIndex;     // 当前BUFF的技能id，一般情况是有的
         /// <summary>
         /// 1.用于AOE触发器的位置
         /// 2.用于拉扯性BUFF的结束位置
         /// </summary>
-        public Vector2 m_skillPos;
-        public Vector2 m_skillDir;
+        public Vector2d m_skillPos;
+        public Vector2d m_skillDir;
         public object m_extendParam;  // 扩展参数
 
         public SkillBuffCsvData m_buffData;
@@ -115,21 +115,21 @@ namespace Roma
         /// 1时，取手雷
         /// 2时，取火炮
         /// </summary>
-        public int GetPlayerAp()
-        {
-            PlayerCsvData pCsv = (PlayerCsvData)m_caster.m_csvData;
-            int lv = m_caster.GetPropNum(eCreatureProp.Lv);
-            int maxAp = 0;
-            //int maxAp = m_caster.GetPlayerPropVal(pCsv.BaseAp, pCsv.ApGrow, lv);
-            //if (m_skillIndex == -1 || m_skillIndex == 0 || m_skillIndex == 4)
-            //    maxAp += m_caster.GetEquipAp(eEquipType.HandRight);
-            //else if (m_skillIndex == 1)
-            //    maxAp += m_caster.GetEquipAp(eEquipType.Grenade);
-            //else if (m_skillIndex == 2)
-            //    maxAp += m_caster.GetEquipAp(eEquipType.Back);
-            maxAp += m_caster.GetBuffAp(maxAp);
-            return maxAp;
-        }
+        //public int GetPlayerAp()
+        //{
+        //    PlayerCsvData pCsv = (PlayerCsvData)m_caster.m_csvData;
+        //    int lv = m_caster.GetPropNum(eCreatureProp.Lv);
+        //    int maxAp = 0;
+        //    //int maxAp = m_caster.GetPlayerPropVal(pCsv.BaseAp, pCsv.ApGrow, lv);
+        //    //if (m_skillIndex == -1 || m_skillIndex == 0 || m_skillIndex == 4)
+        //    //    maxAp += m_caster.GetEquipAp(eEquipType.HandRight);
+        //    //else if (m_skillIndex == 1)
+        //    //    maxAp += m_caster.GetEquipAp(eEquipType.Grenade);
+        //    //else if (m_skillIndex == 2)
+        //    //    maxAp += m_caster.GetEquipAp(eEquipType.Back);
+        //    maxAp += m_caster.GetBuffAp(maxAp);
+        //    return maxAp;
+        //}
 
         /// <summary>
         /// 1.技能伤害数值，是通过普攻*val%计算得出的
@@ -147,14 +147,14 @@ namespace Roma
             }
 
             // 设置主角保护
-            if (m_rec.IsMaster() && m_rec.bMasterProtect())
-            {
-                return 1;
-            }
-            if (m_rec.IsMaster())
-            {
-                m_rec.SetMasterProtect();
-            }
+            //if (m_rec.IsMaster() && m_rec.bMasterProtect())
+            //{
+            //    return 1;
+            //}
+            //if (m_rec.IsMaster())
+            //{
+            //    m_rec.SetMasterProtect();
+            //}
 
             // 施法者是载具时，数值结算用主人的
             //if (m_caster.GetMaster() != null)
@@ -173,22 +173,27 @@ namespace Roma
             int ap = m_caster.GetPropNum(eCreatureProp.Ap);
             int dp = m_rec.GetPropNum(eCreatureProp.Dp);
             // 玩家普攻伤害
-            int hurtVal = (int)Math.Ceiling((float)ap * ap / (ap + k * dp));
+            int hurtVal = (int)(new FixedPoint(ap * ap) / new FixedPoint((ap + k * dp))).value;
             // 技能伤害
-            hurtVal = (int)Math.Ceiling(hurtVal * (1 + skillVal * 0.01));
+            hurtVal = (int)(new FixedPoint(hurtVal) * 
+                (FixedPoint.N_1 + new FixedPoint(skillVal) * new FixedPoint(0.01f))).value;
+
             // 计算暴击
-            float CritChance = m_caster.GetPropNum(eCreatureProp.CritChance);
-            if (GameManager.Inst.GetRand(0, 100) <= CritChance * 0.1f)
+            int CritChance = m_caster.GetPropNum(eCreatureProp.CritChance);
+            if (GameManager.Inst.GetRand(0, 100, 1) <= CritChance * 0.1f)
             {
                 bCrit = true;
-                float CritDamage = m_caster.GetPropNum(eCreatureProp.CritDamage);
-                hurtVal = (int)Math.Ceiling((float)hurtVal * (1 + CritDamage * 0.001f));
+                int CritDamage = m_caster.GetPropNum(eCreatureProp.CritDamage);
+                hurtVal = (int)(new FixedPoint(hurtVal) * 
+                    (FixedPoint.N_1 +  new FixedPoint(CritDamage) * new FixedPoint(0.001f))).value;
+
             }
             // 连击累加
             int comboNum = m_caster.GetComboNum();
             if (comboNum > 300)
                 comboNum = 300;
-            hurtVal = (int)(hurtVal * (comboNum * 0.01f + 1.0f));
+            hurtVal = (int)(new FixedPoint(hurtVal) * 
+                (new FixedPoint(comboNum) * new FixedPoint(0.01f) + FixedPoint.N_1)).value;
 
             int curHp = m_rec.GetPropNum(eCreatureProp.CurHp);
             int nextHp = curHp - hurtVal;
@@ -207,10 +212,10 @@ namespace Roma
             // 经验计算
             GetExp(m_rec);
             // 主角连击
-            if (m_caster != null && m_caster.IsMaster())
-            {
-                m_caster.OnComboAdd();
-            }
+            //if (m_caster != null && m_caster.IsMaster())
+            //{
+            //    m_caster.OnComboAdd();
+            //}
             UpdateUI_ShowHpHUD(m_rec, -hurtVal, bCrit);
 
             return 1;

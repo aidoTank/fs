@@ -258,8 +258,8 @@ namespace Roma
                 CmdFspSendSkill cmd = new CmdFspSendSkill();
                 cmd.m_casterUid = (int)m_creature.GetUid();
                 cmd.m_skillIndex = selectSkillUid;
-                cmd.m_dir = dir.ToVector2();
-                cmd.m_endPos = targetCc.GetPos().ToVector2();
+                cmd.m_dir = dir;
+                cmd.m_endPos = targetCc.GetPos();
                 cmd.m_bDown = bDown;
     
 

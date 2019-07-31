@@ -35,13 +35,13 @@ namespace Roma
 
         public int GetPlayerPropVal(int baseVal, float growVal, int lv)
         {
-            double preVal = baseVal;
+            FixedPoint preVal = new FixedPoint(baseVal);
             for (int i = 1; i <= lv; i++)
             {
-                double d = (baseVal * growVal * i);
+                FixedPoint d = (new FixedPoint(baseVal) * new FixedPoint(growVal) * i);
                 preVal = preVal + d;
             }
-            return (int)Math.Ceiling(preVal);
+            return (int)preVal.value;
         }
 
         /// <summary>
@@ -133,9 +133,9 @@ namespace Roma
 
         public void UpdateMoveSpeed()
         {
-            float speed = m_csvData.moveSpeed;
+            FixedPoint speed = new FixedPoint(m_csvData.moveSpeed);
             speed += GetBuffSpeed(speed);
-            SetSpeed(new FixedPoint(speed));
+            SetSpeed(speed);
         }
 
         public virtual void UpdataFightingVal()
@@ -228,16 +228,21 @@ namespace Roma
         /// </summary>
         public int GetFightingVal(int hp, int ap, int dp, float CritChance, float CritDamage)
         {
-            double val = 0;
+            FixedPoint val = FixedPoint.N_0;
             if (ap <= 0 && dp <= 0)
             {
-                val = hp + ap * 2 + dp;
+                val = new FixedPoint(hp) + new FixedPoint(ap) * 2 + new FixedPoint(dp);
             }
             else
             {
-                val = hp + ap * 2 + dp + ap * ap / (ap + 1 * dp) * (CritChance / 1000) * (CritDamage / 1000);
+                val = new FixedPoint(hp) + new FixedPoint(ap) * 2 +
+                    new FixedPoint(dp) +
+                    new FixedPoint(ap) * new FixedPoint(ap) / 
+                    (new FixedPoint(ap) + FixedPoint.N_1 * new FixedPoint(dp)) *
+                    (new FixedPoint(CritChance) / 1000) * 
+                    (new FixedPoint(CritDamage) / 1000);
             }
-            return (int)Math.Ceiling(val);
+            return (int)val.value;
         }
     }
 

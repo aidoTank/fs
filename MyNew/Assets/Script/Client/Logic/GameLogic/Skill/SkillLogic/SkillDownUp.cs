@@ -81,7 +81,7 @@ namespace Roma
                 return;
             for (int i = 0; i < m_curBuff.Count; i++)
             {
-                m_curBuff[i].m_skillPos = GetCaster().GetPos().ToVector2();
+                m_curBuff[i].m_skillPos = GetCaster().GetPos();
                 m_curBuff[i].m_skillDir = m_curSkillCmd.m_dir;
             }
         }

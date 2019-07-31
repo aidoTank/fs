@@ -149,8 +149,8 @@ namespace Roma
                     skill.m_casterUid = cmd.args[0];
                     skill.m_skillId = cmd.args[1];
                     skill.m_targetId = cmd.args[2];
-                    Vector2 dir = new Vector2(cmd.args[3], cmd.args[4])  * 0.01f;
-                    Vector2 endPos = new Vector2(cmd.args[5], cmd.args[6])  * 0.01f;
+                    Vector2d dir = new Vector2d(cmd.args[3] * 0.01f, cmd.args[4] * 0.01f);
+                    Vector2d endPos = new Vector2d(cmd.args[5] * 0.01f, cmd.args[6] * 0.01f);
                     skill.m_dir = dir;
                     skill.m_endPos = endPos;
                     logicCmd = skill;

@@ -26,15 +26,17 @@ namespace Roma
 
     public struct FPObb
     {
-        public Vector2d pos;
+        public Vector2d center;
         public Vector2d[] u; // 表示世界坐标中x,y的轴方向向量
         public Vector2d e;   // 矩形长宽的一半
 
+        private int ang;
+
         public FPObb(Vector2d pos, Vector2d size, int angle)
         {
-            this.pos = pos;
-            this.e = size * new FixedPoint(0.5f);
-
+            center = pos;
+            e = size * new FixedPoint(0.5f);
+            ang = angle;
             /// <summary>
             /// 2D环境中的角度，转为世界坐标中的xy方向的向量
             /// </summary>
@@ -46,6 +48,27 @@ namespace Roma
         public Vector2d GetDir()
         {
             return u[0];
+        }
+
+        public Vector2d[] GetVert2d()
+        {
+            // 先求矩形坐标系中四个点位置
+            Vector2d v1 = new Vector2d(-e.x, e.y);
+            Vector2d v2 = new Vector2d(e.x, e.y);
+            Vector2d v3 = new Vector2d(e.x, -e.y);
+            Vector2d v4 = new Vector2d(-e.x, -e.y);
+
+            v1 = center + FPCollide.Rotate(v1, ang);
+            v2 = center + FPCollide.Rotate(v2, ang);
+            v3 = center + FPCollide.Rotate(v3, ang);
+            v4 = center + FPCollide.Rotate(v4, ang);
+
+            Vector2d[] list = new Vector2d[4];
+            list[0] = v1;
+            list[1] = v2;
+            list[2] = v3;
+            list[3] = v4;
+            return list;
         }
     }
 
@@ -70,7 +93,7 @@ namespace Roma
 
         public static FixedPoint GetAngle(Vector2d vec)
         {
-            return CustomMath.Atan2((int)vec.x.value, (int)vec.y.value);
+            return CustomMath.Atan2((int)(vec.x.value * 10), (int)(vec.y.value * 10));
         }
 
         public static Vector2d Rotate(Vector2d vec, int angle)
@@ -107,8 +130,8 @@ namespace Roma
         /// </summary>
         public static Vector2d ClosestPointOBB(Vector2d p, FPObb b)
         {
-            Vector2d d = p - b.pos;
-            Vector2d q = b.pos;
+            Vector2d d = p - b.center;
+            Vector2d q = b.center;
             FixedPoint distX = Vector2d.Dot(d, b.u[0]);
             if (distX > b.e.x) distX = b.e.x;
             if (distX < -b.e.x) distX = -b.e.x;

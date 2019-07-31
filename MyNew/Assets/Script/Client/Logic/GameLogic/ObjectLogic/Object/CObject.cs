@@ -63,7 +63,7 @@ namespace Roma
             return (VTrigger)m_vCreature;
         }
 
-        public virtual bool Create(int csvId, string name, Vector2 pos, Vector2 dir, float scale = 1)
+        public virtual bool Create(int csvId, string name, Vector2d pos, Vector2d dir, float scale = 1)
         {
             return true;
         }

@@ -55,7 +55,7 @@ namespace Roma
             {
                 if (m_skillDataInfo.atkBuffList[i] == 0)
                     continue;
-                BuffBase buff = SkillBase.AddBuff(m_creature, m_creature, m_skillDataInfo.atkBuffList[i], Vector2.zero, Vector2.zero, Vector2.zero, index);
+                BuffBase buff = SkillBase.AddBuff(m_creature, m_creature, m_skillDataInfo.atkBuffList[i], Vector2d.zero, Vector2d.zero, Vector2d.zero, index);
                 if (buff != null)
                 {
                     buff.m_dieDestroy = false;
@@ -67,7 +67,7 @@ namespace Roma
             {
                 if (m_skillDataInfo.hitBuffList[i] == 0)
                     continue;
-                BuffBase buff = SkillBase.AddBuff(m_creature, m_creature, m_skillDataInfo.hitBuffList[i], Vector2.zero, Vector2.zero, Vector2.zero, index);
+                BuffBase buff = SkillBase.AddBuff(m_creature, m_creature, m_skillDataInfo.hitBuffList[i], Vector2d.zero, Vector2d.zero, Vector2d.zero, index);
                 if (buff != null)
                 {
                     buff.m_dieDestroy = false;
@@ -217,6 +217,7 @@ namespace Roma
             return m_curCdTime;
         }
 
+        // 给界面用的
         public float GetChargePct()
         {
             if (m_skillDataInfo.cd == 0)

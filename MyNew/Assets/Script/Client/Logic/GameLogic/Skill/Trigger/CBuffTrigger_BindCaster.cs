@@ -18,10 +18,10 @@ namespace Roma
 
         }
 
-        public override void InitPos(ref Vector2 startPos, ref Vector2 startDir)
+        public override void InitPos(ref Vector2d startPos, ref Vector2d startDir)
         {
-            startPos = m_caster.GetPos().ToVector2();
-            startDir = m_caster.GetDir().ToVector2();
+            startPos = m_caster.GetPos();
+            startDir = m_caster.GetDir();
 
             SetPos(m_caster.GetPos(), true);
             SetDir(m_caster.GetDir());

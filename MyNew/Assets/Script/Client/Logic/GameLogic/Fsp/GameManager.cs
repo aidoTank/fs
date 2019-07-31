@@ -78,7 +78,7 @@ namespace Roma
                     CCreature master = CCreatureMgr.Create(EThingType.Player, uid);
                     master.Create(uid, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(-220));
                     master.m_aiType = eAIType.Player;
-                    master.StartAi(true);
+                   master.StartAi(true);
                 }
                 else
                 {
@@ -91,12 +91,12 @@ namespace Roma
             }
 
 
-            for (int i = 0; i < 6; i++)
-            {
-                CCreature test1 = CCreatureMgr.Create(EThingType.Player, 1000 + i);
-                test1.Create(2, "测试1", new Vector2d(50 + i * 2, 60), FPCollide.GetVector(-220));
-                //test1.StartAi(true);
-            }
+            //for (int i = 0; i < 6; i++)
+            //{
+            //    CCreature test1 = CCreatureMgr.Create(EThingType.Player, 1000 + i);
+            //    test1.Create(2, "测试1", new Vector2d(50 + i * 2, 60), FPCollide.GetVector(-220));
+            //    test1.StartAi(true);
+            //}
 
             m_bRunning = true;
         }
@@ -171,7 +171,7 @@ namespace Roma
         public int GetRand(int nMin, int nMax, int from = 500)
         {
             int val = m_rand.Next(nMin, nMax);
-            //Debuger.LogWarning("CGameManger", "GetRand", "当前帧：" + curFrame + " 来自：from:" + from);
+            Debug.LogWarning("CGameMangerGetRand" + "当前帧：" + m_fspMgr.GetCurFrameIndex() + " 来自：from:" + from);
             return val;
         }
 

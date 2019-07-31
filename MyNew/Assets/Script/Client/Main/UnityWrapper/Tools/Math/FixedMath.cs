@@ -23,6 +23,9 @@ namespace Roma
         public static FixedPoint zero = new FixedPoint(0);
         public static FixedPoint one = new FixedPoint(1);
 
+        public static FixedPoint N_0 = new FixedPoint(0);
+        public static FixedPoint N_1 = new FixedPoint(1);
+
         public long m_value;
         public float value
         {
@@ -153,6 +156,12 @@ namespace Roma
         public static FixedPoint operator *(FixedPoint t1, int t2)
         {
             FixedPoint temp = t1 * new FixedPoint(t2);
+            return temp;
+        }
+
+        public static FixedPoint operator *(int t1, FixedPoint t2)
+        {
+            FixedPoint temp = t2 * new FixedPoint(t1);
             return temp;
         }
 
