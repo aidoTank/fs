@@ -123,11 +123,11 @@ namespace Roma
         #region 移动相关
         private void OnMoveEvent(eJoyStickEvent jsEvent, MoveJoyStick move)
         {
-            if(m_master != null && m_master.m_ai != null)
-            {
-                if (m_master.m_ai.IsRun())
-                    return;
-            }
+            //if(m_master != null && m_master.m_ai != null)
+            //{
+            //    if (m_master.m_ai.IsRun())
+            //        return;
+            //}
             if (jsEvent == eJoyStickEvent.Up)
             {
                 OnMove(true, move.m_delta);

@@ -129,6 +129,12 @@ namespace Roma
 
                 m_creature.SetPos(nextPos);
                 m_creature.SetDir(m_dirList[m_curMoveIndex].normalized);
+
+                if (m_creature.m_vCreature != null)
+                {
+                    m_creature.GetVObject().SetMove(true);
+                    m_creature.GetVObject().SetBarrier(false);
+                }
             }
         }
 
