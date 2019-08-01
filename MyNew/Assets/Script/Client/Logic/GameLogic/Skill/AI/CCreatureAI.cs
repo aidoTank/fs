@@ -58,11 +58,11 @@ namespace Roma
             //skillUp.AddChild(a_skillUp);
             //skillUp.name = "升级中";
 
-            Condi_CheckTransmit c_checkTransmit = new Condi_CheckTransmit();
-            Action_Transmit a_trans = new Action_Transmit();
-            BtSequence transmit = new BtSequence(c_checkTransmit);
-            transmit.AddChild(a_trans);
-            transmit.name = "瞬间传送";
+            //Condi_CheckTransmit c_checkTransmit = new Condi_CheckTransmit();
+            //Action_Transmit a_trans = new Action_Transmit();
+            //BtSequence transmit = new BtSequence(c_checkTransmit);
+            //transmit.AddChild(a_trans);
+            //transmit.name = "瞬间传送";
 
             // Elude skill
             Condi_CheckSendSkill_ c_checkSkill = new Condi_CheckSendSkill_();
@@ -100,11 +100,11 @@ namespace Roma
             chase.name = "追逐";
 
 
-            Condi_CheckFollow c_checkFollow = new Condi_CheckFollow();
-            Action_Follow a_follow = new Action_Follow();
-            BtSequence follow = new BtSequence(c_checkFollow);
-            follow.AddChild(a_follow);
-            follow.name = "跟随";
+            //Condi_CheckFollow c_checkFollow = new Condi_CheckFollow();
+            //Action_Follow a_follow = new Action_Follow();
+            //BtSequence follow = new BtSequence(c_checkFollow);
+            //follow.AddChild(a_follow);
+            //follow.name = "跟随";
 
             // patrol
             Action_Patrol patrol = new Action_Patrol();
@@ -119,7 +119,7 @@ namespace Roma
             //{
             //    m_tree.m_root.AddChild(findBuff);
             //}
-            //m_tree.m_root.AddChild(fight);
+            m_tree.m_root.AddChild(fight);
             //m_tree.m_root.AddChild(chase);
 
             //if (creature.IsPartner())

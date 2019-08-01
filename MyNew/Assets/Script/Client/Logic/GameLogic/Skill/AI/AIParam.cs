@@ -145,7 +145,7 @@ namespace Roma
             int targetUid = m_dataBase.GetData<int>((int)eAIParam.INT_TARGET_UID);
             CCreature targetCC =  CCreatureMgr.Get(targetUid);
             if (targetCC == null || 
-                FPCollide.GetDis2(targetCC.GetPos(), m_creature.GetPos()) > 20 * 20 ||
+                FPCollide.GetDis2(targetCC.GetPos(), m_creature.GetPos()) > new FixedPoint(20 * 20) ||
                 targetCC.IsDie())  // 隐藏时，不作为目标
             {
                 targetUid = 0;
@@ -155,27 +155,27 @@ namespace Roma
                 return true;
             }
             // 如果没有目标，检测玩家附近的单位，锁定目标
-            float m_minDis2 = 99999999;
+            FixedPoint m_minDis2 = new FixedPoint(999999);
             List<long> list = CCreatureMgr.GetCreatureList();
             for (int i = 0; i < list.Count; i++)
             {
                 CCreature cc = CCreatureMgr.Get(list[i]);
                 FixedPoint abDis2 = FPCollide.GetDis2(m_creature.GetPos(), cc.GetPos());
-                if (abDis2.value > lookDis * lookDis)
+                if (abDis2 > new FixedPoint(lookDis * lookDis))
                     continue;
 
-                if (cc.IsDie() || cc.GetUid() == m_creature.GetUid() || cc.GetThingType() == m_creature.GetThingType())
+                if (cc.IsDie() || cc.GetUid() == m_creature.GetUid())
                     continue;
                 //if (m_creature.bCamp(cc))
                 //    continue;
 
                 
-                if (abDis2 < lookDis * lookDis)    // 如果目标在视线范围内
+                if (abDis2 < new FixedPoint(lookDis * lookDis))    // 如果目标在视线范围内
                 {
-                    if (abDis2.value < m_minDis2)
+                    if (abDis2 < m_minDis2)
                     {
                         targetUid = (int)cc.GetUid();
-                        m_minDis2 = abDis2.value;
+                        m_minDis2 = abDis2;
                     }
                 }
             }
@@ -191,49 +191,36 @@ namespace Roma
         #endregion
 
         #region 随机选择一个可用技能
-        //private static List<CSkillInfo> m_canUserSkillList;
-        //public static bool RandomSelectSkill(CCreature m_creature, BtDatabase m_dataBase)
-        //{
-        //    if (m_canUserSkillList == null)
-        //        m_canUserSkillList = new List<CSkillInfo>();
+        private static List<CSkillInfo> m_canUserSkillList;
+        public static bool RandomSelectSkill(CCreature m_creature, BtDatabase m_dataBase)
+        {
+            if (m_canUserSkillList == null)
+                m_canUserSkillList = new List<CSkillInfo>();
 
-        //    // 如果有技能没有被使用，就不进行新的随机
-        //    int skillId = m_dataBase.GetData<int>((int)eAIParam.INT_SELECT_SKILL_INDEX);
-        //    if (skillId != 0)
-        //        return true;
+            // 如果有技能没有被使用，就不进行新的随机
+            int skillId = m_dataBase.GetData<int>((int)eAIParam.INT_SELECT_SKILL_INDEX);
+            if (skillId != -1)
+                return true;
 
-        //    m_creature.GetCanUseSkillList(ref m_canUserSkillList);
+            m_creature.GetCanUseSkillList(ref m_canUserSkillList);
 
-        //    if (m_canUserSkillList.Count == 0)
-        //        return false;
+            if (m_canUserSkillList.Count == 0)
+                return false;
 
-        //    // 主角技能，优先从高到低释放
-        //    if (m_creature.IsMaster())
-        //    {
-        //        for(int mIndex = m_canUserSkillList.Count - 1; mIndex >= 0; mIndex--)
-        //        {
-        //            int skillIndex = m_canUserSkillList[mIndex].GetSkillIndex();
-        //            if (skillIndex == 3)
-        //                continue;
-        //            m_dataBase.SetData<int>((int)eAIParam.INT_SELECT_SKILL_INDEX, skillIndex);
-        //            return true;
-        //        }
-        //        return false;
-        //    }
 
-        //    int i;
-        //    if (m_creature.m_aiType == eAIType.Client)
-        //    {
-        //        i = GameManager.Inst.GetRand(0, m_canUserSkillList.Count, 513);
-        //    }
-        //    else
-        //    {
-        //        i = GameManager.Inst.m_clientRand.Next(0, m_canUserSkillList.Count);
-        //    }
-        //    int index = m_canUserSkillList[i].GetSkillIndex();
-        //    m_dataBase.SetData<int>((int)eAIParam.INT_SELECT_SKILL_INDEX, index);
-        //    return true;
-        //}
+            int i;
+            if (m_creature.m_aiType == eAIType.Client)
+            {
+                i = GameManager.Inst.GetRand(0, m_canUserSkillList.Count, 513);
+            }
+            else
+            {
+                i = GameManager.Inst.GetClientRand(0, m_canUserSkillList.Count);
+            }
+            int index = m_canUserSkillList[i].GetSkillIndex();
+            m_dataBase.SetData<int>((int)eAIParam.INT_SELECT_SKILL_INDEX, index);
+            return true;
+        }
         #endregion
 
         #region 需要获取玩家目标的施法接口
@@ -255,21 +242,43 @@ namespace Roma
                 //}
                 int selectSkillUid = m_dataBase.GetData<int>((int)eAIParam.INT_SELECT_SKILL_INDEX);
 
+                CSkillInfo skillInfo = m_creature.GetSkillByIndex(selectSkillUid);
+         
+
+
                 CmdFspSendSkill cmd = new CmdFspSendSkill();
                 cmd.m_casterUid = (int)m_creature.GetUid();
                 cmd.m_skillIndex = selectSkillUid;
-                cmd.m_dir = dir;
-                cmd.m_endPos = targetCc.GetPos();
+
+                if (skillInfo.m_skillInfo.selectTargetType == (int)eSelectTargetType.Self)
+                {
+
+                }
+                else if (skillInfo.m_skillInfo.selectTargetType == (int)eSelectTargetType.Dir ||
+                         skillInfo.m_skillInfo.selectTargetType == (int)eSelectTargetType.SectorDir)
+                {
+                    cmd.m_dir = dir;
+                }
+                else if (skillInfo.m_skillInfo.selectTargetType == (int)eSelectTargetType.Pos)
+                {
+                    cmd.m_dir = dir;
+                    cmd.m_endPos = targetCc.GetPos();
+                }
                 cmd.m_bDown = bDown;
-    
 
-
-                m_creature.PushCommand(cmd);
+                if (m_creature.m_aiType == eAIType.Player)
+                {
+                    m_creature.SendFspCmd(cmd);
+                }
+                else
+                {
+                    m_creature.PushCommand(cmd);
+                }
 
                 // 进入公共CD
                 m_dataBase.SetData<int>((int)eAIParam.INT_SKILL_INTERVAL, GetSkillCastCd(m_creature, m_dataBase));
                 // 清空当前发送的技能
-                m_dataBase.SetData<int>((int)eAIParam.INT_SELECT_SKILL_INDEX, 0);
+                m_dataBase.SetData<int>((int)eAIParam.INT_SELECT_SKILL_INDEX, -1);
                 return true;
             }
             return false;

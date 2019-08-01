@@ -147,7 +147,7 @@ namespace Roma
                     
                     CmdFspSendSkill skill = new CmdFspSendSkill();
                     skill.m_casterUid = cmd.args[0];
-                    skill.m_skillId = cmd.args[1];
+                    skill.m_skillIndex = cmd.args[1];
                     skill.m_targetId = cmd.args[2];
                     Vector2d dir = new Vector2d(cmd.args[3] * 0.01f, cmd.args[4] * 0.01f);
                     Vector2d endPos = new Vector2d(cmd.args[5] * 0.01f, cmd.args[6] * 0.01f);

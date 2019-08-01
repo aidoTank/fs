@@ -12,6 +12,9 @@ namespace Roma
         public KeyMgr() : base(true) { }
 
         private bool m_bMove;
+
+        private bool m_ai;
+
         public override void Update(float fTime, float fDTime)
         { 
             float h = Input.GetAxis("Horizontal");
@@ -31,6 +34,13 @@ namespace Roma
                     ctr.OnMove(true, moveVec);
                     m_bMove = false;
                 }
+            }
+
+            if(Input.GetKey(KeyCode.Alpha7))
+            {
+                m_ai = !m_ai;
+                CCreature cc = CCreatureMgr.GetMaster();
+                cc.StartAi(m_ai);
             }
         }
       

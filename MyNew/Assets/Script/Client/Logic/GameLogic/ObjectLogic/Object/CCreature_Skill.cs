@@ -172,7 +172,7 @@ namespace Roma
                 {
                     m_startCd = false;
                 }
-                //m_creature.UpdateUI_CD(m_skillIndex, m_curCdTime * 0.001f, m_skillDataInfo.cd * 0.001f);
+                m_creature.UpdateUI_CD(m_skillIndex, m_curCdTime * 0.001f, m_skillDataInfo.cd * 0.001f);
             }
 
             if(m_bCondiSubSkill)
@@ -189,7 +189,7 @@ namespace Roma
         {
             //if (!Client.Inst().m_bCd)
             //    return true;
-            return true;
+            //return true;
             if (m_skillDataInfo == null)
                 return false;
             return m_curCdTime >= m_skillDataInfo.cd;
@@ -457,7 +457,7 @@ namespace Roma
 
         public void ExecuteFrameSkill()
         {
-            ExecuteFrame_Combo();
+            //ExecuteFrame_Combo();
 
             if (m_dicSkill == null)
                 return;
@@ -538,16 +538,16 @@ namespace Roma
             //Debug.Log("m_comboNum:" + m_comboNum);
         }
 
-        public void ExecuteFrame_Combo()
-        {
-            if (!IsMaster())
-                return;
-            m_comboTime += FSPParam.clientFrameMsTime;
-            if (m_comboTime > m_comboMaxTime)
-            {
-                m_comboNum = 0;
-            }
-        }
+        //public void ExecuteFrame_Combo()
+        //{
+        //    if (!IsMaster())
+        //        return;
+        //    m_comboTime += FSPParam.clientFrameMsTime;
+        //    if (m_comboTime > m_comboMaxTime)
+        //    {
+        //        m_comboNum = 0;
+        //    }
+        //}
         #endregion
     }
 }

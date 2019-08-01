@@ -74,27 +74,21 @@ namespace Roma
                 if (EGame.m_openid.Equals(uid.ToString()))
                 {
                     EGame.m_uid = uid;
-                    Debug.Log("客户端主角:" + uid);
-                    CCreature master = CCreatureMgr.Create(EThingType.Player, uid);
-                    master.Create(uid, playerData[i].ToString(), new Vector2d(60, 60), FPCollide.GetVector(-220));
-                    master.m_aiType = eAIType.Player;
-                   master.StartAi(true);
                 }
-                else
-                {
-                    Debug.Log("客户端玩家:" + uid);
-                    CCreature player = CCreatureMgr.Create(EThingType.Player, uid);
-                    player.Create(uid, uid.ToString(), new Vector2d(60, 60), FPCollide.GetVector(60));
-                    player.m_aiType = eAIType.Player;
-                    player.StartAi(true);
-                }
+                CCreature master = CCreatureMgr.Create(EThingType.Player, uid);
+                master.Create(uid, playerData[i].ToString(), new Vector2d(60, 60 + i * 4), FPCollide.GetVector(60));
+
+                master.m_ai = new CCreatureAI(master, eAILevel.HARD);
+                master.m_aiType = eAIType.Player;
+                master.StartAi(false);
             }
 
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 4; i++)
             {
                 CCreature test1 = CCreatureMgr.Create(EThingType.Player, 1000 + i);
                 test1.Create(2, "测试" + i, new Vector2d(50 + i * 2, 60), FPCollide.GetVector(-220));
+                test1.m_ai = new CCreatureAI(test1, eAILevel.EASY);
                 test1.StartAi(true);
             }
 

@@ -12,9 +12,7 @@ namespace Roma
 
         public override bool Check()
         {
-            //return AIParam.RandomSelectSkill(m_creature, m_dataBase);
-
-            return false;
+            return AIParam.RandomSelectSkill(m_creature, m_dataBase);
         }
 
     }

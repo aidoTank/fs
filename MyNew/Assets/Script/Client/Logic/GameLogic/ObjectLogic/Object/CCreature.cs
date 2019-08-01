@@ -113,7 +113,7 @@ namespace Roma
                     CmdFspSendSkill skill = cmd as CmdFspSendSkill;
                     key.args = new int[7];
                     key.args[0] = (int)skill.m_casterUid;
-                    key.args[1] = (int)skill.m_skillId;
+                    key.args[1] = (int)skill.m_skillIndex;
                     key.args[2] = (int)skill.m_targetId;
 
                     key.args[3] = (int)(skill.m_dir.x * 100);
@@ -155,27 +155,22 @@ namespace Roma
 
         public override void ExecuteFrame(int frameId)
         {
+            if (collider != null && (IsPlayer() || IsMonster()))
+                collider.Update();
+
+            ExecuteFrameSkill();
+
+            if (IsDie())
+                return;
+
+            if (bStateBuff(eBuffState.stun))
+                return;
+
             if (m_ai != null)
             {
                 m_ai.EnterFrame();
             }
-            ExecuteFrameSkill();
-            if (IsDie())
-                return;
-
-            // 独立状态
-            //if (m_logicMoveEnabled && m_logicState.GetCmdType() == CmdFspEnum.eFspAutoMove)
-            //{
-            //    TickAutoMove();
-            //}
-            //base.ExecuteFrame(frameId);
-
             m_stateMgr.ExecuteFrame(frameId);
-
-            if (collider == null)
-                return;
-            if (IsPlayer() || IsMonster())
-                collider.Update();
         }
 
         public override void SetPos(Vector2d pos, bool bTeleport = false)
@@ -213,10 +208,6 @@ namespace Roma
         /// </summary>
         public virtual void OnDie()
         {
-            if (IsMaster())
-            {
-                StartAi(false);
-            }
             DestoryDownUpSkill();
             if (m_curSkill != null)
                 m_curSkill.Destory();
@@ -307,7 +298,7 @@ namespace Roma
         {
             if (m_ai == null)
             {
-                m_ai = new CCreatureAI(this, eAILevel.HARD);
+                return;
             }
 
             // 取消AI时，如果之前开启了AI，则停止按下技能

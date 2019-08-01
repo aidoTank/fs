@@ -41,6 +41,7 @@ namespace Roma
         public bool isLua;
 
         public bool isSingleTest;
+        public bool isPlayerAi;
 
         public static Client m_client;
 

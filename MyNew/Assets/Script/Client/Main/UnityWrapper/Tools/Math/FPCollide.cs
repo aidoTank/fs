@@ -93,6 +93,10 @@ namespace Roma
 
         public static FixedPoint GetAngle(Vector2d vec)
         {
+            if(vec.y.value == 0)
+            {
+                return FixedPoint.N_0;
+            }
             return CustomMath.Atan2((int)(vec.x.value * 10), (int)(vec.y.value * 10));
         }
 
