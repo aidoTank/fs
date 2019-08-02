@@ -31,6 +31,7 @@ namespace Roma
         public override void Update()
         {
             _HandleMsg();
+            //_HandleMsgNew();
         }
 
         public void RecvMessage()
@@ -149,5 +150,56 @@ namespace Roma
 
         // 接受的消息队列，不能再异步回调的线程中操作模型
         private List<NetMessage> m_msgList = new List<NetMessage>();
+
+
+
+        #region 优化为消息注册方式
+        protected List<LusuoStream> _m_listMsg = new List<LusuoStream>();
+        //private Dictionary<int, Action<MyMessage>> _m_msgList = new Dictionary<int, Action<MyMessage>>();
+
+        private void HandleMsgNew()
+        {
+            LusuoStream stream = new LusuoStream(m_recvBuffer);
+            _m_listMsg.Add(stream);
+        }
+
+        private void _HandleMsgNew()
+        {
+            for (int i = 0; i < _m_listMsg.Count; i++)
+            {
+                LusuoStream stream = _m_listMsg[i];
+                int msgLen = stream.ReadInt();
+                //ushort msgId = stream.ReadUShort();
+                int msgId = stream.ReadInt();
+                //Debug.Log("接受消息长度：" + msgLen);
+                //Debug.Log("接受消息ID：" + (eNetMessageID)msgId);
+                byte[] structBytes = new byte[msgLen - StringHelper.s_IntSize];
+                stream.Read(ref structBytes);
+                //MyMessage recv = ProtobufHelper.DeSerialize<MyMessage>(structBytes);
+
+                //Action<MyMessage> OnRecv;
+                //if (_m_msgList.TryGetValue(msgId, out OnRecv))
+                //{
+                //    if (OnRecv != null)
+                //        OnRecv(recv);
+                //}
+            }
+            _m_listMsg.Clear();
+        }
+
+        //public void AddMsgEvent(eNetMessageID id, Action<MyMessage> onRecv)
+        //{
+        //    Action<MyMessage> recv;
+        //    if (_m_msgList.TryGetValue((int)id, out recv))
+        //    {
+        //        recv += onRecv;
+        //    }
+        //    else
+        //    {
+        //        _m_msgList.Add((int)id, onRecv);
+        //    }
+        //}
+
+        #endregion
     }
 }

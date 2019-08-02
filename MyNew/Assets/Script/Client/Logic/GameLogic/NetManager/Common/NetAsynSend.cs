@@ -42,6 +42,7 @@ namespace Roma
         public override void Update()
         {
             SendMessage();
+            //SendMessageNew();
         }
 
         /// <summary>
@@ -79,5 +80,64 @@ namespace Roma
 
         private LusuoStream m_stream;
         protected bool m_bSending = false;
+
+
+        #region 优化为消息注册方式
+        public void SendMessage<T>(int msgID, T t)
+        {
+            LusuoStream stream = new LusuoStream(new byte[m_uBufferSize]);
+
+            stream.WriteInt(0);                   // 预留总字节数
+            stream.WriteInt((int)msgID);          // 写消息编号
+            byte[] bytes = ProtobufHelper.Serialize<T>(t);
+            byte[] md5 = GetMd5Str(bytes);
+
+            stream.Write(ref md5);
+            stream.Write(ref bytes);              // 写具体结构体
+            stream.Seek(0);
+            // 内容字节数
+            int contentLen = StringHelper.s_IntSize + md5.Length + bytes.Length;
+            stream.WriteInt(contentLen);          // 再次写内容长度
+            stream.m_byteLen = StringHelper.s_IntSize + contentLen; // 长度字节数 + 内容字节数
+
+            _m_listMsg.Add(stream);
+        }
+
+        private void SendMessageNew()
+        {
+            // 一次发送一条
+            if (_m_bSending)
+                return;
+            if (_m_listMsg.Count > 0)
+            {
+                _m_bSending = true;
+                LusuoStream msg = _m_listMsg[0];
+                m_socket.BeginSend(msg.GetBuffer(), 0, msg.m_byteLen, SocketFlags.None, _SendedEnd, null);
+                _m_listMsg.RemoveAt(0);
+                //Debug.LogWarning("最后发送消息：" + (eNetMessageID)msg.msgID);
+            }
+        }
+
+        private void _SendedEnd(IAsyncResult ar)
+        {
+            m_socket.EndSend(ar);
+            _m_bSending = false;
+            //m_stream.Reset();
+            ar = null;
+            Debug.Log("发送成功！");
+        }
+
+        public byte[] GetMd5Str(byte[] ConvertString)
+        {
+            System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            string value = System.BitConverter.ToString(md5.ComputeHash(ConvertString), 4, 8);
+            value = value.Replace("-", "");
+            value = value.ToLower();
+            return System.Text.Encoding.UTF8.GetBytes(value);
+        }
+
+        protected List<LusuoStream> _m_listMsg = new List<LusuoStream>();
+        protected bool _m_bSending = false;
+        #endregion
     }
 }

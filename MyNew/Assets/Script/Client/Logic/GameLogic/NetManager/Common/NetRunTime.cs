@@ -169,6 +169,24 @@ namespace Roma
             m_nSend.SendMessage(msg);
         }
 
+        //public void SendMessage<T>(int msgID, T t)
+        //{
+        //    if (!IsConnected())
+        //    {
+        //        return;
+        //    }
+        //    m_nSend.SendMessage<T>(msgID, t);
+        //}
+
+        //public void AddMsgEvent(eNetMessageID id, Action<MyMessage> onRecv)
+        //{
+        //    if (!IsConnected())
+        //    {
+        //        return;
+        //    }
+        //    m_nRecv.AddMsgEvent(id, onRecv);
+        //}
+
         private void _UpdateSend()
         {
             m_nSend.Update();
