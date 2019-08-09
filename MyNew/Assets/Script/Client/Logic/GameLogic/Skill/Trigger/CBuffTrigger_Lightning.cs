@@ -49,46 +49,48 @@ namespace Roma
         public override void InitPos(ref Vector2d startPos, ref Vector2d startDir)
         {
             // modified starting point
-            //startPos = m_rec.GetPos();
+            startPos = m_rec.GetPos();
         }
 
         public void OnHitTarget()
         {
-            float m_minDis2 = 999999;
+            FixedPoint m_minDis2 = new FixedPoint(999999);
             CCreature target = null;
             List<long> list = CCreatureMgr.GetCreatureList();
             for (int i = 0; i < list.Count; i++)
             {
-                //CCreature creature = CCreatureMgr.Get(list[i]);
-                //if (m_listHited != null && m_listHited.Contains((int)list[i]))
-                //    continue;
-                //if (m_caster == creature || m_caster.bCamp(creature) || creature.IsDie() || creature == m_rec)
-                //    continue;
-                //float abDis2 = Collide.GetDis2(m_rec.GetPos(), creature.GetPos());
-                //if (abDis2 < m_triggerData.Length * m_triggerData.Length) 
-                //{
-                //    if (abDis2 < m_minDis2)
-                //    {
-                //        target = creature;
-                //        m_minDis2 = abDis2;
-                //    }
-                //}
+                CCreature creature = CCreatureMgr.Get(list[i]);
+                if (m_listHited != null && m_listHited.Contains((int)list[i]))
+                    continue;
+                if (m_caster == creature || m_caster.bCamp(creature) || creature.IsDie() || creature == m_rec)
+                    continue;
+                FixedPoint abDis2 = FPCollide.GetDis2(m_rec.GetPos(), creature.GetPos());
+                if (abDis2 < new FixedPoint(m_triggerData.Length * m_triggerData.Length)) 
+                {
+                    if (abDis2 < m_minDis2)
+                    {
+                        target = creature;
+                        m_minDis2 = abDis2;
+                    }
+                }
             }
             if(target != null)
             {
-                //if(m_listHited == null)
-                //    m_listHited = new List<int>();
-                //m_listHited.Add((int)target.GetUid());
-                //OnHitAddBuff(m_caster, target, m_listHited);
+                if(m_listHited == null)
+                    m_listHited = new List<int>();
 
-                //VTrigger vTri = GetVTrigger();
-                //if(vTri !=  null && m_rec != null && m_rec.GetVObject() != null)
-                //{
-                //    Vector3 sh = m_rec.GetVObject().GetHitHeight();
-                //    Vector3 th = target.GetVObject().GetHitHeight();
-                //    vTri.SetLineStartPos(GetPos().ToVector3() + sh);
-                //    vTri.SetLineTargetPos(target.GetPos().ToVector3() + th);
-                //}
+                Debug.Log("添加单位："  + target.GetUid());
+                m_listHited.Add((int)target.GetUid());
+                OnHitAddBuff(m_caster, target, m_listHited);
+
+                VTrigger vTri = GetVTrigger();
+                if(vTri !=  null && m_rec != null && m_rec.GetVObject() != null)
+                {
+                    Vector3 sh = m_rec.GetVObject().GetHitHeight();
+                    Vector3 th = target.GetVObject().GetHitHeight();
+                    vTri.SetLineStartPos(GetPos().ToVector3() + sh);
+                    vTri.SetLineTargetPos(target.GetPos().ToVector3() + th);
+                }
             }
             else
             {

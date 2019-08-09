@@ -154,6 +154,7 @@ namespace Roma
             for (int i = 0; i < m_lineRender.Length; i++)
             {
                 LineRenderer line = m_lineRender[i];
+                line.numPositions = 2;
                 line.SetPosition(0, m_lineStart.position);
                 line.SetPosition(1, m_lineEnd.position);
             }
@@ -167,7 +168,6 @@ namespace Roma
                 m_lineStart = GetObject().transform.FindChild("0");
             if (m_lineStart == null)
                 return;
-
             m_lineStart.position = sPos;
         }
 

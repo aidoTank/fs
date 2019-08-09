@@ -84,12 +84,20 @@ namespace Roma
             }
 
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 2; i++)
             {
                 CCreature test1 = CCreatureMgr.Create(EThingType.Player, 1000 + i);
                 test1.Create(2, "测试" + i, new Vector2d(50 + i * 2, 60), FPCollide.GetVector(-220));
-                test1.m_ai = new CCreatureAI(test1, eAILevel.EASY);
-                test1.StartAi(true);
+                //test1.m_ai = new CCreatureAI(test1, eAILevel.EASY);
+                //test1.StartAi(true);
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                CCreature test1 = CCreatureMgr.Create(EThingType.Player, 2000 + i);
+                test1.Create(1, "测试" + i, new Vector2d(50 + i * 2, 60), FPCollide.GetVector(-220));
+                //test1.m_ai = new CCreatureAI(test1, eAILevel.EASY);
+                //test1.StartAi(true);
             }
 
             m_bRunning = true;

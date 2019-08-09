@@ -306,7 +306,7 @@ namespace Roma
                     //Debug.Log("发送技能：" + skillInfo.id  + "dir:" + m_curSkillDir + " pos:" + m_curSkilPos);
                     CmdFspSendSkill cmd = new CmdFspSendSkill();
                     cmd.m_casterUid = (int)m_master.GetUid();
-                    cmd.m_skillId = skillInfo.id;
+                    cmd.m_skillIndex = m_curSkillIndex;
                     cmd.m_dir = (new Vector2(m_curSkillDir.x, m_curSkillDir.z)).ToVector2d();
                     cmd.m_endPos = (new Vector2(m_curSkilPos.x, m_curSkilPos.z)).ToVector2d();
                     master.SendFspCmd(cmd);

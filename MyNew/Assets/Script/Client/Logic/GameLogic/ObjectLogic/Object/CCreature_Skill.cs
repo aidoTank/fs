@@ -187,9 +187,9 @@ namespace Roma
 
         public bool IsCanUse()
         {
-            //if (!Client.Inst().m_bCd)
-            //    return true;
-            //return true;
+            if (!Client.Inst().m_bCd)
+                return true;
+            return true;
             if (m_skillDataInfo == null)
                 return false;
             return m_curCdTime >= m_skillDataInfo.cd;

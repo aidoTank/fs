@@ -17,7 +17,7 @@ public class FspMsgCreateRoom : NetMessage
     public override void ToByte(ref LusuoStream ls)
     {
         eno = 0;
-        SetByte<CG_CreateRoom>(m_createRoom, ref ls);
+        SetByte<CS_CreateRoom>(m_createRoom, ref ls);
     }
 
     public override void OnRecv()
@@ -28,6 +28,6 @@ public class FspMsgCreateRoom : NetMessage
         }
     }
 
-    public CG_CreateRoom m_createRoom = new CG_CreateRoom();
+    public CS_CreateRoom m_createRoom = new CS_CreateRoom();
 }
 

@@ -135,7 +135,7 @@ namespace Roma
                 m_animation[action.strFull].time = Mathf.Epsilon;
             }
             m_animation.CrossFade(action.strFull, action.crossTime);
-            //Debug.LogError(m_animation.gameObject.name + "播放：" + action.strFull + " 速度:" + action.playSpeed + "  时间：" + anima.length);
+            Debug.LogError(m_animation.gameObject.name + "播放：" + action.strFull + " 速度:" + action.playSpeed + "  时间：" + anima.length);
             if (action.endEvent != null)
             {
                 action.endTime = anima.length;

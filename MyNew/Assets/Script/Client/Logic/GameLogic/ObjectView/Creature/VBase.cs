@@ -122,6 +122,10 @@ namespace Roma
 
         public virtual void SetPos(Vector3 pos, bool isTeleport = false)
         {
+            if (pos.y == 0)
+            {
+                pos.y = m_moveInfo.m_pos.y;
+            }
             m_moveInfo.m_pos = pos;
             if (isTeleport)
             {

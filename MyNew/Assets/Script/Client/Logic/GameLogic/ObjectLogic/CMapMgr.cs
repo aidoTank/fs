@@ -24,6 +24,11 @@ namespace Roma
             }
         }
 
+        public static CMap GetMap()
+        {
+            return m_map;
+        }
+
         public static void Destroy()
         {
             if(m_map != null)

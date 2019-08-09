@@ -18,7 +18,7 @@ namespace Roma
 
         public override void ToByte(ref LusuoStream ls)
         {
-            SetByte<CG_Login>(login, ref ls);
+            SetByte<CS_Login>(login, ref ls);
         }
 
         public override void OnRecv()
@@ -36,7 +36,7 @@ namespace Roma
                 LoginModule login = (LoginModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelLogin);
                 login.SetVisible(false);
                 Debug.Log("有角色，直接进入大厅");
-                GC_PlayerPublicData data = GetData<GC_PlayerPublicData>(structBytes);
+                SC_PlayerPublicData data = GetData<SC_PlayerPublicData>(structBytes);
                 Debug.Log(data.name);
                 Debug.Log(data.occ);
                 Debug.Log(data.x);
@@ -51,14 +51,14 @@ namespace Roma
             }
         }
 
-        public static void EnterMainUI(GC_PlayerPublicData data)
+        public static void EnterMainUI(SC_PlayerPublicData data)
         {
             Debug.Log("进入主界面，附带玩家信息 :"+ data.userName);
             MainModule main = (MainModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelMain);
             main.SetVisible(true);
         }
 
-        public CG_Login login = new CG_Login();
+        public CS_Login login = new CS_Login();
     }
 
 

@@ -42,7 +42,7 @@ namespace Roma
 
         public bool isSingleTest;
         public bool isPlayerAi;
-
+        public bool m_bCd;
         public static Client m_client;
 
         public string s_gameServerIP;

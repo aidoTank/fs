@@ -642,7 +642,7 @@ namespace Roma
 
         public Vector3 GetHitHeight()
         {
-            return Vector3.up * m_baseInfo.m_headHeight * 0.7f;
+            return Vector3.up * m_baseInfo.m_headHeight * 0.5f;
         }
 
         public override void Update(float time, float fdTime)

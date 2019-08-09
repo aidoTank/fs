@@ -7,27 +7,6 @@ using System.Collections.Generic;
 using System.Text;
 using System;
 
-
-/**
-正方贴图:
-IOS下：
-a.普通不透明： RGB PVRTC 4BITS
-b.普通透明：   RGBA PVRTC 4BITS
-
-Android下：
-a.普通不透明： RGB ETC 4BITS
-b.普通透明:    RGBA 16BIT
-    因为没有通用最兼容的格式，所以一般情况是用RGBA 16BIT
-    或有针对性的选择DXT5/ATC8 BITS/ETC2 8BITS。
-    如果有技术支持，可以采用RGB ETC 4BITS加一张ALPHA 8的贴图来实现透明效果。
-
-非正方贴图:
-a.不透明贴图: RGB 16BITS
-d.透明贴图：RGBA 16BITS
-
-注：photo背景贴图直接压小
-*/
-
 /// <summary>
 /// 导出所有数据配置 》二进制 》包文件
 /// 
@@ -42,6 +21,8 @@ d.透明贴图：RGBA 16BITS
 /// 4.打包
 ///     将设置ab名的资源进行打包
 /// </summary>
+/// 
+
 public class ExportConfig
 {
 
@@ -65,6 +46,14 @@ public class ExportConfig
     protected static List<ResInfo> m_lstResinfo = null;
     private static int m_curResID = 0;
 
+    [MenuItem("打包/一键打包[资源+csv] &v")]
+    public static void CreateAllAssetBundles()
+    {
+        ExportAB.CreateAllAssetBundles2();
+        Debug.Log("===> 资源打包完成");
+        ExportConfig.Export();
+        Debug.Log("===> 配置打包完成");
+    }
 
     [MenuItem("配置/生成Csv和ResInfo配置(先打包资源，才能自动生成路径配置) &C")]
     public static void Export()
@@ -83,9 +72,6 @@ public class ExportConfig
         CsvManager.Inst = new CsvManager();
         LogicSystem logicSystem = new LogicSystem();
         logicSystem.InitCsv(ref CsvManager.Inst);
-
-        //LuaLogicSystem logicSystem = new LuaLogicSystem();
-        //logicSystem.InitCsv(ref CsvManager.Inst);
 
         // 将所有的csv文件写入到m_csvStream
         m_csvNums = 0;
@@ -136,19 +122,20 @@ public class ExportConfig
                 }
                 catch (IOException ioe)
                 {
-                    Debug.LogError("处理csv失败，检查是否已经打开：" + item.FullName + " "+ ioe);
+                    Debug.LogError("处理csv失败，检查是否已经打开：" + item.FullName + " " + ioe);
                     EditorUtility.DisplayDialog(
                     "打包配置错误",
                     "请关闭配置表，重新打包： " + item.FullName,
                     "确定");
                     file = null;
+                    m_csvStream = null;
                     return false;
                 }
 
                 m_csvNums++;
                 // 这里存csv的id效率更好
                 //m_csvStream.WriteString(ref csvName);
-                int type = CsvManager.Inst.GetType(csvName);
+                int type = (int)CsvManager.Inst.GetType(csvName);
                 m_csvStream.WriteInt(type);
 
                 byte[] readData = new byte[file.Length];
@@ -174,7 +161,7 @@ public class ExportConfig
         bool b = m_resInfoCsv.Load(m_resCsvPath, Encoding.Default);
         if (!b)
         {
-            Debug.LogError("打开csv失败。");
+            Debug.LogError("注意： 资源总表，打开csv失败。");
             return;
         }
 
@@ -249,8 +236,8 @@ public class ExportConfig
         foreach (FileInfo item in fileInfo)
         {
             // 排除.mate
-            if(ResInfo.IsMainResFile(item.Name))
-            { 
+            if (ResInfo.IsMainResFile(item.Name))
+            {
                 ResInfo res = new ResInfo();
                 string resName = item.Name.ToLower();
                 string resPath = item.FullName;
@@ -269,7 +256,7 @@ public class ExportConfig
                 if (m_resInfoCsv.m_mapNameResInfo.TryGetValue(resName, out oldRes))
                 {
                     res.nResID = oldRes.nResID;
-
+                    res.bz = oldRes.bz;
                     if (!m_mapNameResInfo.ContainsKey(resName))
                     {
                         m_mapNameResInfo.Add(resName, res);
@@ -305,7 +292,7 @@ public class ExportConfig
                     }
                     else
                     {
-                        Debug.LogError("有重复的资源：" + item.Name);
+                        Debug.LogError("StreamingAssets目录有重复的资源，请删除多余资源：" + item.Name);
                     }
                 }
             }
@@ -348,11 +335,11 @@ public class ExportConfig
         }
 
         //打包资源
-        //BuildPipeline.BuildAssetBundles(m_exportPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+        BuildPipeline.BuildAssetBundles(m_exportPath, BuildAssetBundleOptions.ChunkBasedCompression, ExportTarget.m_buildTarget);
 
         //File.Delete(m_resBytesPath);
         //File.Delete(m_csvBytesPath);
         AssetDatabase.Refresh();
-        ExportAB.CreateAllAssetBundles();
+        //ExportAB.CreateAllAssetBundles();
     }
 }

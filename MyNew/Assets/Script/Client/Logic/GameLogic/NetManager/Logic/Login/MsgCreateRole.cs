@@ -19,7 +19,7 @@ namespace Roma
 
         public override void ToByte(ref LusuoStream ls)
         {
-            SetByte<CG_CreateRole>(createRole, ref ls);
+            SetByte<CS_CreateRole>(createRole, ref ls);
         }
 
         public override void OnRecv()
@@ -30,7 +30,7 @@ namespace Roma
                 cRole.SetVisible(false);
 
                 Debug.Log("创建角色成功，直接进入大厅");
-                GC_PlayerPublicData data = GetData<GC_PlayerPublicData>(structBytes);
+                SC_PlayerPublicData data = GetData<SC_PlayerPublicData>(structBytes);
                 Debug.Log(data.name);
                 Debug.Log(data.occ);
                 Debug.Log(data.x);
@@ -48,7 +48,7 @@ namespace Roma
             }
         }
 
-        public CG_CreateRole createRole = new CG_CreateRole();
+        public CS_CreateRole createRole = new CS_CreateRole();
     }
 
     /// <summary>

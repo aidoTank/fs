@@ -19,13 +19,6 @@ namespace Roma
         public override void Init()
         {
             base.Init();
-            m_rec.SetState((eBuffState)m_buffData.ParamValue1, true);
-
-            //ride = m_rec.GetRide();
-            if (ride != null)
-            {
-                ride.SetState((eBuffState)m_buffData.ParamValue1, true);
-            }
 
             switch (m_buffData.ParamValue1)
             {
@@ -49,6 +42,14 @@ namespace Roma
                     break;
             }
 
+            m_rec.SetState((eBuffState)m_buffData.ParamValue1, true);
+
+            //ride = m_rec.GetRide();
+            if (ride != null)
+            {
+                ride.SetState((eBuffState)m_buffData.ParamValue1, true);
+            }
+
         }
 
         public override bool IsStateBuff()
@@ -64,14 +65,6 @@ namespace Roma
         public override void Destroy()
         {
             base.Destroy();
-
-            m_rec.SetState((eBuffState)m_buffData.ParamValue1, false);
-
-            //ride = m_rec.GetRide();
-            if (ride != null)
-            {
-                ride.SetState((eBuffState)m_buffData.ParamValue1, true);
-            }
 
             switch (m_buffData.ParamValue1)
             {
@@ -93,6 +86,14 @@ namespace Roma
                     ResetMove(m_rec);
                     ResetSkill(m_rec);
                     break;
+            }
+
+            m_rec.SetState((eBuffState)m_buffData.ParamValue1, false);
+
+            //ride = m_rec.GetRide();
+            if (ride != null)
+            {
+                ride.SetState((eBuffState)m_buffData.ParamValue1, true);
             }
         }
 

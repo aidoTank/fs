@@ -6,15 +6,12 @@ namespace Roma
     /// <summary>
     /// 可旋转发射变长矩形
     /// 绑定施法者的位置lightning
+    /// 
+    /// 后面将【两点激光】和【可旋转发射变长矩形】分离
+    /// 因为他们逻辑处理其实是不一样的
     /// </summary>
     public class CBuffTrigger_Laser :  CBuffTrigger
     {
-        /// <summary>
-        /// 矩形可变的长度
-        /// </summary>
-        private float m_length;
-        private bool m_bLerp = true;
-
         public CBuffTrigger_Laser(long id)
             : base(id)
         {
@@ -24,51 +21,29 @@ namespace Roma
         public override bool Create(int csvId, string name, Vector2d pos, Vector2d dir, float scale = 1)
         {
             base.Create(csvId, name, pos, dir, scale);
+
+            VTrigger vTri = GetVTrigger();
+            if (vTri != null)
+            {
+                // 设置起始点为当前闪电原点
+                vTri.SetLineStartPos(vTri.m_baseInfo.m_pos);
+            }
             return true;
         }
 
-        public override void ExecuteFrame(int frameId)
+        public override void InitPos(ref Vector2d startPos, ref Vector2d startDir)
         {
-            base.ExecuteFrame(frameId);
-
-            if(m_bLerp)
-            {
-                m_length += FSPParam.clientFrameScTime * 40;
-                if (m_length >= m_triggerData.Length)
-                {
-                    m_bLerp = false;
-                    m_length = m_triggerData.Length;
-                }
-            }
-
-            _UpdatePos();
-            _UpdateSize();
+            // 修正起始位置XZ
+            Vector3 deltaPos = m_triggerData.vBulletDeltaPos;
+            Vector2d vL = FPCollide.Rotate(startDir.normalized, 90) * new FixedPoint(deltaPos.x);   // 左右偏移
+            Vector2d vF = startDir.normalized * new FixedPoint(deltaPos.z);                         // 前后偏移
+            startPos = m_caster.GetPos() + vL + vF;
         }
 
-        public override void _UpdatePos()
+        // 矩形检测，获取最近的单位，进行激光链接
+        public override void Trigger()
         {
-            //SetPos(m_caster.GetPos(), true);
-
-            //// 击退的过程中不跟随方向（因为击退时逻辑方向是向后的，技能方向如果跟随角色会出现技能方向错误的问题）
-            //if (m_caster.bConBuffLogicType(eBuffType.repel))
-            //{
-            //    return;
-            //}
-            //Vector2 lastDir = Collide.Rotate(m_caster.GetDir(), m_triggerData.dirDelta);
-            //SetDir(lastDir);
-        }
-
-        public void _UpdateSize()
-        {
-
-            float length = 0;
-            if (m_bLerp)
-                length = m_length;
-            else
-                length = m_triggerData.Length;
-            
-
-            float minDis = 999999;
+            FixedPoint minDis = new FixedPoint(999999);
             CCreature minCC = null;
             List<long> list = CCreatureMgr.GetCreatureList();
             for (int i = 0; i < list.Count; i++)
@@ -77,91 +52,66 @@ namespace Roma
                 if (m_caster.bCamp(creature) || creature.IsDie())
                     continue;
 
-                Sphere playerS = new Sphere();
-                //playerS.c = creature.GetPos();
-                //playerS.r = creature.GetR();
+                FPSphere playerS = new FPSphere();
+                playerS.c = creature.GetPos();
+                playerS.r = creature.GetR();
 
-                //Vector2 pos = GetPos() + GetDir().normalized * length * 0.5f;
-                //float angle = Collide.GetAngle(GetDir());
-                //OBB obb = new OBB(pos, new Vector2(m_triggerData.Width, length), angle);
-                //if (Collide.bSphereOBB(playerS, obb))
-                //{
-                //    float dis = Vector2.Distance(creature.GetPos(), GetPos());
-                //    if (dis < minDis)
-                //    {
-                //        minDis = dis;
-                //        minCC = creature;
-                //    }
-                //}
+                Vector2d pos = m_caster.GetPos() + GetDir().normalized * new FixedPoint((m_triggerData.Length + m_triggerData.vBulletDeltaPos.z) * 0.5f);
+                int angle = (int)FPCollide.GetAngle(GetDir()).value;
+                FPObb obb = new FPObb(pos, new Vector2d(m_triggerData.Width, m_triggerData.Length), angle);
+                if (FPCollide.bSphereOBB(playerS, obb))
+                {
+                    FixedPoint dis = Vector2d.Distance(creature.GetPos(), GetPos());
+                    if (dis < minDis)
+                    {
+                        minDis = dis;
+                        minCC = creature;
+                    }
+                }
             }
             if (minCC != null)
             {
-                m_length = minDis;
-                //Vector2 targetPos = GetPos() + GetDir().normalized * m_length;
-                //if (m_vCreature != null)
-                //{
-                //    Vector3 tH = minCC.GetVObject().GetHitHeight();
-                //    GetVTrigger().SetLineTargetPos(targetPos.ToVector3() + tH);
-                //}
-                //m_bLerp = false;
+                OnHitAddBuff(m_caster, minCC);
+                Vector2d targetPos = GetPos() + GetDir().normalized * minDis;
+
+                if (m_vCreature != null)
+                {
+                    Vector3 tH = minCC.GetVObject().GetHitHeight();
+                    GetVTrigger().SetLineTargetPos(targetPos.ToVector3() + tH);
+                }
             }
             else
             {
                 _CheckObstacle();
             }
         }
-        
-        public override void Trigger()
-        {
-            //List<long> list = CCreatureMgr.GetCreatureList();
-            //for (int i = 0; i < list.Count; i++)
-            //{
-            //    CCreature creature = CCreatureMgr.Get(list[i]);
-            //    if (m_caster.bCamp(creature) || creature.IsDie())
-            //        continue;
 
-            //    Sphere playerS = new Sphere();
-            //    playerS.c = creature.GetPos();
-            //    playerS.r = creature.GetR();
-
-            //    Vector2 pos = GetPos() + GetDir().normalized * m_length * 0.5f;
-            //    float angle = Collide.GetAngle(GetDir());
-            //    OBB obb = new OBB(pos, new Vector2(m_triggerData.Width, m_length), angle);
-            //    if (Collide.bSphereOBB(playerS, obb))
-            //    {
-            //        OnHitAddBuff(m_caster, creature);
-            //    }
-            //}
-        }
-
-        public void _CheckObstacle()
-        {
-            float length = 0;
-            if (m_bLerp)
-                length = m_length;
-            else
-                length = m_triggerData.Length;
-
-            //Vector2 intersectionPont = Vector2.zero;
-            //Vector2 startPos = m_caster.GetPos();
-            //Vector2 endPos = startPos + GetDir().normalized * length;
-            //if(CMapMgr.GetMap().LineObstacle(
-            //    (int)startPos.x, (int)startPos.y,
-            //    (int)endPos.x, (int)endPos.y,
-            //    ref intersectionPont))
-            //{
-            //    if (m_vCreature != null)
-            //    {
-            //        GetVTrigger().SetLineTargetPos(intersectionPont.ToVector3());
-            //    }
-            //    m_bLerp = false;
-            //}
+       public void _CheckObstacle()
+       {
+            //FixedPoint length = FixedPoint.N_0;
+            //if (m_bLerp)
+            //    length = m_length;
             //else
-            //{
-            //    if (m_vCreature != null)
-            //    {
-            //        GetVTrigger().SetLineTargetPos(endPos.ToVector3());
-            //    }
+            //    length = new FixedPoint(m_triggerData.Length);
+
+            Vector2d startPos = m_caster.GetPos();
+            Vector2 intersectionPont = Vector2.zero;
+            // 实际表现效果要短一点
+            Vector2d endPos = startPos + GetDir().normalized * new FixedPoint(m_triggerData.Length);
+            if(CMapMgr.GetMap().LineObstacle(
+                (int)startPos.x.value, (int)startPos.y.value,
+                (int)endPos.x.value, (int)endPos.y.value,
+                ref intersectionPont))
+            {
+                if (m_vCreature != null)
+                {
+                    GetVTrigger().SetLineTargetPos(intersectionPont.ToVector3());
+                }
+            }
+            else if (m_vCreature != null)
+            {
+                GetVTrigger().SetLineTargetPos(endPos.ToVector3());
+            }
             //}
         }
     }

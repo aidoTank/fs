@@ -56,7 +56,7 @@ namespace Roma
                 m_vCreature.Create(info);
             }
 
-            SetPos(pos);
+            SetPos(pos, true);
             SetDir(dir);
             SetScale(scale);
             SetSpeed(new FixedPoint(m_triggerData.FlySpeed));

@@ -32,6 +32,6 @@ public class FspMsgPlayerData : NetMessage
         }
     }
 
-    public CG_CreateRoom m_joinRoom = new CG_CreateRoom();
+    public CS_CreateRoom m_joinRoom = new CS_CreateRoom();
 }
 

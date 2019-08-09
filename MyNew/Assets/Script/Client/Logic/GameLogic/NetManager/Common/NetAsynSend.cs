@@ -25,16 +25,8 @@ namespace Roma
         public void SendMessage(NetMessage msg)
         {
             m_listMsg.Add(msg);
-     
-            //m_stream.Reset();
-            //msg.ToByte(ref m_stream);
-            //m_socket.BeginSend(m_stream.GetBuffer(), 0, msg.msgMaxLen, SocketFlags.None, null, null);
         }
 
-        //public void SendMessage(LusuoStream stream)
-        //{
-        //    m_socket.BeginSend(stream.GetBuffer(), 0, stream.m_byteLen, SocketFlags.None, null, null);
-        //}
 
 
         // 发送消息要单独在心跳中发送
@@ -42,7 +34,7 @@ namespace Roma
         public override void Update()
         {
             SendMessage();
-            //SendMessageNew();
+            SendMessageNew();
         }
 
         /// <summary>
@@ -83,20 +75,18 @@ namespace Roma
 
 
         #region 优化为消息注册方式
-        public void SendMessage<T>(int msgID, T t)
+        public void SendMessage<T>(ushort msgID, T t)
         {
             LusuoStream stream = new LusuoStream(new byte[m_uBufferSize]);
 
             stream.WriteInt(0);                   // 预留总字节数
-            stream.WriteInt((int)msgID);          // 写消息编号
+            stream.WriteUShort(msgID);           // 写消息编号
+            stream.WriteInt(1);
             byte[] bytes = ProtobufHelper.Serialize<T>(t);
-            byte[] md5 = GetMd5Str(bytes);
-
-            stream.Write(ref md5);
             stream.Write(ref bytes);              // 写具体结构体
             stream.Seek(0);
             // 内容字节数
-            int contentLen = StringHelper.s_IntSize + md5.Length + bytes.Length;
+            int contentLen = StringHelper.s_ShortSize + StringHelper.s_IntSize + bytes.Length;
             stream.WriteInt(contentLen);          // 再次写内容长度
             stream.m_byteLen = StringHelper.s_IntSize + contentLen; // 长度字节数 + 内容字节数
 
@@ -127,14 +117,6 @@ namespace Roma
             Debug.Log("发送成功！");
         }
 
-        public byte[] GetMd5Str(byte[] ConvertString)
-        {
-            System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
-            string value = System.BitConverter.ToString(md5.ComputeHash(ConvertString), 4, 8);
-            value = value.Replace("-", "");
-            value = value.ToLower();
-            return System.Text.Encoding.UTF8.GetBytes(value);
-        }
 
         protected List<LusuoStream> _m_listMsg = new List<LusuoStream>();
         protected bool _m_bSending = false;

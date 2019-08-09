@@ -39,8 +39,8 @@ namespace Roma
             if (Client.Inst().isSingleTest)
             {
                 int[] info = new int[1];
-                info[0] = 2;
-                EGame.m_uid = 2;
+                info[0] = 3;
+                EGame.m_uid = 3;
                 GameManager.Inst.Start(info);
                 GameManager.Inst.GetFspManager().m_bStartCtl = true;
                 return;
@@ -62,7 +62,12 @@ namespace Roma
             msgLogin.login.userName = EGame.m_openid;
             msgLogin.login.passWord = GetPassWord();
             NetRunTime.Inst.SendMessage(msgLogin);
-            Debug.Log("发送登陆");
+        
+            //CG_Login login = new CG_Login();
+            //login.userName = EGame.m_openid;
+            //login.passWord = GetPassWord();
+            //NetRunTime.Inst.SendMessage<CG_Login>(eNetMessageID.MsgLogin, login);
+            //Debug.Log("发送登陆");
         }
 
         public override void UpdateUI(float fTime, float fDTime)

@@ -137,13 +137,16 @@ namespace Roma
             if (IsDie())
                 return;
 
+            if (bStateBuff(eBuffState.stun) || bConBuffLogicType(eBuffType.repel))
+                return;
+
             if (cmd.GetCmdType() == CmdFspEnum.eFspSendSkill)
             {
                 m_cmdFspSendSkill = cmd as CmdFspSendSkill;
                 EnterSkill();
             }
 
-            if(m_logicMoveEnabled && 
+            if (m_logicMoveEnabled && 
                 (cmd.GetCmdType() == CmdFspEnum.eFspStopMove ||
                 cmd.GetCmdType() == CmdFspEnum.eFspMove ||
                 cmd.GetCmdType() == CmdFspEnum.eFspAutoMove))
@@ -163,7 +166,7 @@ namespace Roma
             if (IsDie())
                 return;
 
-            if (bStateBuff(eBuffState.stun))
+            if (bStateBuff(eBuffState.stun) || bConBuffLogicType(eBuffType.repel))
                 return;
 
             if (m_ai != null)

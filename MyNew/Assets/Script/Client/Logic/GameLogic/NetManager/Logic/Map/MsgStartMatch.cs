@@ -27,7 +27,7 @@ public class MsgStartMatch : NetMessage
         // 接收匹配类型，开始匹配，如果有异常，直接返回
         if (eno == 0)
         {
-            GC_MatchResult data = GetData<GC_MatchResult>(structBytes);
+            SC_MatchResult data = GetData<SC_MatchResult>(structBytes);
 
             //GC_MatchResult m_matchResult = new GC_MatchResult();
 

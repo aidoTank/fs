@@ -19,7 +19,7 @@ public class FspMsgJoinRoom : NetMessage
     public override void ToByte(ref LusuoStream ls)
     {
         eno = 0;
-        SetByte<CG_CreateRoom>(m_joinRoom, ref ls);
+        SetByte<CS_CreateRoom>(m_joinRoom, ref ls);
     }
 
     public override void OnRecv()
@@ -42,6 +42,6 @@ public class FspMsgJoinRoom : NetMessage
         }
     }
 
-    public CG_CreateRoom m_joinRoom = new CG_CreateRoom();
+    public CS_CreateRoom m_joinRoom = new CS_CreateRoom();
 }
 

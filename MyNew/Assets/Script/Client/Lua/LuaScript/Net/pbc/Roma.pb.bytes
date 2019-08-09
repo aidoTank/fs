@@ -1,15 +1,25 @@
 
-€
+ô
 
-Roma.proto".
-CG_Login
+Roma.proto"p
+
+CS_Message
+login (2	.CS_Login#
+create_role (2.CS_CreateRole#
+create_room (2.CS_CreateRoom"r
+
+SC_Message
+SC_Eno (.
+PlayerPublicData (2.SC_PlayerPublicData$
+MatchResult (2.SC_MatchResult".
+CS_Login
 userName (	
 passWord (	"<
-CG_CreateRole
+CS_CreateRole
 userName (	
 name (	
 occ ("ƒ
-GC_PlayerPublicData
+SC_PlayerPublicData
 userName (
 name (	
 occ (
@@ -17,4 +27,13 @@ Roma.proto".
 mapId (	
 x (	
 y (
-dir (
+dir ("Y
+SC_MatchResult
+	matchType (
+serverIp (	
+
+serverPort (
+roomId ("1
+CS_CreateRoom
+userName (
+roomId (

@@ -38,7 +38,7 @@ namespace Roma
 
         public void SetLogicMoveEnabled(bool bTrue)
         {
-            Debug.Log("SetLogicMoveEnabled:" + bTrue);
+            //Debug.Log("SetLogicMoveEnabled:" + bTrue);
             m_logicMoveEnabled = bTrue;
         }
 
