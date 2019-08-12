@@ -76,6 +76,9 @@ namespace Roma
                 case (int)eBuffType.createCreature:
                     obj = new Buff22(m_uid, buffData);
                     break;
+                case (int)eBuffType.flash:
+                    obj = new Buff101(m_uid, buffData);
+                    break;
             }
             m_uid++;
             //Add(m_uid++, obj);

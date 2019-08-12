@@ -1,6 +1,9 @@
 技能ID,技能名称,站立施法动作,施法特效id,施法特效绑定点,特效开始时间,按下持续施法时的前进动作,按下持续施法时的后退动作
 id,name,animaId,effectId,bindPoint,startTime,ForwardAnimaId,BackAnimaId
 int,string,string,string,int,int,int,int
+,,,,,,,
+1,闪现,10,,,,,
+,,,,,,,
 1100,火女普攻,10,,origin,,,
 1200,火女技能2,20,,origin,,,
 1300,火女技能3,30,,origin,,,
@@ -10,6 +13,11 @@ int,string,string,string,int,int,int,int
 2200,撼地者1,20,,origin,,,
 2300,撼地者2,30,,origin,,,
 2400,撼地者3,40,,origin,,,
+,,,,,,,
+3100,电魂0,10,,origin,,,
+3200,电魂1,20,,origin,,,
+3300,电魂2,30,,origin,,,
+3400,电魂3,40,,origin,,,
 ,,,,,,,
 ,,,,,,,
 100,新测试机枪普通释放,12,,origin,0,13,17

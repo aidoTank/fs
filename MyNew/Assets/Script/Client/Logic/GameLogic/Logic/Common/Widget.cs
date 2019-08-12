@@ -81,7 +81,7 @@ namespace Roma
 
         public void OnLoadPrefab()
         {
-            ResourceFactory.Inst.LoadResource((int)m_uiIndex + 10000, (res) =>
+            ResourceFactory.Inst.LoadResource((int)m_uiIndex + 1000, (res) =>
             {
                 m_uiObj = res.InstantiateGameObject();
                 m_uiObj.name = res.GetResInfo().strName;

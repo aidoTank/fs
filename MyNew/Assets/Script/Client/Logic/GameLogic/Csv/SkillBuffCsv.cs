@@ -51,6 +51,8 @@ namespace Roma
         createTrigger = 20, // 创建BUFF触发器，比如创建爆炸物，旋风斩，陷阱，烟雾弹，独立的单位
         createSkill = 21,
         createCreature = 22,// 创建怪物
+
+        flash = 101,  // 闪现
     }
 
 	public enum eSkillBuffCsv

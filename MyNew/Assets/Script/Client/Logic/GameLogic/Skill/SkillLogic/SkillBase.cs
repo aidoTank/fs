@@ -53,8 +53,6 @@ namespace Roma
                 SkillCsv skillCsv = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill);
                 m_skillInfo = skillCsv.GetData(m_curSkillCmd.m_skillId);
             }
-
-            m_bLaunching = true;
             // 同步施法者方向
             GetCaster().SetDir(m_curSkillCmd.m_dir);
 
@@ -70,6 +68,15 @@ namespace Roma
             // 释放技能，前摇时不可再操作技能
             // 至于能不能移动看技能配置
             SetLogicEnable(false);
+
+            if(m_skillInfo.launchTime == 0)
+            {
+                Launch();
+            }
+            else
+            {
+                m_bLaunching = true;
+            }
         }
 
         public virtual void ExecuteFrame(int frameId)

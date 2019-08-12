@@ -56,7 +56,7 @@ namespace Roma
         {
             foreach (KeyValuePair<int, Widget> item in m_dicGameAllPanel)
             {
-                ResInfo resInfo = ResInfosResource.GetResInfo(10000 + (int)item.Key);
+                ResInfo resInfo = ResInfosResource.GetResInfo(1000 + (int)item.Key);
                 if (resInfo != null)
                 {
                     m_dicWidgetByName.Add(resInfo.strName, item.Value);
@@ -125,7 +125,7 @@ namespace Roma
 
         private Dictionary<int, Widget> m_dicGameAllPanel = new Dictionary<int, Widget>();
         private Dictionary<string, Widget> m_dicWidgetByName = new Dictionary<string, Widget>();
-        private int m_mainUIBgmHid;
+
     }
 }
 

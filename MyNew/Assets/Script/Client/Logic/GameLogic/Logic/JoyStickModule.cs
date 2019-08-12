@@ -66,6 +66,7 @@ namespace Roma
         private void OnLoadSelect()
         {
             m_master = CCreatureMgr.GetMaster();
+            m_master.UpdateUI_Skill();
             EntityBaseInfo info = new EntityBaseInfo();
             info.m_resID = 3;
             info.m_ilayer = (int)LusuoLayer.eEL_Dynamic;
