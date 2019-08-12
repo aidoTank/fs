@@ -173,14 +173,14 @@ namespace Roma
         public void UpdateUI_CD(int index, float time, float maxTime)
         {
             // 如果是主角，坐骑主人是主角
-            //if (IsMaster() || (GetMaster() != null && GetMaster().IsMaster()))
-            //{
-            //    JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
-            //    if (js.IsShow())
-            //    {
-            //        js.SetCD(index, time, maxTime);
-            //    }
-            //}
+            if (IsMaster())
+            {
+                JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
+                if (js.IsShow())
+                {
+                    js.SetCD(index, time, maxTime);
+                }
+            }
         }
 
         /// <summary>

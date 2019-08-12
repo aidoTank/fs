@@ -7,6 +7,15 @@ namespace Roma
    
     public partial class Entity
     {
+        public void SetGhostShadow(bool bShow)
+        {
+            if (m_object == null)
+                return;
+
+            GhostShadow gs = GhostShadow.Get(m_object);
+            gs.SetShow(bShow);
+        }
+
         #region 模拟抛物线(模拟重力)
         /// <summary>
         /// 模拟重力效果，只控制Y轴

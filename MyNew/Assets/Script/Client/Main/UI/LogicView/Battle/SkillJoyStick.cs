@@ -17,6 +17,8 @@ public enum eJoyStickEvent
 /// </summary>
 public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
+    public int m_order;
+
     public GameObject m_btnSkill;
     public RawImage m_icon;
     public GameObject m_mask; // 未升级时的锁
@@ -36,8 +38,8 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private Color SKLL_BLUE = new Color(0f, 0.38f, 0.89f, 0.5f);
     private Color SKLL_RED = new Color(0.79f, 0.16f, 0.21f, 0.5f);
 
-    public int m_moveRadius = 190;
-    private int m_cancelRadius = 340;  // 取消技能的半径
+    public int m_moveRadius = 100;
+    private int m_cancelRadius = 150;  // 取消技能的半径
 
     public Vector2 m_delta;
     private Vector2 m_startPos;
@@ -48,9 +50,9 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private float m_cdTime;
     private float m_curCdTime;
     // 被动
-    private bool m_pasv;   
-    // 沉默
-    private bool m_chenmo;
+    private bool m_pasv;
+    // 沉默,锁住
+    private bool m_lock;
 
     // 能量回复中
     private bool m_energeCd;
@@ -62,7 +64,7 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     // 回调(索引，事件，摇杆信息，取消技能）
     public Action<int, eJoyStickEvent, Vector2, bool> OnJoyStickEvent;
     public Action<int> OnLvUpEvent;
-    private int m_index;
+    public int m_index;
 
     //private bool m_bDown = false;
     //private float m_curIntervaTime = 0;
@@ -98,6 +100,7 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         m_btnFocus.gameObject.SetActiveNew(false);
         m_skillRange.gameObject.SetActiveNew(false);
         m_levelUp.gameObject.SetActiveNew(false);
+        m_lvParent.gameObject.SetActiveNew(false);
 
         UIEventListener.Get(m_levelUp.gameObject).onClick = (go) =>
         {
@@ -117,6 +120,11 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         m_energeImage.gameObject.SetActiveNew(false);
     }
 
+    public void SetOrder(int order)
+    {
+        m_order = order;
+    }
+
     public void SetSelectOrder(int order)
     {
         Canvas can = m_select.GetComponent<Canvas>();
@@ -132,7 +140,7 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         // if (!BattleControlModule.ReplayingInteractable())
         //     return;
 
-        if (m_pasv || m_cd || m_lv == 0 || m_chenmo)
+        if (m_pasv || m_cd || m_lv == 0 || m_lock)
         {
             return;
         }
@@ -156,7 +164,9 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         // if (!BattleControlModule.ReplayingInteractable())
         //     return;
 
-        if (m_pasv || m_cd || m_lv == 0 || m_chenmo)
+
+
+        if (m_pasv || m_cd || m_lv == 0 || m_lock)
         {
             return;
         }
@@ -184,9 +194,8 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public void OnDrag(PointerEventData eventData)
     {
         // if (!BattleControlModule.ReplayingInteractable())
-        //     return;
-
-        if (m_pasv || m_cd || m_lv == 0 || m_chenmo)
+        //     return;                    
+        if (m_pasv || m_cd || m_lv == 0 || m_lock)
         {
             return;
         }
@@ -225,46 +234,34 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private float m_curUpdateTime;
     private void Update()
     {
-        if (m_cd)
-        {
-            m_curCdTime -= Time.deltaTime;
-            m_maskCd.fillAmount = m_curCdTime / m_cdTime;
-            if (m_curCdTime <= 0)
-            {
-                m_cd = false;
-                SetCDMask(false);
-                m_txtCd.gameObject.SetActiveNew(false);
-            }
-            // 增加更新间隔，优化GC
-            m_curUpdateTime += Time.deltaTime;
-            if(m_curUpdateTime >= 1f)
-            {
-                m_curUpdateTime = 0;
-                m_txtCd.text = ((int)m_curCdTime + 1).ToString();
-            }
-        }
         _UpdateEnerge();
     }
 
     /// <summary>
     /// 设置冷却时间
     /// </summary>
-    public void SetCD(float coolTime)
+    public void SetCD(float coolTime, float maxTime)
     {
-        m_cdTime = coolTime;
-        m_curCdTime = coolTime;
         m_cd = true;
         SetCDMask(true);
         m_txtCd.gameObject.SetActiveNew(true);
-        m_txtCd.text = ((int)coolTime + 1).ToString();
+        m_maskCd.fillAmount = (maxTime - coolTime) / maxTime;
+        m_txtCd.text = ((int)(maxTime - coolTime) + 1).ToString();
+        if (coolTime >= maxTime)
+        {
+            m_cd = false;
+            SetCDMask(false);
+            m_txtCd.gameObject.SetActiveNew(false);
 
-        tween.Play(false);
-
-        // 点击超级快时，会出现范围框不消失的问题，需设置CD时隐藏
+            // CD结束
+            //if (maxTime != 0 && m_index != 0)
+            //{
+            //    int parentOrder = GetComponentInParent<Canvas>().sortingOrder;
+            //    CEffectMgr.CreateUI(22000, m_btnSkill.transform.FindChild("effect"), parentOrder);
+            //}
+        }
         m_btnFocus.gameObject.SetActiveNew(false);
         m_skillRange.gameObject.SetActiveNew(false);
-        //if(!BattleControlModule.m_bStorage)
-        CancelSkillEvent();
     }
 
     public void SetCDMask(bool bActive)
@@ -274,6 +271,12 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         {
             m_maskCd.fillAmount = 1;
         }
+    }
+
+    public void SetCharge(float pct)
+    {
+        m_maskCd.gameObject.SetActiveNew(true);
+        m_maskCd.fillAmount = pct;
     }
 
     #region 能量设置
@@ -304,12 +307,26 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         }
     }
 
+    private Slider m_energeSlider;
+
+    public void SetNewEnerge(float val)
+    {
+        if (m_energeSlider == null)
+        {
+            Transform trans = transform.FindChild("btn_skill/new_energe");
+            if (trans == null)
+                return;
+            m_energeSlider = trans.GetComponent<Slider>();
+        }
+        m_energeSlider.value = val;
+    }
+
     /// <summary>
     /// 设置能量
     /// </summary>
     public void SetEnerge(float maxEnergeCDTime, int curPointNum, int maxPiontNum)
     {
-        Debug.Log("设置:energeCDTime" + maxEnergeCDTime + "  curPointNum:" + curPointNum + " maxPiontNum：" + maxPiontNum);
+        //Debug.Log("设置:energeCDTime" + maxEnergeCDTime + "  curPointNum:" + curPointNum + " maxPiontNum：" + maxPiontNum);
         //m_energeTxt.text = curPointNum.ToString();
         SetPoint(curPointNum);
         if (curPointNum == maxPiontNum)   // 如果满了，关闭CD
@@ -346,6 +363,11 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     }
     #endregion
 
+    public void SetLock(bool bLock)
+    {
+        m_lock = bLock;
+        m_mask.SetActiveNew(bLock);
+    }
 
     public void SetLv(int lv)
     {
@@ -374,8 +396,8 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public void SetChenMoMask(bool value)
     {
         m_x.SetActiveNew(value);
-        m_chenmo = value;
-        if(value)
+        m_lock = value;
+        if (value)
         {
             CancelSkillEvent();
         }
@@ -398,7 +420,7 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         if (bShow)
         {
             //if (m_skillHintEffectUid == 0)
-                //m_skillHintEffectUid = CEffectMgr.CreateUI(31032, m_btnSkill.transform.FindChild("effect"), order, null, null, scale);
+            //m_skillHintEffectUid = CEffectMgr.CreateUI(31032, m_btnSkill.transform.FindChild("effect"), order, null, null, scale);
         }
         else
         {
@@ -415,25 +437,25 @@ public class SkillJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         CEffectMgr.CreateUI(31006, m_btnSkill.transform.FindChild("effect"));
     }
 
-    private int m_lvUpBtnEffectHid;
-    public void SetLongEffect(bool bShow)
-    {
-        m_levelUp.gameObject.SetActiveNew(bShow);
-        if (bShow)
-        {
-            if (m_lvUpBtnEffectHid == 0)
-                m_lvUpBtnEffectHid = CEffectMgr.CreateUI(31005, m_levelUp.transform.FindChild("effect"));
-        }
-        else
-        {
-            CEffectMgr.Destroy(m_lvUpBtnEffectHid);
-            m_lvUpBtnEffectHid = 0;
-        }
-    }
+    //private int m_lvUpBtnEffectHid;
+    //public void SetLongEffect(bool bShow)
+    //{
+    //    m_levelUp.gameObject.SetActiveNew(bShow);
+    //    if (bShow)
+    //    {
+    //        if (m_lvUpBtnEffectHid == 0)
+    //            m_lvUpBtnEffectHid = CEffectMgr.CreateUI(31005, m_levelUp.transform.FindChild("effect"));
+    //    }
+    //    else
+    //    {
+    //        CEffectMgr.Destroy(m_lvUpBtnEffectHid);
+    //        m_lvUpBtnEffectHid = 0;
+    //    }
+    //}
 
     public void UnInit()
     {
-        SetLongEffect(false);
+        //SetLongEffect(false);
     }
 
 

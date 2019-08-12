@@ -148,10 +148,7 @@ namespace Roma
             CCreature player = CCreatureMgr.Get(m_curSkillCmd.m_casterUid);
             if (player != null && player.m_vCreature != null)
             {
-                if (m_curAnima != null && m_curAnima.switchHand)  // 如果是火炮，特殊处理一下，施法时武器切换到手上
-                {
-                    ((BattleEntity)player.m_vCreature.GetEnt()).BackEquipEnd();
-                }
+                player.m_vCreature.PushCommand(CmdFspStopMove.Inst);
             }
             if(m_curCasterEffectHid != 0)
             {

@@ -49,9 +49,9 @@ namespace Roma
             }
             m_buffList.Add(buffUid);
 
-            //UpdateUI_Buff();
-            //if(buffUid.m_buffData.hasColor)
-            //    UpdateVO_ColorByBuff();
+            UpdateUI_Buff();
+            if (buffUid.m_buffData.hasColor)
+                UpdateVO_ColorByBuff();
         }
 
         public void RemoveBuff(BuffBase buffUid)

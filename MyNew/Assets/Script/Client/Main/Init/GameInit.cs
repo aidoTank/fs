@@ -220,18 +220,18 @@ namespace Roma
             {
                 LayoutMgr.Inst.m_listLoading.Clear();
                 LayoutMgr.Inst.m_listLoading = null;
-                //InitLoadingShader();
-                OnInitShaderEnd(0,0);
+                InitLoadingShader();
+                //OnInitShaderEnd(0,0);
             }
         }
 
         private void InitLoadingShader()
         {
-            // ShaderManager.Inst.LoadAllShader(OnInitShaderEnd);
+            ShaderManager.Inst.LoadAllShader(OnInitShaderEnd);
 
-            // LogicSystem.Inst.GetMapLoadProcess().strCurInfo = "正在加载其他资源：";
-            // LogicSystem.Inst.GetMapLoadProcess().fPercent = 0.9f;
-            // m_curItmPct = 0.1f;
+            SceneManager.Inst.GetMapLoadProcess().strCurInfo = "正在加载其他资源：";
+            SceneManager.Inst.GetMapLoadProcess().fPercent = 0.9f;
+            m_curItmPct = 0.1f;
         }
 
         private void OnInitShaderEnd(int cur, int max)

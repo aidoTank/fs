@@ -71,7 +71,7 @@ namespace Roma
 
         public void ShowSkillLvUp(int index, bool bShow)
         {
-            m_SkillBtn[index].SetLongEffect(bShow);
+            //m_SkillBtn[index].SetLongEffect(bShow);
         }
 
         /// <summary>
@@ -82,11 +82,12 @@ namespace Roma
             m_SkillBtn[index].SetPoint(curPointNum);
         }
 
-        public void SetCD(int index, float cd)
+        public void SetCD(int index, float cd, float max)
         {
-            m_SkillBtn[index].SetCD(cd);
+            if (index >= m_SkillBtn.Length)
+                return;
+            m_SkillBtn[index].SetCD(cd, max);
         }
-
 
         public void SetColor(int index, Color color)
         {

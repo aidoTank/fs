@@ -173,32 +173,32 @@ namespace Roma
         /// </summary>
         public void UpdateVO_ColorByBuff()
         {
-            //if (m_buffList == null || m_vCreature == null)
-            //    return;
+            if (m_buffList == null || m_vCreature == null)
+                return;
 
-            //bool hasColor = false;
-            //Color color = Color.white;
-            //// 获取有颜色的BUFF，取最新的
-            //for (int i = 0; i < m_buffList.Count; i++)
-            //{
-            //    BuffBase buff = m_buffList[i];
-            //    if (buff.m_buffData.hasColor)
-            //    {
-            //        hasColor = true;
-            //        color = buff.m_buffData.hitColor;
-            //    }
-            //}
+            bool hasColor = false;
+            Color color = Color.white;
+            // 获取有颜色的BUFF，取最新的
+            for (int i = 0; i < m_buffList.Count; i++)
+            {
+                BuffBase buff = m_buffList[i];
+                if (buff.m_buffData.hasColor)
+                {
+                    hasColor = true;
+                    color = buff.m_buffData.hitColor;
+                }
+            }
 
-            //if (hasColor)
-            //{
-            //    //m_vCreature.GetEnt().SetShader(eShaderType.eRim, color / 255);
-            //    m_vCreature.GetEnt().SetColor(color / 255);
-            //}
-            //else
-            //{
-            //    m_vCreature.GetEnt().RestoreColor();
-            //    //m_vCreature.GetEnt().RemoveShader();
-            //}
+            if (hasColor)
+            {
+                m_vCreature.GetEnt().SetShader(eShaderType.eRim, color / 255);
+                //m_vCreature.GetEnt().SetColor(color / 255);
+            }
+            else
+            {
+                m_vCreature.GetEnt().RemoveShader();
+                //m_vCreature.GetEnt().RestoreColor();
+            }
         }
 
         /// <summary>

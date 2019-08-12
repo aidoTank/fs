@@ -189,7 +189,7 @@ namespace Roma
         {
             if (!Client.Inst().m_bCd)
                 return true;
-            return true;
+
             if (m_skillDataInfo == null)
                 return false;
             return m_curCdTime >= m_skillDataInfo.cd;
@@ -412,7 +412,7 @@ namespace Roma
             }
             CSkillInfo info = new CSkillInfo(this, index, skillId, skillLv);
             m_dicSkill[index] = info;
-            //UpdateUI_CD(index, 0, 0);
+            UpdateUI_CD(index, 0, 0);
         }
 
         public void RemoveSkill(int index)

@@ -92,6 +92,10 @@ namespace Roma
             m_ui.SetIcon(index, icon, false);
         }
 
+        public void SetCD(int index, float time, float maxTime)
+        {
+            m_ui.SetCD(index, time, maxTime);
+        }
 
         public override void UpdateUI(float time, float fdTime)
         {
@@ -351,8 +355,8 @@ namespace Roma
         private Vector3 m_curSkilPos;
 
 
-        private Color SKLL_BLUE = new Color(0f, 0.145f, 0.807f, 0.5f);
-        private Color SKLL_RED = new Color(0.345f, 0f, 0f, 0.5f);
+        private Color SKLL_BLUE = new Color(0f, 1.0f, 0.0f, 0.3f);
+        private Color SKLL_RED = new Color(0.5f, 0f, 0f, 0.4f);
 
 
         /// <summary>

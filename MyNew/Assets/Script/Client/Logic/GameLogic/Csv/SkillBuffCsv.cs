@@ -17,7 +17,7 @@ namespace Roma
         sleep = 5,        // 睡眠，被攻击时解除
         SuperArmor = 6,   // 霸体
 
-
+        GhostShadow = 7, // 残影
 
         // 仅仅控制表现层状态
         Hit,        // 受击

@@ -18,6 +18,8 @@ namespace Roma
         sleep,     // 睡眠，被攻击时解除
         SuperArmor,   // 霸体
 
+        GhostShadow = 7, // 残影
+
         // 仅仅控制表现层状态
         Hit,         // 受击
         AlphaToHalf, // 半透
@@ -435,6 +437,9 @@ namespace Roma
                         SetShowState(type, true);
                         switch (type)
                         {
+                            case eVObjectState.GhostShadow:
+                                ent.SetGhostShadow(true);
+                                break;
                             case eVObjectState.AlphaToHide:   // 全透 all alpha need hide effect
                                 ent.SetShader(eShaderType.eAlphaToHide, Color.white, 0.3f, false, () =>
                                 {
@@ -502,6 +507,9 @@ namespace Roma
                         SetShowState(type, false);
                         switch (type)
                         {
+                            case eVObjectState.GhostShadow:
+                                ent.SetGhostShadow(false);
+                                break;
                             case eVObjectState.AlphaToHide:   // 全透
                                 ent.RemoveShader();
                                 ent.SetShow(true);
