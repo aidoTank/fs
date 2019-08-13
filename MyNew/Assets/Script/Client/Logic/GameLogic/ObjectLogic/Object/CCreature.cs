@@ -215,8 +215,7 @@ namespace Roma
             if (m_curSkill != null)
                 m_curSkill.Destory();
             ClearBuff();
-            ClearTrigger();
-            //StopAutoMove();
+            //ClearTrigger();
             PushCommand(CmdFspStopMove.Inst);
             if (collider != null)
                 collider.active = false;

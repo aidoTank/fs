@@ -39,8 +39,8 @@ namespace Roma
             if (Client.Inst().isSingleTest)
             {
                 int[] info = new int[1];
-                info[0] = 3;
-                EGame.m_uid = 3;
+                info[0] = 4;
+                EGame.m_uid = 4;
                 GameManager.Inst.Start(info);
                 GameManager.Inst.GetFspManager().m_bStartCtl = true;
                 return;

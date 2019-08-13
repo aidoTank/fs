@@ -16,6 +16,7 @@ namespace Roma
     /// </summary>
     public class Collider
     {
+        public bool bAirWall = true;   // 是否是空气墙障碍
         public eColliderType type;
         public Vector2d c;
         public bool active = true;
@@ -51,7 +52,6 @@ namespace Roma
 
     public class Polygon : Collider
     {
-        public bool bAirWall = true;   // 是否是空气墙障碍
         public List<Vector2d> m_edgesList = new List<Vector2d>();    // 边列表
         public List<Vector2d> m_worldPosList = new List<Vector2d>(); // 顶点列表
 
@@ -136,6 +136,37 @@ namespace Roma
             m_rolePush = bPush;
         }
 
+
+        public bool IsblockNotAirWal(int x, int y)
+        {
+            Circle cir = new Circle();
+            cir.c = new Vector2d(x, y);
+            cir.r = FixedPoint.one;
+            for (int j = 0; j < m_list.Count; j++)
+            {
+                Collider col = m_list[j];
+                if (col.bAirWall)
+                    continue;
+
+                if (col is Polygon)
+                {
+                    Polygon pol = col as Polygon;
+                    if (CheckPolygonAndCircle(pol, cir, false))
+                    {
+                        return true;
+                    }
+                }
+                else if(col is Circle)
+                {
+                    Circle itemCir = col as Circle;
+                    if (CheckCircleAndCircle(itemCir, cir, false))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// 是否障碍，用于终止冲刺

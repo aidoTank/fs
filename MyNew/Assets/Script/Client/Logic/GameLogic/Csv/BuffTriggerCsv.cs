@@ -28,7 +28,9 @@ namespace Roma
         ShapeType,
         Length,
 		Width,
-		Buff1,
+        Obstacle,
+
+        Buff1,
 		Buff2,
 	}
 
@@ -161,10 +163,11 @@ namespace Roma
 		/// </summary>
 		public float Width;
 
-		/// <summary>
-		/// 我方触发BUFF1
-		/// </summary>
-		public int[] selfBuffList;
+        public bool Obstacle;
+        /// <summary>
+        /// 我方触发BUFF1
+        /// </summary>
+        public int[] selfBuffList;
 
 		/// <summary>
 		/// 敌方触发BUFF2
@@ -259,6 +262,9 @@ namespace Roma
                 data.ShapeType = m_csv.GetIntData(i, (int)eBuffTriggerCsv.ShapeType);
                 data.Length = m_csv.GetFloatData(i, (int)eBuffTriggerCsv.Length);
 				data.Width = m_csv.GetFloatData(i, (int)eBuffTriggerCsv.Width);
+
+                data.Obstacle = m_csv.GetBoolData(i, (int)eBuffTriggerCsv.Obstacle);
+
                 string b1 = m_csv.GetData(i, (int)eBuffTriggerCsv.Buff1);
                 data.selfBuffList = StringHelper.GetIntList(b1);
 

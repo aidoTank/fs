@@ -27,7 +27,7 @@ namespace Roma
         public int m_curIntervalTime;
 
         public bool m_bStartCheck;  // 开始检测
-        public Polygon m_polygon;   // 参与碰撞的形状
+        public Collider m_collider;   // 参与碰撞的形状
 
         public CBuffTrigger(long id)
             : base(id)
@@ -80,20 +80,36 @@ namespace Roma
                     Trigger();
                 });
             }
+            InitObstacle(pos);
+            return true;
+        }
 
-           if (m_triggerData.ShapeType == (int)eBuffTriggerShapeType.Rect)
-           {
+        private void InitObstacle(Vector2d pos)
+        {
+            if(!m_triggerData.Obstacle)
+                return;
+
+            if (m_triggerData.ShapeType == (int)eBuffTriggerShapeType.Circle)
+            {
+                Circle cir = new Circle();
+                cir.c = pos;
+                cir.r = new FixedPoint(m_triggerData.Length);
+                cir.bAirWall = false;
+                m_collider = cir;
+                PhysicsManager.Inst.Add(m_collider);
+            }
+            else if (m_triggerData.ShapeType == (int)eBuffTriggerShapeType.Rect)
+            {
                 int angle = (int)FPCollide.GetAngle(GetDir()).value;
                 FPObb obb = new FPObb(pos, new Vector2d(m_triggerData.Width, m_triggerData.Length), angle);
-                m_polygon = new Polygon();
-
-                m_polygon.c = pos;
-                m_polygon.isObstacle = true;
-                m_polygon.bAirWall = false;
-                m_polygon.Init(obb.GetVert2d());
-                PhysicsManager.Inst.Add(m_polygon);
+                Polygon pol = new Polygon();
+                pol.c = pos;
+                pol.isObstacle = true;
+                pol.bAirWall = false;
+                pol.Init(obb.GetVert2d());
+                m_collider = pol;
+                PhysicsManager.Inst.Add(m_collider);
             }
-           return true;
         }
 
         public virtual void InitPos(ref Vector2d startPos, ref Vector2d startDir)
@@ -135,9 +151,9 @@ namespace Roma
             {
                 OnHitAddBuff(m_caster, null);
             }
-            if(m_polygon != null)
+            if(m_collider != null)
             {
-                PhysicsManager.Inst.Remove(m_polygon);
+                PhysicsManager.Inst.Remove(m_collider);
             }
         }
 
@@ -225,11 +241,11 @@ namespace Roma
                     Destory();
                     return;
                 }
-                //if (PhysicsManager.Inst.IsblockNotAirWal((int)m_curPos.x, (int)m_curPos.y))
-                //{
-                //    Destory();
-                //    return;
-                //}
+                if (PhysicsManager.Inst.IsblockNotAirWal((int)m_curPos.x, (int)m_curPos.y))
+                {
+                    Destory();
+                    return;
+                }
             }
         }
 
