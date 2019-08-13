@@ -15,8 +15,8 @@ public class MoveJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public RectTransform m_thumb;
 
     // 最小开始位置（左下为0,0）
-    public Vector2 m_maxMinStartPos = new Vector2(200,200);
-    public float m_moveRadius = 150;
+    public Vector2 m_maxMinStartPos = new Vector2(100,100);
+    public float m_moveRadius = 80;
 
     public Vector2 m_originalPos;
     public Vector2 m_delta;
