@@ -107,7 +107,6 @@ namespace Roma
             //Debug.Log("skill mgr:" + m_dicPlayer.Count);
         }
 
-
         public static void Destory()
         {
             foreach (KeyValuePair<long, CBuffTrigger> item in m_dicSkill)

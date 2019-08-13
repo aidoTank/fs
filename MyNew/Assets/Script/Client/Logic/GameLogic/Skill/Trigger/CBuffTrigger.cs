@@ -233,9 +233,9 @@ namespace Roma
                 }
             }
 
-            // 静态碰撞
             if (m_triggerData.PosType == (int)eBuffTriggerPosType.CasterStartPos_SkillDir)
             {
+                // 障碍碰撞
                 if (CMapMgr.m_map.IsblockNotAirWal((int)m_curPos.x.value, (int)m_curPos.y.value))
                 {
                     Destory();
@@ -245,6 +245,27 @@ namespace Roma
                 {
                     Destory();
                     return;
+                }
+
+                // 子弹碰撞
+                FPSphere cur = new FPSphere();
+                cur.c = GetPos();
+                cur.r = GetR();
+                foreach (KeyValuePair<long, CBuffTrigger> item in CBuffTriggerMgr.m_dicSkill)
+                {
+                    CBuffTrigger tri = item.Value;
+                    if (tri.m_triggerData.PosType == (int)eBuffTriggerPosType.CasterStartPos_SkillDir && tri != this && tri.m_caster != m_caster)
+                    {
+                        FPSphere triItem = new FPSphere();
+                        triItem.c = tri.GetPos();
+                        triItem.r = tri.GetR();
+
+                        if (FPCollide.bSphereSphere(cur, triItem))
+                        {
+                            Destory();
+                            tri.Destory();
+                        }
+                    }
                 }
             }
         }
