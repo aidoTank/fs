@@ -73,7 +73,7 @@ namespace Roma
             item.SetParent(m_panel.transform);
             item.localPosition = Vector3.zero;
             item.localRotation = Quaternion.identity;
-            item.localScale = Vector3.one;
+            item.localScale = Vector3.one * 0.6f;
             //m_dicTitleOffset[item.gameObject.GetInstanceID()] = 0;
 
             Canvas can = item.gameObject.AddComponent<Canvas>();

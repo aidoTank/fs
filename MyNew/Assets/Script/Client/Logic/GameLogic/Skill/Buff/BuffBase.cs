@@ -174,7 +174,7 @@ namespace Roma
             int dp = m_rec.GetPropNum(eCreatureProp.Dp);
             // 玩家普攻伤害
             int hurtVal = (int)(new FixedPoint(ap * ap) / new FixedPoint((ap + k * dp))).value;
-            // 技能伤害
+            // 技能伤害，倍数
             hurtVal = (int)(new FixedPoint(hurtVal) * 
                 (FixedPoint.N_1 + new FixedPoint(skillVal) * new FixedPoint(0.01f))).value;
 
@@ -185,7 +185,7 @@ namespace Roma
                 bCrit = true;
                 int CritDamage = m_caster.GetPropNum(eCreatureProp.CritDamage);
                 hurtVal = (int)(new FixedPoint(hurtVal) * 
-                    (FixedPoint.N_1 +  new FixedPoint(CritDamage) * new FixedPoint(0.001f))).value;
+                    (FixedPoint.N_1 +  new FixedPoint(CritDamage * 0.001f))).value;
 
             }
             // 连击累加

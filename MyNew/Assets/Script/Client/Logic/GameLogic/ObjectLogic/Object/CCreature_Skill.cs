@@ -469,6 +469,33 @@ namespace Roma
         }
 
 
+        public int GetTarget(int lookDis)
+        {
+            int targetUid = 0;
+            FixedPoint m_minDis2 = new FixedPoint(999999);
+            List<long> list = CCreatureMgr.GetCreatureList();
+            for (int i = 0; i < list.Count; i++)
+            {
+                CCreature cc = CCreatureMgr.Get(list[i]);
+                FixedPoint abDis2 = FPCollide.GetDis2(GetPos(), cc.GetPos());
+                if (abDis2 > new FixedPoint(lookDis * lookDis))
+                    continue;
+
+                if (cc.IsDie() || cc.GetUid() == GetUid())
+                    continue;
+
+                if (abDis2 < new FixedPoint(lookDis * lookDis))    // 如果目标在视线范围内
+                {
+                    if (abDis2 < m_minDis2)
+                    {
+                        m_minDis2 = abDis2;
+                        targetUid = (int)cc.GetUid();
+                    }
+                }
+            }
+            return targetUid;
+        }
+
         /// <summary>
         /// 是否同阵营
         /// </summary>

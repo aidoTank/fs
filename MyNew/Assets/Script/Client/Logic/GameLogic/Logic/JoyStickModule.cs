@@ -273,7 +273,19 @@ namespace Roma
             {
                 if(jsEvent == eJoyStickEvent.Down)
                 {
-                    m_curSkillDir = master.GetDir().ToVector3();
+                    int tUid = master.GetTarget(skillInfo.distance);
+                    if(tUid == 0)
+                    {
+                        m_curSkillDir = master.GetDir().ToVector3();
+                    }
+                    else
+                    {
+                        CCreature cc = CCreatureMgr.Get(tUid);
+                        if(cc != null)
+                        {
+                            m_curSkillDir = (cc.GetPos() - master.GetPos()).ToVector3().normalized;
+                        }
+                    }
                     m_skillDir.gameObject.SetActiveNew(true);
                     m_skillDir.localScale = new Vector3(skillInfo.distance, 0.01f, skillInfo.distance);
                 }
@@ -288,8 +300,19 @@ namespace Roma
             {
                 if(jsEvent == eJoyStickEvent.Down)
                 {
-                    m_curSkilPos = m_master.GetPos().ToVector3();
-
+                    int tUid = master.GetTarget(skillInfo.distance);
+                    if (tUid == 0)
+                    {
+                        m_curSkilPos = m_master.GetPos().ToVector3();
+                    }
+                    else
+                    {
+                        CCreature cc = CCreatureMgr.Get(tUid);
+                        if (cc != null)
+                        {
+                            m_curSkilPos = cc.GetPos().ToVector3();
+                        }
+                    }
                     m_skillPos.gameObject.SetActiveNew(true);
                     m_skillPos.position = m_curSkilPos;
                     m_skillPos.localScale = new Vector3(skillInfo.length, 0.001f, skillInfo.length);

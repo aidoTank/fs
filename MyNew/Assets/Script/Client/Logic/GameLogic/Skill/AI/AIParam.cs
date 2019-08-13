@@ -154,31 +154,33 @@ namespace Roma
             {
                 return true;
             }
-            // 如果没有目标，检测玩家附近的单位，锁定目标
-            FixedPoint m_minDis2 = new FixedPoint(999999);
-            List<long> list = CCreatureMgr.GetCreatureList();
-            for (int i = 0; i < list.Count; i++)
-            {
-                CCreature cc = CCreatureMgr.Get(list[i]);
-                FixedPoint abDis2 = FPCollide.GetDis2(m_creature.GetPos(), cc.GetPos());
-                if (abDis2 > new FixedPoint(lookDis * lookDis))
-                    continue;
 
-                if (cc.IsDie() || cc.GetUid() == m_creature.GetUid())
-                    continue;
-                //if (m_creature.bCamp(cc))
-                //    continue;
+            targetUid = m_creature.GetTarget(lookDis);
+            // 如果没有目标，检测玩家附近的单位，锁定目标
+            //FixedPoint m_minDis2 = new FixedPoint(999999);
+            //List<long> list = CCreatureMgr.GetCreatureList();
+            //for (int i = 0; i < list.Count; i++)
+            //{
+            //    CCreature cc = CCreatureMgr.Get(list[i]);
+            //    FixedPoint abDis2 = FPCollide.GetDis2(m_creature.GetPos(), cc.GetPos());
+            //    if (abDis2 > new FixedPoint(lookDis * lookDis))
+            //        continue;
+
+            //    if (cc.IsDie() || cc.GetUid() == m_creature.GetUid())
+            //        continue;
+            //    //if (m_creature.bCamp(cc))
+            //    //    continue;
 
                 
-                if (abDis2 < new FixedPoint(lookDis * lookDis))    // 如果目标在视线范围内
-                {
-                    if (abDis2 < m_minDis2)
-                    {
-                        targetUid = (int)cc.GetUid();
-                        m_minDis2 = abDis2;
-                    }
-                }
-            }
+            //    if (abDis2 < new FixedPoint(lookDis * lookDis))    // 如果目标在视线范围内
+            //    {
+            //        if (abDis2 < m_minDis2)
+            //        {
+            //            targetUid = (int)cc.GetUid();
+            //            m_minDis2 = abDis2;
+            //        }
+            //    }
+            //}
 
             if (targetUid != 0)
             {
