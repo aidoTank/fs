@@ -25,6 +25,7 @@ namespace Roma
             }
             sVOjectBaseInfo info = new sVOjectBaseInfo();
             info.m_uid = (int)GetUid();
+            info.csvId = m_csvData.Id;
             info.m_resId = resId;
             info.m_pos = GetPos().ToVector3();
             info.m_dir = GetDir().ToVector3();

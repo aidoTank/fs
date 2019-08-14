@@ -1,5 +1,5 @@
 
-ô
+†
 
 Roma.proto"p
 
@@ -14,11 +14,12 @@ SC_Message
 MatchResult (2.SC_MatchResult".
 CS_Login
 userName (	
-passWord (	"<
+passWord (	"M
 CS_CreateRole
 userName (	
-name (	
-occ ("ƒ
+name (	
+icon (
+gender ("ƒ
 SC_PlayerPublicData
 userName (
 name (	
@@ -36,4 +37,13 @@ serverPort (
 roomId ("1
 CS_CreateRoom
 userName (
-roomId (
+roomId ("Q
+SC_BattleInfo
+roomId (
+mapType (
+
+playerInfo (2.PlayerInfo",
+
+PlayerInfo
+uid (
+	heroIndex (

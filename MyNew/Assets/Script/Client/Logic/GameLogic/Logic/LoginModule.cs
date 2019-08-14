@@ -41,7 +41,15 @@ namespace Roma
                 int[] info = new int[1];
                 info[0] = 4;
                 EGame.m_uid = 4;
-                GameManager.Inst.Start(info);
+
+                SC_BattleInfo s = new SC_BattleInfo();
+                s.roomId = 1;
+                PlayerInfo p = new PlayerInfo();
+                p.uid = 4;
+                p.heroIndex = 4;
+                s.playerInfo.Add(p);
+
+                GameManager.Inst.Start(s);
                 GameManager.Inst.GetFspManager().m_bStartCtl = true;
                 return;
             }

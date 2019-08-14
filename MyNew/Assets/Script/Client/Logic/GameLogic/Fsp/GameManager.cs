@@ -41,7 +41,7 @@ namespace Roma
         /// <summary>
         /// 服务器收到所有人准备后，开始游戏
         /// </summary>
-        public void Start(int[] playerData)
+        public void Start(SC_BattleInfo battleInfo)
         {
             m_fspMgr = new FspManager();
             m_fspMgr.Init();
@@ -68,15 +68,16 @@ namespace Roma
             map.Create();
 
 
-            for(int i = 0; i < playerData.Length; i ++)
+            for(int i = 0; i < battleInfo.playerInfo.Count; i ++)
             {
-                int uid = playerData[i];
+                PlayerInfo playerInfo = battleInfo.playerInfo[i];
+                int uid = (int)playerInfo.uid;
                 if (EGame.m_openid.Equals(uid.ToString()))
                 {
                     EGame.m_uid = uid;
                 }
                 CCreature master = CCreatureMgr.Create(EThingType.Player, uid);
-                master.Create(uid, playerData[i].ToString(), new Vector2d(60, 60 + i * 4), FPCollide.GetVector(60));
+                master.Create(playerInfo.heroIndex, uid.ToString(), new Vector2d(60, 60 + i * 4), FPCollide.GetVector(60));
 
                 master.m_ai = new CCreatureAI(master, eAILevel.HARD);
                 master.m_aiType = eAIType.Player;

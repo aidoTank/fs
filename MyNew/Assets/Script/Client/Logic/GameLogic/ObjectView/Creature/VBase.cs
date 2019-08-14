@@ -10,6 +10,7 @@ namespace Roma
     public struct sVOjectBaseInfo
     {
         public int m_uid;
+        public int csvId;
         public int m_resId;
         public Vector3 m_pos;
         public Vector3 m_dir;  // 方向向量

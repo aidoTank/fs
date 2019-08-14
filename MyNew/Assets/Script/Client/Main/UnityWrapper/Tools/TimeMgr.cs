@@ -56,5 +56,26 @@ public class TimeMgr :  Singleton
         m_delList.Clear();
     }
 
+    public void RemoveEvent(int hid)
+    {
+        CTimeEvent fEvent;
+        if (m_timeEvent.TryGetValue(hid, out fEvent))
+        {
+            fEvent.endEvent = null;
+            fEvent = null;
+            m_timeEvent.Remove(hid);
+        }
+    }
+
+    /// <summary>
+    /// 清除events
+    /// </summary>
+    public void ClearAllEvents()
+    {
+        m_timeEvent.Clear();
+        m_delList.Clear();
+        m_startId = 0;
+    }
+
 
 }

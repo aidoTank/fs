@@ -8,6 +8,7 @@ namespace Roma
 		Name,
 		icon,
 		ModelResId,
+        ShowModelResId,
         ModelScale,
         headHeight,
         moveSpeed,
@@ -28,6 +29,13 @@ namespace Roma
         CritDamage,
 
         Skill,
+
+        runSpeak,
+        dieSpeak,
+        skill0Speak,
+        skill1Speak,
+        skill2Speak,
+        skill3Speak,
     }
 
     public class CreatureCsvData
@@ -62,7 +70,9 @@ namespace Roma
         /// 模型资源id
         /// </summary>
         public int ModelResId;
+        public int ShowModelResId;
         public float ModelScale;
+
         public float HeadHeight;
 
         /// <summary>
@@ -136,6 +146,14 @@ namespace Roma
 
         public int[] SkillList;
 
+
+        public string runSpeak;
+        public string dieSpeak;
+        public string skill0Speak;
+        public string skill1Speak;
+        public string skill2Speak;
+        public string skill3Speak;
+
     }
 
 	public class PlayerCsv : CsvExWrapper
@@ -154,6 +172,7 @@ namespace Roma
 				//data.Name = m_csv.GetData(i, (int)ePlayerCsv.Name);
 				data.Icon = m_csv.GetIntData(i, (int)ePlayerCsv.icon);
 				data.ModelResId = m_csv.GetIntData(i, (int)ePlayerCsv.ModelResId);
+                data.ShowModelResId = m_csv.GetIntData(i, (int)ePlayerCsv.ShowModelResId);
                 data.ModelScale = m_csv.GetFloatData(i, (int)ePlayerCsv.ModelScale);
                 data.HeadHeight = m_csv.GetFloatData(i, (int)ePlayerCsv.headHeight);
 
@@ -172,6 +191,13 @@ namespace Roma
                 data.CritDamage = m_csv.GetFloatData(i, (int)ePlayerCsv.CritDamage);
 
                 data.SkillList = StringHelper.GetIntList(m_csv.GetData(i, (int)ePlayerCsv.Skill));
+
+                data.runSpeak = m_csv.GetData(i, (int)ePlayerCsv.runSpeak);
+                data.dieSpeak = m_csv.GetData(i, (int)ePlayerCsv.dieSpeak);
+                data.skill0Speak = m_csv.GetData(i, (int)ePlayerCsv.skill0Speak);
+                data.skill1Speak = m_csv.GetData(i, (int)ePlayerCsv.skill1Speak);
+                data.skill2Speak = m_csv.GetData(i, (int)ePlayerCsv.skill2Speak);
+                data.skill3Speak = m_csv.GetData(i, (int)ePlayerCsv.skill3Speak);
 
                 m_dicData.Add(data.Id, data);
 			}

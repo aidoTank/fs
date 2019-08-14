@@ -132,12 +132,19 @@ namespace Roma
       get { return _name; }
       set { _name = value; }
     }
-    private int _occ;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"occ", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int occ
+    private int _icon;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"icon", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int icon
     {
-      get { return _occ; }
-      set { _occ = value; }
+      get { return _icon; }
+      set { _icon = value; }
+    }
+    private int _gender;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"gender", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int gender
+    {
+      get { return _gender; }
+      set { _gender = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -267,6 +274,81 @@ namespace Roma
       get { return _roomId; }
       set { _roomId = value; }
     }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"SC_BattleInfo")]
+  public partial class SC_BattleInfo : global::ProtoBuf.IExtensible
+  {
+    public SC_BattleInfo() {}
+    
+    private int _roomId;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"roomId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int roomId
+    {
+      get { return _roomId; }
+      set { _roomId = value; }
+    }
+    private int _mapType;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"mapType", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int mapType
+    {
+      get { return _mapType; }
+      set { _mapType = value; }
+    }
+    private readonly global::System.Collections.Generic.List<PlayerInfo> _playerInfo = new global::System.Collections.Generic.List<PlayerInfo>();
+    [global::ProtoBuf.ProtoMember(3, Name=@"playerInfo", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<PlayerInfo> playerInfo
+    {
+      get { return _playerInfo; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlayerInfo")]
+  public partial class PlayerInfo : global::ProtoBuf.IExtensible
+  {
+    public PlayerInfo() {}
+    
+    private long? _uid;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"uid", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long uid
+    {
+      get { return _uid?? default(long); }
+      set { _uid = value; }
+    }
+    [global::System.Xml.Serialization.XmlIgnore]
+    [global::System.ComponentModel.Browsable(false)]
+    public bool uidSpecified
+    {
+      get { return this._uid != null; }
+      set { if (value == (this._uid== null)) this._uid = value ? this.uid : (long?)null; }
+    }
+    private bool ShouldSerializeuid() { return uidSpecified; }
+    private void Resetuid() { uidSpecified = false; }
+    
+    private int? _heroIndex;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"heroIndex", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int heroIndex
+    {
+      get { return _heroIndex?? default(int); }
+      set { _heroIndex = value; }
+    }
+    [global::System.Xml.Serialization.XmlIgnore]
+    [global::System.ComponentModel.Browsable(false)]
+    public bool heroIndexSpecified
+    {
+      get { return this._heroIndex != null; }
+      set { if (value == (this._heroIndex== null)) this._heroIndex = value ? this.heroIndex : (int?)null; }
+    }
+    private bool ShouldSerializeheroIndex() { return heroIndexSpecified; }
+    private void ResetheroIndex() { heroIndexSpecified = false; }
+    
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

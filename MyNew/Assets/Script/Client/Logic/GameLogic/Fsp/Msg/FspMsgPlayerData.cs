@@ -26,12 +26,12 @@ public class FspMsgPlayerData : NetMessage
     {
         if (eno == 0)
         {
-            int[] info = GetData<int[]>(structBytes);
+            SC_BattleInfo info = GetData<SC_BattleInfo>(structBytes);
             Debug.Log("接受玩家信息，开始游戏");
             GameManager.Inst.Start(info);
         }
     }
 
-    public CS_CreateRoom m_joinRoom = new CS_CreateRoom();
+    //public CS_CreateRoom m_joinRoom = new CS_CreateRoom();
 }
 

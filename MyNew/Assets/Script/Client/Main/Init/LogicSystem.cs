@@ -62,6 +62,9 @@ namespace Roma
             TimeMgr.Inst = new TimeMgr();
             SingletonManager.Inst.AddSingleton("timeMgr", TimeMgr.Inst);
 
+            HeroPhotoMgr.Inst = new HeroPhotoMgr();
+            SingletonManager.Inst.AddSingleton("HeroPhotoMgr", HeroPhotoMgr.Inst);
+
             SingletonManager.Inst.Init();
 
             SoundManager.Inst.SetMute(SoundType.eBG, false);

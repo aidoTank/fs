@@ -305,9 +305,21 @@ namespace Roma
                     {
                         SetMove(false);
                         ent.PlayAnima(SMtCreatureAnima.ANIMA_DIE);
-                        SoundManager.Inst.PlaySound(m_baseInfo.m_dieSound, ent.GetPos());
+                        //SoundManager.Inst.PlaySound(m_baseInfo.m_dieSound, ent.GetPos());
                         CEffectMgr.Create(m_baseInfo.m_dieEffect, GetEnt(), SBindPont.ORIGIN);
 
+                        // xingzuo sound
+                        PlayerCsv playerCsv = CsvManager.Inst.GetCsv<PlayerCsv>((int)eAllCSV.eAC_Player);
+                        PlayerCsvData csvData = playerCsv.GetData(m_baseInfo.csvId);
+                        if (csvData != null)
+                        {
+                            int soundId = 0, pct = 0;
+                            JoyStickModule.GetSpeak(csvData.dieSpeak, ref soundId, ref pct);
+                            SoundManager.Inst.PlaySound(soundId, (e) =>
+                            {
+                                e.SetPos(m_moveInfo.m_pos);
+                            });
+                        }
                         // 死亡说话
                         //PlaySpeak(eRoleSpeakCsv.die);
                     }

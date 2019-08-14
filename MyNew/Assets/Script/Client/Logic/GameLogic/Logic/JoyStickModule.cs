@@ -48,7 +48,7 @@ namespace Roma
         public override void InitData()
         {
             OnLoadSelect();
-
+            InitSpeak();
             //SkillCsv skillInfo = CsvManager.Inst.GetCsv<SkillCsv>((int)eAllCSV.eAC_Skill);
             //SkillCsvData skill0 = skillInfo.GetData(0);
             //SkillCsvData skill1 = skillInfo.GetData(1);
@@ -103,6 +103,8 @@ namespace Roma
             {
                 m_skillChose.position = m_master.m_vCreature.GetEnt().GetPos() + Vector3.up * 0.01f;
             }
+
+            _UpdateMoveSpeak(fdTime);
         }
 
         private void SetSkillCancel(bool bCancel)
@@ -147,6 +149,7 @@ namespace Roma
         {
             if (bUp)
             {
+                m_curMoveJoyStick = eJoyStickEvent.Up;
                 m_preMoveDir = Vector3.zero;
                 m_isFirstJoyStick = true;
                 if (m_master != null)
@@ -157,6 +160,7 @@ namespace Roma
             }
             else
             {
+                m_curMoveJoyStick = eJoyStickEvent.Drag;
                 delta.Normalize();
                 MasterMove(delta);
             }
@@ -338,6 +342,8 @@ namespace Roma
                     cmd.m_dir = (new Vector2(m_curSkillDir.x, m_curSkillDir.z)).ToVector2d();
                     cmd.m_endPos = (new Vector2(m_curSkilPos.x, m_curSkilPos.z)).ToVector2d();
                     master.SendFspCmd(cmd);
+
+                    OnSkillSpeak(index);
                 }
                 // 还原指示器
                 CancelSkill();
@@ -380,7 +386,7 @@ namespace Roma
 
         private Color SKLL_BLUE = new Color(0f, 1.0f, 0.0f, 0.3f);
         private Color SKLL_RED = new Color(0.5f, 0f, 0f, 0.4f);
-
+        public eJoyStickEvent m_curMoveJoyStick = eJoyStickEvent.None;
 
         /// <summary>
         /// 是否取消施法

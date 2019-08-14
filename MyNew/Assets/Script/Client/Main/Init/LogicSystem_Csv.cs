@@ -17,6 +17,7 @@ namespace Roma
         eAC_GameText,
         eAC_Scene,
 
+
         eAC_Player,
         eAC_PlayerExp,
         eAC_Skill,
@@ -24,6 +25,9 @@ namespace Roma
         eAC_SkillData,
         eAC_SkillBuff,
         eAc_BuffTrigger,
+
+        eAC_UIHeroShow,
+        eAC_UIHeroShowEffect,
     }
 
     public partial class LogicSystem
@@ -60,6 +64,9 @@ namespace Roma
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_SkillData, "技能数据表", new SkillDataCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAC_SkillBuff, "技能buff表", new SkillBuffCsv());
             csvMgr.AddCSVCreate((int)eAllCSV.eAc_BuffTrigger, "技能buff触发器表", new BuffTriggerCsv());
+
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_UIHeroShow, "英雄展示表", UIHeroShowCsv.CreateCSV());
+            csvMgr.AddCSVCreate((int)eAllCSV.eAC_UIHeroShowEffect, "英雄展示动效表", UIHeroShowEffectCsv.CreateCSV());
 
             InitLuaCsv(ref csvMgr);
         }
