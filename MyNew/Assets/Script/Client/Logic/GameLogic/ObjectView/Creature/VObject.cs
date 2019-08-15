@@ -19,6 +19,7 @@ namespace Roma
         SuperArmor,   // 霸体
 
         GhostShadow = 7, // 残影
+        WindBlowsUp = 8,    // 被吹起在空中
 
         // 仅仅控制表现层状态
         Hit,         // 受击
@@ -449,6 +450,9 @@ namespace Roma
                         SetShowState(type, true);
                         switch (type)
                         {
+                            case eVObjectState.WindBlowsUp:
+                                ent.SetWindBlowsUp(true);
+                                break;
                             case eVObjectState.GhostShadow:
                                 ent.SetGhostShadow(true);
                                 break;
@@ -519,6 +523,9 @@ namespace Roma
                         SetShowState(type, false);
                         switch (type)
                         {
+                            case eVObjectState.WindBlowsUp:
+                                ent.SetWindBlowsUp(false);
+                                break;
                             case eVObjectState.GhostShadow:
                                 ent.SetGhostShadow(false);
                                 break;

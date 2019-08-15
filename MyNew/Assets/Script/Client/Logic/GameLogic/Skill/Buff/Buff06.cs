@@ -57,7 +57,7 @@ namespace Roma
             if (m_rec != m_caster)   // 属于被打击退
             {
                 moveDir = m_rec.GetPos() - m_skillPos;
-                moveDir = m_rec.GetPos() - m_caster.GetPos();
+                //moveDir = m_rec.GetPos() - m_caster.GetPos();
             }
             // 逻辑层移动位置
             moveDir.Normalize();

@@ -327,13 +327,14 @@ namespace Roma
                     }
                 }
             }
-           
+
             // 切到后台时，网络层没卡，渲染帧卡主，但是切回来时，会获取最新逻辑位置
             //if ((this as MtCreature) != null)
             //{
             //    Debug.Log("logicPos:" + logicPos.x + "|" + logicPos.z);
             //    Debug.Log("entityPos:" + curPos.x + "|" + curPos.z);
             //}
+            result.y = ent.GetPos().y;
             ent.SetPos(result);
             return result;
         }

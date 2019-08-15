@@ -20,9 +20,13 @@ namespace Roma
         {
             base.Init();
 
+            if (m_rec == null)
+                return;
+
             switch (m_buffData.ParamValue1)
             {
                 case (int)eBuffState.stun:
+                case (int)eBuffState.WindBlowsUp:
                     //Debug.Log("晕眩，添加特效");
                     SetStopMove(m_rec);
                     SetStopSkill(m_rec);
@@ -49,7 +53,7 @@ namespace Roma
             {
                 ride.SetState((eBuffState)m_buffData.ParamValue1, true);
             }
-
+            UpdateVO_HitAnima(m_rec, m_buffData.animaId);
         }
 
         public override bool IsStateBuff()
@@ -66,9 +70,13 @@ namespace Roma
         {
             base.Destroy();
 
+            if (m_rec == null)
+                return;
+
             switch (m_buffData.ParamValue1)
             {
                 case (int)eBuffState.stun:
+                case (int)eBuffState.WindBlowsUp:
                     //Debug.Log("移除 晕眩");
                     ResetMove(m_rec);
                     ResetSkill(m_rec);
@@ -99,6 +107,8 @@ namespace Roma
 
         public void SetStopMove(CCreature rec)
         {
+            if (rec == null)
+                return;
             rec.SetLogicMoveEnabled(false);
             rec.PushCommand(CmdFspStopMove.Inst);
             //CCreature ride = rec.GetRide();
@@ -122,17 +132,19 @@ namespace Roma
 
         private void ResetMove(CCreature rec)
         {
-            // 解除BUFF状态时，如果没有晕眩，禁锢，则重置遥感，让遥感继续生效
-            if (!rec.bStateBuff(eBuffState.stun) && !rec.bStateBuff(eBuffState.unmove) && !rec.bStateBuff(eBuffState.sleep))
-            {
-                rec.SetLogicMoveEnabled(true);
-                rec.UpdateUI_ResetJoyStick(true);
-            }
+
 
             //rec = rec.GetRide();
             if (rec != null)
             {
-                if (!rec.bStateBuff(eBuffState.stun) && !rec.bStateBuff(eBuffState.unmove) && !rec.bStateBuff(eBuffState.sleep))
+                // 解除BUFF状态时，如果没有晕眩，禁锢，则重置遥感，让遥感继续生效
+                if (!rec.bStateBuff(eBuffState.stun) && !rec.bStateBuff(eBuffState.unmove) && !rec.bStateBuff(eBuffState.sleep) && !rec.bStateBuff(eBuffState.WindBlowsUp))
+                {
+                    rec.SetLogicMoveEnabled(true);
+                    rec.UpdateUI_ResetJoyStick(true);
+                }
+
+                if (!rec.bStateBuff(eBuffState.stun) && !rec.bStateBuff(eBuffState.unmove) && !rec.bStateBuff(eBuffState.sleep) && !rec.bStateBuff(eBuffState.WindBlowsUp))
                 {
                     rec.SetLogicMoveEnabled(true);
                     rec.UpdateUI_ResetJoyStick(true);

@@ -7,6 +7,33 @@ namespace Roma
    
     public partial class Entity
     {
+
+        private bool m_bWindBlowsUp;
+        public void SetWindBlowsUp(bool bTrue)
+        {
+            if(m_object != null)
+            {
+                m_bWindBlowsUp = bTrue;
+                Vector3 pos = GetPos();
+                if(bTrue)
+                {
+                    SetPos(new Vector3(pos.x, 3, pos.z));
+                }
+                else
+                {
+                    SetPos(new Vector3(pos.x, 0, pos.z));
+                }
+            }
+        }
+
+        public void _UpdateWindBlowsUp(float fDtime)
+        {
+            if (!m_bWindBlowsUp)
+                return;
+
+            SetDirection(GetRotate() + new Vector3(0f, fDtime * 1000, 0f));
+        }
+
         public void SetGhostShadow(bool bShow)
         {
             if (m_object == null)

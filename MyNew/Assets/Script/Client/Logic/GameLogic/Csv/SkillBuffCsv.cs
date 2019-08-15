@@ -18,6 +18,7 @@ namespace Roma
         SuperArmor = 6,   // 霸体
 
         GhostShadow = 7, // 残影
+        WindBlowsUp = 8,    // 被吹起在空中
 
         // 仅仅控制表现层状态
         Hit,        // 受击

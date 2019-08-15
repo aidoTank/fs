@@ -137,7 +137,7 @@ namespace Roma
             if (IsDie())
                 return;
 
-            if (bStateBuff(eBuffState.stun) || bConBuffLogicType(eBuffType.repel))
+            if (bStateBuff(eBuffState.stun) || bStateBuff(eBuffState.WindBlowsUp) || bConBuffLogicType(eBuffType.repel))
                 return;
 
             if (cmd.GetCmdType() == CmdFspEnum.eFspSendSkill)
@@ -166,7 +166,7 @@ namespace Roma
             if (IsDie())
                 return;
 
-            if (bStateBuff(eBuffState.stun) || bConBuffLogicType(eBuffType.repel))
+            if (bStateBuff(eBuffState.stun) || bConBuffLogicType(eBuffType.repel) || bStateBuff(eBuffState.WindBlowsUp))
                 return;
 
             if (m_ai != null)

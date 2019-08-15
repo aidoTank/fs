@@ -38,15 +38,16 @@ namespace Roma
         {
             if (Client.Inst().isSingleTest)
             {
-                int[] info = new int[1];
-                info[0] = 4;
-                EGame.m_uid = 4;
+                //int[] info = new int[1];
+                //info[0] = 5;
+
+                EGame.m_uid = 5;
 
                 SC_BattleInfo s = new SC_BattleInfo();
-                s.roomId = 1;
+                s.roomId = 5;
                 PlayerInfo p = new PlayerInfo();
-                p.uid = 4;
-                p.heroIndex = 4;
+                p.uid = 5;
+                p.heroIndex = 5;
                 s.playerInfo.Add(p);
 
                 GameManager.Inst.Start(s);

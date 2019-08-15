@@ -212,8 +212,8 @@ namespace Roma
             // 接受者无敌时
             if (receiver != null)
             {
-                //if (receiver.IsDie())
-                //    return null;
+                if (receiver.IsDie() || receiver.CheckState(eBuffState.WindBlowsUp))
+                    return null;
                 if (caster != receiver && receiver.CheckState(eBuffState.God))
                     return null;
             }

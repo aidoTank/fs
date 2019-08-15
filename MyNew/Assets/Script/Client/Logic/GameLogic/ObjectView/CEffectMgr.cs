@@ -371,12 +371,14 @@ namespace Roma
 
             foreach (KeyValuePair<CEffect, Entity> item in m_followPos)
             {
-                Entity ent = item.Key.GetEntity();
+                CEffect effect = item.Key;
+                Entity ent = effect.GetEntity();
                 if (ent.IsInited())
                 {
-                    if (item.Key.m_followType == 1)
+                    if (effect.m_followType == 1)
                     {
-                        ent.SetPos(item.Value.GetPos());
+                        Vector3 targetPos = item.Value.GetPos();
+                        ent.SetPos(new Vector3(targetPos.x, 0 , targetPos.z));
                     }
                     else
                     {

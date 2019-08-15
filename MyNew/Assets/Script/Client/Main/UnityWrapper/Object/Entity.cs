@@ -153,6 +153,7 @@ namespace Roma
                 }
             }
             _UpdateHight(fDTime);
+            _UpdateWindBlowsUp(fDTime);
             //_UpdateFllow(fDTime);
         }
 
