@@ -41,13 +41,13 @@ namespace Roma
                 //int[] info = new int[1];
                 //info[0] = 5;
 
-                EGame.m_uid = 5;
+                EGame.m_uid = 2;
 
                 SC_BattleInfo s = new SC_BattleInfo();
-                s.roomId = 5;
+                s.roomId = 1;
                 PlayerInfo p = new PlayerInfo();
-                p.uid = 5;
-                p.heroIndex = 5;
+                p.uid = 2;
+                p.heroIndex = 2;
                 s.playerInfo.Add(p);
 
                 GameManager.Inst.Start(s);

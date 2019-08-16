@@ -105,7 +105,7 @@ namespace Roma
                 Polygon pol = new Polygon();
                 pol.c = pos;
                 pol.isObstacle = true;
-                pol.bAirWall = false;
+                pol.bAirWall = true;
                 pol.Init(obb.GetVert2d());
                 m_collider = pol;
                 PhysicsManager.Inst.Add(m_collider);

@@ -236,8 +236,8 @@ namespace Roma
                         //    break;
                         case 10:
                             // The state of dizziness does not play the hit action
-                            if (CheckState(eVObjectState.stun))
-                                return;
+                            //if (CheckState(eVObjectState.stun))
+                            //    return;
                             ent.PlayAnima(head.animaId, ()=> {
                                 ResetState();
                             });
@@ -498,7 +498,7 @@ namespace Roma
                                 GetEnt().SetShow(true);
                                 break;
                             case eVObjectState.stun:    // 晕眩
-                                ((BattleEntity)GetEnt()).Play(false);
+                                //((BattleEntity)GetEnt()).Play(false);
                                 if (m_bMaster)
                                 {
                                     JoyStickModule js = (JoyStickModule)LayoutMgr.Inst.GetLogicModule(LogicModuleIndex.eLM_PanelJoyStick);
@@ -560,7 +560,7 @@ namespace Roma
                                 GetEnt().SetShow(false);
                                 break;
                             case eVObjectState.stun:    // 晕眩
-                                ((BattleEntity)GetEnt()).Play(true);
+                                //((BattleEntity)GetEnt()).Play(true);
                                 ResetState();
                                 if (m_bMaster)
                                 {
