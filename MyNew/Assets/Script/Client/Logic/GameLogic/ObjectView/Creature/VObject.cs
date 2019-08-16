@@ -55,7 +55,7 @@ namespace Roma
         }
 
         public const string HEAD = "over_head";
-        public const string CHEST = "hit";
+        public const string CHEST = "chest";
         public const string ORIGIN = "origin";
         public const string R_HAND = "r_hand";
         public const string L_HAND = "l_hand";
